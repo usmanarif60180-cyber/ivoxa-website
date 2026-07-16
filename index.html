@@ -360,7 +360,7 @@
     font-size: 0.875rem; font-weight: 600; color: hsl(var(--muted-fg));
   }
   .app-nav a:hover, .app-nav-footer a:hover { background: hsl(var(--muted)); color: hsl(var(--fg)); }
-  .app-nav a.current { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
+  .app-nav a.current, .app-nav-footer a.current { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
   .app-nav-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--border)); }
   .app-main { flex: 1; min-width: 0; }
   .app-topbar {
@@ -1395,7 +1395,7 @@
     return (
       '<aside class="app-sidebar"><div class="logo"><span class="logo-mark">IX</span>IVOXA</div>' +
       '<nav class="app-nav">' + nav + "</nav>" +
-      '<div class="app-nav-footer"><a href="#" data-goto="dashboard">⚙ Settings</a></div></aside>'
+      '<div class="app-nav-footer"><a href="#" data-goto="settings" class="' + (active === "settings" ? "current" : "") + '">⚙ Settings</a></div></aside>'
     );
   }
   function renderTopbar() {
@@ -1516,6 +1516,11 @@
             <div id="dash-ai-insights-list"></div>
             <div class="widget-row"><span><a href="#" class="link-strong" data-goto="ai">Ask the AI Assistant →</a></span></div>
           </div>
+          <div class="card card-pad" data-widget-id="compliance">
+            <div class="card-title">🛡️ Compliance</div>
+            <div id="dash-compliance-summary"></div>
+            <div class="widget-row"><span><a href="#" class="link-strong" data-goto="settings">Open Compliance Center →</a></span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1555,12 +1560,14 @@
 
         <div class="card card-pad" style="margin-bottom:1.1rem;">
           <div class="card-title">Invoice details</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
             <div><label class="field-label">Client</label><select class="field"><option>Nova Digital Agency</option><option>Atlas Studio</option><option>Harborline Logistics</option></select></div>
             <div><label class="field-label">Issue date</label><input class="field" type="date" value="2026-07-10" /></div>
             <div><label class="field-label">Due date</label><input class="field" type="date" value="2026-07-24" /></div>
             <div><label class="field-label">Currency</label><select class="field"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
+            <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
           </div>
+          <div id="inv-compliance-banner" style="margin-top:1rem;"></div>
         </div>
 
         <div class="card card-pad" style="margin-bottom:1.1rem;">
@@ -2285,6 +2292,81 @@
   </div>
 </section>
 
+<section class="view" id="view-settings">
+  <div class="app-shell">
+    <div id="sidebar-settings"></div>
+    <div class="app-main">
+      <div id="topbar-settings"></div>
+      <div class="app-content">
+        <div class="page-head"><div><h1>Settings</h1><p>Workspace preferences and the Global Compliance Center.</p></div></div>
+
+        <div class="ds-tabs" id="settings-tabs">
+          <button class="on" data-settings-tab="general">General</button>
+          <button data-settings-tab="compliance">Compliance Center</button>
+        </div>
+
+        <div class="ds-panel on" id="settings-panel-general">
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Business defaults</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div><label class="field-label">Default country</label><select class="field" id="set-default-country"></select></div>
+              <div><label class="field-label">Validation mode</label><select class="field" id="set-validation-mode">
+                <option value="strict">Strict — block on missing required fields</option>
+                <option value="warn" selected>Warn — show warnings, allow saving</option>
+                <option value="off">Off — no compliance checks</option>
+              </select></div>
+            </div>
+          </div>
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Legal footer</div>
+            <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.6rem;">Appears on invoices and quotes — registration details, share capital, etc.</p>
+            <textarea class="field" id="set-legal-footer" rows="3" placeholder="e.g. Share capital €10,000 — RCS Paris 123 456 789"></textarea>
+          </div>
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Compliance preferences</div>
+            <label style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.7rem;font-size:0.85rem;"><input type="checkbox" id="set-pref-autovalidate" checked style="width:1.05rem;height:1.05rem;" /> Automatically validate compliance before sending an invoice</label>
+            <label style="display:flex;gap:0.6rem;align-items:center;font-size:0.85rem;"><input type="checkbox" id="set-pref-blockcritical" style="width:1.05rem;height:1.05rem;" /> Block invoice creation on critical compliance errors</label>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title">Electronic invoice settings <span class="badge badge-default">Future-ready</span></div>
+            <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.8rem;">These toggles prepare the architecture for country-mandated e-invoicing. No live electronic submission happens yet.</p>
+            <label style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.7rem;font-size:0.85rem;"><input type="checkbox" id="set-einvoice-enable" style="width:1.05rem;height:1.05rem;" /> Enable electronic invoice architecture</label>
+            <label style="display:flex;gap:0.6rem;align-items:center;font-size:0.85rem;"><input type="checkbox" id="set-ereporting-enable" style="width:1.05rem;height:1.05rem;" /> Enable e-reporting architecture</label>
+          </div>
+        </div>
+
+        <div class="ds-panel" id="settings-panel-compliance">
+          <div class="callout" style="margin-bottom:1.1rem;">
+            <span>🛡️</span>
+            <span>This center prepares IVOXA's architecture for country-specific e-invoicing and tax rules. It's future-ready scaffolding, not a certified legal/tax compliance solution — confirm requirements with a local advisor before relying on it for legal filings.</span>
+          </div>
+
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">🌍 Compliance dashboard</div>
+            <div class="table-wrap"><table class="data-table" id="cc-dashboard-table">
+              <thead><tr><th>Country</th><th>Status</th><th>Missing info</th><th>Warnings</th><th>Ready</th><th>Upcoming</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:16rem 1fr;gap:1.1rem;align-items:start;">
+            <div class="card card-pad">
+              <div class="card-title">Countries</div>
+              <div id="cc-country-list"></div>
+            </div>
+            <div id="cc-country-detail"></div>
+          </div>
+
+          <div class="card card-pad" style="margin-top:1.1rem;">
+            <div class="card-title">✨ AI Compliance Assistant</div>
+            <div id="cc-ai-tips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="tag-strip" id="tag-strip">
   <button data-goto="landing">Landing</button>
   <button data-goto="blog">Blog</button>
@@ -2302,6 +2384,7 @@
   <button data-goto="inventory">Inventory</button>
   <button data-goto="team">Team</button>
   <button data-goto="files">Files</button>
+  <button data-goto="settings">Settings</button>
   <button data-goto="invoices">Invoices</button>
   <button data-goto="ai">Assistant</button>
   <button class="replay-onboarding">✨ Onboarding</button>
@@ -2309,7 +2392,7 @@
 
 <script>
   (function () {
-    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "reports", "ai"];
+    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "settings", "reports", "ai"];
     appViews.forEach(function (id) {
       var sb = document.getElementById("sidebar-" + id);
       var tb = document.getElementById("topbar-" + id);
@@ -2586,6 +2669,8 @@
       if (id === "tasks") renderTasksInit();
       if (id === "team") renderTeamInit();
       if (id === "files") renderFilesInit();
+      if (id === "settings") renderSettingsInit();
+      if (id === "invoice-new") renderInvoiceComplianceBanner();
       if (id === "clients") renderClientsInit();
       if (id === "expenses") renderExpensesInit();
       if (id === "invoices") renderInvoicesInit();
@@ -3900,6 +3985,342 @@
     var cdLogActivityBtn = document.getElementById("cd-log-activity-btn");
     if (cdLogActivityBtn) cdLogActivityBtn.addEventListener("click", laOpen);
 
+    // ---- Global Compliance Center: plugin architecture ----
+    // Each country/region registers itself as an independent "compliance
+    // plugin" (field schema + required fields + a few validation rules).
+    // The core engine below (ccValidate/ccRenderDashboard/AI tips) only
+    // depends on this registry shape and never contains country-specific
+    // logic — new countries are added by registering a plugin, nothing
+    // else in the app has to change.
+    var CompliancePlugins = {};
+    var CompliancePluginOrder = [];
+    function registerCompliancePlugin(def) {
+      CompliancePlugins[def.code] = def;
+      CompliancePluginOrder.push(def.code);
+    }
+    var ComplianceData = {};
+    function ccGet(code, key, fallback) {
+      return (ComplianceData[code] && ComplianceData[code][key]) || fallback || "";
+    }
+    function ccSet(code, key, value) {
+      ComplianceData[code] = ComplianceData[code] || {};
+      ComplianceData[code][key] = value;
+    }
+
+    registerCompliancePlugin({
+      code: "GLOBAL", name: "Global", flag: "🌍", enabled: true, alwaysOn: true,
+      summary: "Shared EU/cross-border compliance services used by every country plugin.",
+      fields: [],
+      services: [
+        { key: "oss", label: "OSS — One-Stop Shop", desc: "Report cross-border B2C EU VAT through a single return." },
+        { key: "ioss", label: "IOSS — Import One-Stop Shop", desc: "Simplified VAT for low-value goods imported into the EU." },
+        { key: "reverseCharge", label: "Reverse charge", desc: "Shift VAT liability to the customer for eligible B2B transactions." },
+        { key: "intraCommunityVat", label: "Intra-community VAT", desc: "Zero-rated VAT handling for goods/services moving between EU states." },
+        { key: "euVatValidation", label: "EU VAT validation", desc: "Architecture for validating customer VAT numbers (VIES-style)." },
+        { key: "crossBorderInvoices", label: "Cross-border invoices", desc: "Multi-currency, multi-language invoice rules for cross-border sales." },
+      ],
+      architecture: [],
+      upcoming: "EU e-invoicing standardization (ViDA) — architecture will extend as rules finalize.",
+    });
+    registerCompliancePlugin({
+      code: "FR", name: "France", flag: "🇫🇷", enabled: true,
+      summary: "French invoice legal requirements, TVA and future electronic invoicing readiness.",
+      fields: [
+        { key: "legalForm", label: "Legal form", type: "text", placeholder: "SAS, SARL, EI…" },
+        { key: "siren", label: "SIREN", type: "text", placeholder: "9-digit business identifier" },
+        { key: "siret", label: "SIRET", type: "text", placeholder: "14-digit establishment identifier" },
+        { key: "tva", label: "TVA / VAT number", type: "text", placeholder: "FR XX XXXXXXXXX" },
+        { key: "invoiceNumberingRule", label: "Invoice numbering rule", type: "text", placeholder: "e.g. INV-{YYYY}-{SEQ}" },
+        { key: "paymentTerms", label: "Payment terms", type: "select", options: ["Net 30", "45 days end of month", "Net 60", "Net 15", "Due on receipt"] },
+        { key: "legalFooter", label: "Legal footer", type: "textarea", placeholder: "Share capital, RCS number, APE code…" },
+      ],
+      required: ["siren", "siret", "tva", "invoiceNumberingRule"],
+      architecture: [
+        { label: "Customer VAT validation architecture", note: "Future-ready" },
+        { label: "Electronic invoice architecture", note: "Future-ready" },
+        { label: "Future PDP integration architecture", note: "Coming soon" },
+        { label: "Future e-reporting architecture", note: "Coming soon" },
+      ],
+      upcoming: "French e-invoicing mandate — phased rollout; exact dates depend on the final government timeline.",
+    });
+    registerCompliancePlugin({
+      code: "IT", name: "Italy", flag: "🇮🇹", enabled: true,
+      summary: "Fattura Elettronica, SDI routing and Italian VAT readiness.",
+      fields: [
+        { key: "vatNumber", label: "Italian VAT (Partita IVA)", type: "text", placeholder: "IT XXXXXXXXXXX" },
+        { key: "codiceDestinatario", label: "Codice Destinatario", type: "text", placeholder: "7-character SDI recipient code" },
+        { key: "pec", label: "PEC email", type: "text", placeholder: "name@pec.it" },
+      ],
+      required: ["vatNumber", "codiceDestinatario"],
+      architecture: [
+        { label: "Fattura Elettronica architecture", note: "Future-ready" },
+        { label: "SDI integration architecture", note: "Future-ready" },
+        { label: "Future electronic submission", note: "Coming soon" },
+      ],
+      upcoming: "SDI rules are updated periodically — architecture will track official schema changes.",
+    });
+    registerCompliancePlugin({
+      code: "ES", name: "Spain", flag: "🇪🇸", enabled: true,
+      summary: "VeriFactu readiness and Spanish VAT.",
+      fields: [{ key: "vatNumber", label: "Spanish VAT (NIF)", type: "text", placeholder: "ES XXXXXXXXX" }],
+      required: ["vatNumber"],
+      architecture: [
+        { label: "VeriFactu architecture", note: "Future-ready" },
+        { label: "Future electronic reporting", note: "Coming soon" },
+      ],
+      upcoming: "VeriFactu obligations are phasing in by business size — architecture will adapt to final scope.",
+    });
+    registerCompliancePlugin({
+      code: "DE", name: "Germany", flag: "🇩🇪", enabled: true,
+      summary: "German VAT and e-invoice compliance readiness.",
+      fields: [{ key: "vatNumber", label: "German VAT (USt-IdNr)", type: "text", placeholder: "DE XXXXXXXXX" }],
+      required: ["vatNumber"],
+      architecture: [
+        { label: "Invoice compliance checks", note: "Future-ready" },
+        { label: "Future e-invoice support", note: "Coming soon" },
+      ],
+      upcoming: "Germany's B2B e-invoicing mandate is phasing in — architecture will track final requirements.",
+    });
+    [
+      { code: "BE", name: "Belgium", flag: "🇧🇪", vatLabel: "Belgian VAT (BTW/TVA)" },
+      { code: "NL", name: "Netherlands", flag: "🇳🇱", vatLabel: "Dutch VAT (BTW-nummer)" },
+      { code: "PT", name: "Portugal", flag: "🇵🇹", vatLabel: "Portuguese VAT (NIF)" },
+      { code: "GB", name: "United Kingdom", flag: "🇬🇧", vatLabel: "UK VAT number" },
+      { code: "PL", name: "Poland", flag: "🇵🇱", vatLabel: "Polish VAT (NIP)" },
+    ].forEach(function (c) {
+      registerCompliancePlugin({
+        code: c.code, name: c.name, flag: c.flag, enabled: false,
+        summary: "Minimal scaffold plugin — full module coming soon.",
+        fields: [{ key: "vatNumber", label: c.vatLabel, type: "text", placeholder: "" }],
+        required: ["vatNumber"],
+        architecture: [{ label: "Full compliance module", note: "Coming soon" }],
+        upcoming: "Detailed rules coming soon.",
+      });
+    });
+    registerCompliancePlugin({
+      code: "FUTURE", name: "Future Countries", flag: "➕", enabled: true, isFutureSlot: true,
+      summary: "The plugin architecture is how every country above was added — the core invoicing engine never changes.",
+      fields: [], architecture: [], upcoming: "",
+    });
+
+    function ccValidate(code) {
+      var p = CompliancePlugins[code];
+      if (!p || p.isFutureSlot) return null;
+      if (!p.enabled && !p.alwaysOn) return { status: "Disabled", missing: [], warnings: [] };
+      var missing = (p.required || []).filter(function (key) { return !ccGet(code, key); }).map(function (key) {
+        var f = p.fields.filter(function (x) { return x.key === key; })[0];
+        return f ? f.label : key;
+      });
+      var warnings = [];
+      if (code === "FR") {
+        var rule = ccGet(code, "invoiceNumberingRule");
+        if (rule && rule.indexOf("{SEQ}") === -1) warnings.push("Invoice numbering rule should include a sequential placeholder like {SEQ} to stay compliant.");
+        var siren = ccGet(code, "siren").replace(/\s/g, "");
+        if (siren && !/^\d{9}$/.test(siren)) warnings.push("SIREN should be exactly 9 digits.");
+        var siret = ccGet(code, "siret").replace(/\s/g, "");
+        if (siret && !/^\d{14}$/.test(siret)) warnings.push("SIRET should be exactly 14 digits.");
+      }
+      if (code === "IT") {
+        var cd = ccGet(code, "codiceDestinatario");
+        if (cd && cd.length !== 7 && cd.toUpperCase() !== "0000000") warnings.push("Codice Destinatario is usually 7 characters — double-check the SDI code.");
+      }
+      var status = missing.length ? "Incomplete" : "Ready";
+      return { status: status, missing: missing, warnings: warnings };
+    }
+
+    function ccRenderDashboard() {
+      var tbody = document.querySelector("#cc-dashboard-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = CompliancePluginOrder.filter(function (code) { return !CompliancePlugins[code].isFutureSlot; }).map(function (code) {
+        var p = CompliancePlugins[code];
+        var v = ccValidate(code);
+        var statusBadge = v.status === "Ready" ? "badge-success" : v.status === "Incomplete" ? "badge-warning" : "badge-default";
+        return (
+          '<tr><td style="font-weight:700;">' + p.flag + " " + p.name + "</td>" +
+          '<td><span class="badge ' + statusBadge + '">' + v.status + "</span></td>" +
+          "<td>" + (v.missing.length ? v.missing.length + " field(s)" : "—") + "</td>" +
+          "<td>" + (v.warnings.length || "—") + "</td>" +
+          "<td>" + (v.status === "Ready" ? "✅" : v.status === "Disabled" ? "—" : "⚠️") + "</td>" +
+          '<td style="font-size:0.78rem;color:hsl(var(--muted-fg));">' + (p.upcoming || "—") + "</td></tr>"
+        );
+      }).join("");
+    }
+    var ccActiveCountry = "GLOBAL";
+    function ccRenderCountryList() {
+      var wrap = document.getElementById("cc-country-list");
+      if (!wrap) return;
+      wrap.innerHTML = CompliancePluginOrder.map(function (code) {
+        var p = CompliancePlugins[code];
+        var offBadge = !p.isFutureSlot && !p.alwaysOn && !p.enabled ? ' <span class="badge badge-default">Off</span>' : "";
+        return '<button class="ai-cap' + (code === ccActiveCountry ? " current" : "") + '" data-cc-country="' + code + '">' + p.flag + " " + p.name + offBadge + "</button>";
+      }).join("");
+    }
+    function ccRenderDetail() {
+      var wrap = document.getElementById("cc-country-detail");
+      if (!wrap) return;
+      var p = CompliancePlugins[ccActiveCountry];
+      if (!p) return;
+      var html = '<div class="card card-pad">';
+      html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.9rem;">';
+      html += '<div><div style="font-size:1.1rem;font-weight:800;">' + p.flag + " " + p.name + '</div><p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-top:0.2rem;">' + p.summary + "</p></div>";
+      if (!p.alwaysOn && !p.isFutureSlot) {
+        html += '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;font-weight:600;white-space:nowrap;"><input type="checkbox" data-cc-toggle="' + p.code + '" ' + (p.enabled ? "checked" : "") + ' style="width:1.05rem;height:1.05rem;" /> Enabled</label>';
+      }
+      html += "</div>";
+      if (p.isFutureSlot) {
+        html += '<div class="empty-state"><div class="ic">➕</div><h3>Add a new country in minutes</h3><p>Every country above is a self-contained plugin: a field schema, a required-field list and a few validation rules. The core invoicing engine never changes — register a new plugin and it appears here, in the dashboard, and in the AI assistant automatically.</p></div>';
+      } else if (p.code === "GLOBAL") {
+        html += '<div class="ds-theme-grid" style="grid-template-columns:repeat(2,1fr);">' + p.services.map(function (s) {
+          var on = ccGet("GLOBAL", s.key, "on") !== "off";
+          return (
+            '<div class="card" style="padding:0.9rem;"><label style="display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.85rem;">' +
+            '<input type="checkbox" data-cc-service="' + s.key + '" ' + (on ? "checked" : "") + ' style="width:1.05rem;height:1.05rem;" />' + s.label + "</label>" +
+            '<p style="font-size:0.78rem;color:hsl(var(--muted-fg));margin-top:0.4rem;">' + s.desc + "</p></div>"
+          );
+        }).join("") + "</div>";
+      } else {
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">';
+        p.fields.forEach(function (f) {
+          if (f.type === "textarea") return;
+          var val = ccGet(p.code, f.key);
+          if (f.type === "select") {
+            html += '<div><label class="field-label">' + f.label + '</label><select class="field" data-cc-field="' + f.key + '">' + f.options.map(function (o) {
+              return "<option" + (o === val ? " selected" : "") + ">" + o + "</option>";
+            }).join("") + "</select></div>";
+          } else {
+            html += '<div><label class="field-label">' + f.label + '</label><input class="field" data-cc-field="' + f.key + '" value="' + val + '" placeholder="' + (f.placeholder || "") + '" /></div>';
+          }
+        });
+        html += "</div>";
+        var textareaField = p.fields.filter(function (f) { return f.type === "textarea"; })[0];
+        if (textareaField) {
+          html += '<div style="margin-bottom:1rem;"><label class="field-label">' + textareaField.label + '</label><textarea class="field" rows="3" data-cc-field="' + textareaField.key + '" placeholder="' + (textareaField.placeholder || "") + '">' + ccGet(p.code, textareaField.key) + "</textarea></div>";
+        }
+        if (p.architecture.length) {
+          html += '<div class="card-title" style="margin-bottom:0.5rem;">Future-ready architecture</div>';
+          html += p.architecture.map(function (a) {
+            return '<div class="widget-row"><span>' + a.label + '</span><span class="badge badge-default">' + a.note + "</span></div>";
+          }).join("");
+        }
+        html += '<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid hsl(var(--border));">';
+        html += '<button class="btn btn-outline btn-sm" data-cc-validate="' + p.code + '">🛡️ Run validation</button>';
+        html += '<div id="cc-validate-result" style="margin-top:0.8rem;"></div>';
+        html += "</div>";
+      }
+      html += "</div>";
+      wrap.innerHTML = html;
+    }
+    function ccShowValidateResult(code) {
+      var v = ccValidate(code);
+      var box = document.getElementById("cc-validate-result");
+      if (!box || !v) return;
+      if (v.status === "Ready" && !v.warnings.length) {
+        box.innerHTML = '<div class="empty-state" style="padding:1.5rem;"><div class="ic">✅</div><h3>All required fields are complete</h3><p>No missing information or warnings for ' + CompliancePlugins[code].name + ".</p></div>";
+        return;
+      }
+      var html = "";
+      if (v.missing.length) html += '<div class="callout" style="border-color:hsl(var(--danger)/0.4);background:hsl(var(--danger)/0.08);margin-bottom:0.6rem;"><span>⚠️</span><span>Missing required fields: ' + v.missing.join(", ") + "</span></div>";
+      v.warnings.forEach(function (w) { html += '<div class="callout" style="margin-bottom:0.6rem;"><span>💡</span><span>' + w + "</span></div>"; });
+      box.innerHTML = html;
+    }
+    function ccRenderAITips() {
+      var wrap = document.getElementById("cc-ai-tips");
+      if (!wrap) return;
+      var tips = [];
+      CompliancePluginOrder.forEach(function (code) {
+        var p = CompliancePlugins[code];
+        if (p.isFutureSlot || code === "GLOBAL") return;
+        var v = ccValidate(code);
+        if (v.status === "Incomplete") tips.push("⚠️ " + p.flag + " " + p.name + ": missing " + v.missing.join(", ") + ". Add these in Compliance Center → " + p.name + " to reach Ready status.");
+        v.warnings.forEach(function (w) { tips.push("💡 " + p.flag + " " + p.name + ": " + w); });
+      });
+      if (!tips.length) tips.push("✅ All enabled countries are fully configured. Nothing needs attention right now.");
+      tips.push("📌 Coming soon: automatic regulation-change notifications as country mandates finalize.");
+      wrap.innerHTML = tips.map(function (t) { return '<div class="widget-row"><span>' + t + "</span></div>"; }).join("");
+    }
+    document.body.addEventListener("click", function (e) {
+      var countryBtn = e.target.closest("[data-cc-country]");
+      if (countryBtn) { ccActiveCountry = countryBtn.getAttribute("data-cc-country"); ccRenderCountryList(); ccRenderDetail(); return; }
+      var validateBtn = e.target.closest("[data-cc-validate]");
+      if (validateBtn) ccShowValidateResult(validateBtn.getAttribute("data-cc-validate"));
+    });
+    document.body.addEventListener("change", function (e) {
+      var toggle = e.target.closest("[data-cc-toggle]");
+      if (toggle) {
+        var code = toggle.getAttribute("data-cc-toggle");
+        CompliancePlugins[code].enabled = toggle.checked;
+        ccRenderCountryList(); ccRenderDashboard(); ccRenderDetail(); ccRenderAITips(); renderDashComplianceSummary();
+        showToast((toggle.checked ? "Enabled " : "Disabled ") + CompliancePlugins[code].name + " compliance module");
+        return;
+      }
+      var field = e.target.closest("[data-cc-field]");
+      if (field) { ccSet(ccActiveCountry, field.getAttribute("data-cc-field"), field.value); ccRenderDashboard(); ccRenderAITips(); renderDashComplianceSummary(); return; }
+      var service = e.target.closest("[data-cc-service]");
+      if (service) ccSet("GLOBAL", service.getAttribute("data-cc-service"), service.checked ? "on" : "off");
+    });
+    var settingsTabsEl = document.getElementById("settings-tabs");
+    if (settingsTabsEl) settingsTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-settings-tab]");
+      if (!btn) return;
+      var tab = btn.getAttribute("data-settings-tab");
+      settingsTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+      document.querySelectorAll("#view-settings .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "settings-panel-" + tab); });
+    });
+    function populateDefaultCountrySelect() {
+      var sel = document.getElementById("set-default-country");
+      if (!sel) return;
+      sel.innerHTML = CompliancePluginOrder.filter(function (c) { return c !== "GLOBAL" && c !== "FUTURE"; }).map(function (c) {
+        var p = CompliancePlugins[c];
+        return '<option value="' + c + '">' + p.flag + " " + p.name + "</option>";
+      }).join("");
+      sel.value = "FR";
+    }
+    var settingsInitDone = false;
+    function renderSettingsInit() {
+      if (settingsInitDone) return;
+      settingsInitDone = true;
+      populateDefaultCountrySelect();
+      ccRenderDashboard();
+      ccRenderCountryList();
+      ccRenderDetail();
+      ccRenderAITips();
+    }
+
+    // ---- Compliance validation engine wired into the New Invoice flow ----
+    function renderInvoiceComplianceBanner() {
+      var sel = document.getElementById("inv-compliance-country");
+      var box = document.getElementById("inv-compliance-banner");
+      if (!sel || !box || !sel.value) return;
+      var code = sel.value;
+      var p = CompliancePlugins[code];
+      var v = ccValidate(code);
+      if (!v || v.status === "Disabled") {
+        box.innerHTML = '<div class="callout"><span>ℹ️</span><span>' + p.name + ' compliance module is currently disabled — enable it in <a href="#" class="link-strong" data-goto="settings">Settings → Compliance Center</a> to see checks here.</span></div>';
+        return;
+      }
+      if (v.status === "Ready" && !v.warnings.length) {
+        box.innerHTML = '<div class="callout" style="border-color:hsl(var(--success)/0.4);background:hsl(var(--success)/0.08);"><span>✅</span><span>' + p.name + ' compliance looks good — all required fields are set.</span></div>';
+        return;
+      }
+      var parts = [];
+      if (v.missing.length) parts.push("Missing: " + v.missing.join(", "));
+      v.warnings.forEach(function (w) { parts.push(w); });
+      box.innerHTML = '<div class="callout" style="border-color:hsl(var(--warning)/0.4);background:hsl(var(--warning)/0.08);"><span>⚠️</span><span>' + parts.join(" · ") + ' — review in <a href="#" class="link-strong" data-goto="settings">Settings → Compliance Center</a>.</span></div>';
+    }
+    function populateInvoiceComplianceCountrySelect() {
+      var sel = document.getElementById("inv-compliance-country");
+      if (!sel) return;
+      sel.innerHTML = CompliancePluginOrder.filter(function (c) { return c !== "GLOBAL" && c !== "FUTURE"; }).map(function (c) {
+        var p = CompliancePlugins[c];
+        return '<option value="' + c + '">' + p.flag + " " + p.name + "</option>";
+      }).join("");
+      sel.value = "FR";
+      renderInvoiceComplianceBanner();
+    }
+    populateInvoiceComplianceCountrySelect();
+    var invComplianceCountryEl = document.getElementById("inv-compliance-country");
+    if (invComplianceCountryEl) invComplianceCountryEl.addEventListener("change", renderInvoiceComplianceBanner);
+
     // ---- Payment Tracking (Invoices) ----
     var INVOICES = [
       { id: "INV-0006", client: "Atlas Studio", issue: "2026-07-02", due: "2026-07-16", status: "Paid", total: 1240.00, payments: [{ date: "2026-07-03", amount: 1240.00, method: "Card" }] },
@@ -4203,6 +4624,28 @@
       wrap.innerHTML = items.map(function (i) { return '<div class="widget-row"><span>' + i.ic + " " + i.text + "</span></div>"; }).join("");
     }
     renderAIInsights("dash-ai-insights-list", 3);
+
+    function renderDashComplianceSummary() {
+      var wrap = document.getElementById("dash-compliance-summary");
+      if (!wrap) return;
+      var codes = CompliancePluginOrder.filter(function (c) { return !CompliancePlugins[c].isFutureSlot && c !== "GLOBAL"; });
+      var readyCount = 0, enabledCount = 0, attentionCodes = [];
+      codes.forEach(function (c) {
+        var v = ccValidate(c);
+        if (v.status === "Disabled") return;
+        enabledCount++;
+        if (v.status === "Ready" && !v.warnings.length) readyCount++;
+        else attentionCodes.push(CompliancePlugins[c].flag + " " + CompliancePlugins[c].name);
+      });
+      var html = '<div class="widget-row"><span>' + readyCount + " of " + enabledCount + " enabled countries fully compliant</span></div>";
+      if (attentionCodes.length) {
+        html += '<div class="widget-row"><span style="color:hsl(var(--warning));">⚠️ Needs attention: ' + attentionCodes.join(", ") + "</span></div>";
+      } else if (enabledCount) {
+        html += '<div class="widget-empty" style="margin-top:0.3rem;">All enabled countries are ready.</div>';
+      }
+      wrap.innerHTML = html;
+    }
+    renderDashComplianceSummary();
 
     // ---- Reports & Analytics ----
     var YEARLY_TREND = [{ y: "2023", v: 64000 }, { y: "2024", v: 89000 }, { y: "2025", v: 121000 }, { y: "2026", v: 96000 }];
@@ -4708,6 +5151,7 @@
       { id: "inventory", label: "Inventory alerts" },
       { id: "notifications", label: "Notifications" },
       { id: "ai-insights", label: "AI Insights" },
+      { id: "compliance", label: "Compliance" },
     ];
     var dashWidgetVisibility = {};
     DASH_WIDGET_DEFS.forEach(function (w) { dashWidgetVisibility[w.id] = true; });
@@ -4769,6 +5213,10 @@
       TASKS.forEach(function (t) { idx.push({ group: "Tasks", icon: "✅", label: t.title, sub: t.priority, goto: "tasks" }); });
       FILES.forEach(function (f) { idx.push({ group: "Files", icon: "🗂️", label: f.name, sub: f.folder, goto: "files" }); });
       TEAM_MEMBERS.forEach(function (m) { idx.push({ group: "Team", icon: "🧑", label: m.name, sub: m.role, goto: "team" }); });
+      CompliancePluginOrder.filter(function (c) { return !CompliancePlugins[c].isFutureSlot; }).forEach(function (c) {
+        var p = CompliancePlugins[c];
+        idx.push({ group: "Compliance", icon: p.flag, label: p.name + " compliance", sub: p.enabled || p.alwaysOn ? "Enabled" : "Disabled", goto: "settings" });
+      });
       var pages = [
         { group: "Pages", icon: "▦", label: "Dashboard", goto: "dashboard" },
         { group: "Pages", icon: "💼", label: "CRM", goto: "crm" },
@@ -4781,7 +5229,8 @@
         { group: "Pages", icon: "✨", label: "AI Assistant", goto: "ai" },
         { group: "Pages", icon: "🧑‍🤝‍🧑", label: "Team & Roles", goto: "team" },
         { group: "Pages", icon: "🗂️", label: "Files", goto: "files" },
-        { group: "Pages", icon: "⚙️", label: "Settings (via Team)", goto: "team" },
+        { group: "Pages", icon: "⚙️", label: "Settings", goto: "settings" },
+        { group: "Pages", icon: "🛡️", label: "Compliance Center", goto: "settings" },
       ];
       return idx.concat(pages);
     }
