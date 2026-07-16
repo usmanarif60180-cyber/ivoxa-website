@@ -346,6 +346,10 @@
   .field-group { margin-bottom: 0.9rem; }
   .foot-link { text-align: center; font-size: 0.85rem; color: hsl(var(--muted-fg)); margin-top: 1.2rem; }
   .foot-link a { color: hsl(var(--primary)); font-weight: 600; }
+  .auth-status { min-height: 1.25rem; margin: 0.8rem 0 0; font-size: 0.8rem; line-height: 1.35; }
+  .auth-status.error { color: hsl(var(--danger)); }
+  .auth-status.success { color: hsl(var(--success)); }
+  .auth-card button:disabled { cursor: wait; opacity: 0.65; }
 
   /* ---- app shell ---- */
   .app-shell { display: flex; min-height: calc(100vh - 32px); }
@@ -1099,11 +1103,15 @@
     <div class="auth-center">
       <div class="card auth-card">
         <h2>Welcome back</h2><p class="sub">Sign in to your IVOXA workspace.</p>
-        <button class="btn btn-outline" style="width:100%;margin-top:1.25rem;">🔵 Continue with Google</button>
+        <button class="btn btn-outline" id="login-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; Continue with Google</button>
+        <button class="btn btn-outline" id="login-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; Continue with Apple</button>
         <div class="divider">OR</div>
-        <div class="field-group"><label class="field-label">Email</label><input class="field" type="email" value="ayesha@novadigital.com" /></div>
-        <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;">Password <a href="#" style="color:hsl(var(--primary));font-weight:600;">Forgot password?</a></label><input class="field" type="password" value="••••••••" /></div>
-        <button class="btn btn-primary" style="width:100%;">Sign in</button>
+        <form id="login-form">
+          <div class="field-group"><label class="field-label" for="login-email">Email</label><input class="field" id="login-email" type="email" autocomplete="email" required /></div>
+          <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;" for="login-password">Password <a href="#" id="forgot-password" style="color:hsl(var(--primary));font-weight:600;">Forgot password?</a></label><input class="field" id="login-password" type="password" autocomplete="current-password" required /></div>
+          <button class="btn btn-primary" id="login-submit" type="submit" style="width:100%;">Sign in</button>
+          <p id="login-status" class="auth-status" role="status" aria-live="polite"></p>
+        </form>
         <p class="foot-link">Don't have an account? <a href="#" data-goto="register">Create one</a></p>
       </div>
     </div>
@@ -1117,12 +1125,17 @@
     <div class="auth-center">
       <div class="card auth-card">
         <h2>Create your workspace</h2><p class="sub">Start free — no credit card required.</p>
-        <button class="btn btn-outline" style="width:100%;margin-top:1.25rem;">🔵 Continue with Google</button>
+        <button class="btn btn-outline" id="register-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; Continue with Google</button>
+        <button class="btn btn-outline" id="register-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; Continue with Apple</button>
         <div class="divider">OR</div>
-        <div class="field-group"><label class="field-label">Full name</label><input class="field" placeholder="Your full name" /></div>
-        <div class="field-group"><label class="field-label">Email</label><input class="field" type="email" /></div>
-        <div class="field-group"><label class="field-label">Password</label><input class="field" type="password" /></div>
-        <button class="btn btn-primary" style="width:100%;" data-goto="dashboard">Create account</button>
+        <form id="register-form">
+          <div class="field-group"><label class="field-label" for="register-name">Full name</label><input class="field" id="register-name" autocomplete="name" placeholder="Your full name" required /></div>
+          <div class="field-group"><label class="field-label" for="register-email">Email</label><input class="field" id="register-email" type="email" autocomplete="email" required /></div>
+          <div class="field-group"><label class="field-label" for="register-password">Password</label><input class="field" id="register-password" type="password" autocomplete="new-password" minlength="6" required /></div>
+          <div class="field-group"><label class="field-label" for="register-confirm">Confirm password</label><input class="field" id="register-confirm" type="password" autocomplete="new-password" minlength="6" required /></div>
+          <button class="btn btn-primary" id="register-submit" type="submit" style="width:100%;">Create account</button>
+          <p id="register-status" class="auth-status" role="status" aria-live="polite"></p>
+        </form>
         <p class="foot-link">Already have an account? <a href="#" data-goto="login">Sign in</a></p>
       </div>
     </div>
@@ -1418,7 +1431,8 @@
       '<div data-notif-list></div>' +
       "</div></div>" +
       '<button class="btn btn-ghost btn-icon theme-toggle" aria-label="Toggle theme">◐</button>' +
-      '<div class="avatar">ME</div></div>'
+      '<button class="btn btn-ghost btn-sm" data-auth-logout>Sign out</button>' +
+      '<div class="avatar" data-auth-avatar>U</div></div>'
     );
   }
   document.write(''); // no-op to keep this a plain script block
@@ -2806,6 +2820,7 @@
         });
       }
     }
+    window.ivoxaShowView = showView;
 
     // ---- sound architecture: synthesized Web Audio tones, opt-in, off by default ----
     var soundEnabled = false;
@@ -4889,4 +4904,142 @@
       });
     }
   })();
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYpiXuZ_Bn0Fu3BmQtZP7YxcYUZoHZJLI",
+    authDomain: "ivoxa-819d5.firebaseapp.com",
+    projectId: "ivoxa-819d5",
+    storageBucket: "ivoxa-819d5.firebasestorage.app",
+    messagingSenderId: "645227493068",
+    appId: "1:645227493068:web:a9ceda31c723e3b8323469",
+    measurementId: "G-10HR6VWLLW"
+  };
+  const auth = getAuth(initializeApp(firebaseConfig));
+  const protectedViews = new Set(["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "reports", "ai"]);
+  let currentUser = null;
+
+  function showAuthStatus(id, message, kind = "error") {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.className = "auth-status" + (message ? " " + kind : "");
+  }
+  function friendlyAuthError(error) {
+    const messages = {
+      "auth/email-already-in-use": "An account already exists with this email.",
+      "auth/invalid-email": "Please enter a valid email address.",
+      "auth/weak-password": "Password must be at least 6 characters.",
+      "auth/invalid-credential": "Email or password is incorrect.",
+      "auth/user-not-found": "No account was found with this email.",
+      "auth/wrong-password": "Email or password is incorrect.",
+      "auth/too-many-requests": "Too many attempts. Please wait a little and try again.",
+      "auth/network-request-failed": "Network problem. Check your connection and try again.",
+      "auth/popup-closed-by-user": "The sign-in window was closed before completion.",
+      "auth/popup-blocked": "Your browser blocked the sign-in window. Allow popups and try again.",
+      "auth/account-exists-with-different-credential": "This email already uses a different sign-in method.",
+      "auth/operation-not-allowed": "This sign-in method still needs provider configuration."
+    };
+    return messages[error && error.code] || "Something went wrong. Please try again.";
+  }
+  function initials(user) {
+    const source = (user && user.displayName) || (user && user.email) || "User";
+    return source.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
+  }
+
+  document.getElementById("register-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const name = document.getElementById("register-name").value.trim();
+    const email = document.getElementById("register-email").value.trim();
+    const password = document.getElementById("register-password").value;
+    const confirm = document.getElementById("register-confirm").value;
+    const button = document.getElementById("register-submit");
+    showAuthStatus("register-status", "", "");
+    if (password !== confirm) { showAuthStatus("register-status", "Passwords do not match."); return; }
+    button.disabled = true;
+    button.textContent = "Creating account…";
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(credential.user, { displayName: name });
+      currentUser = credential.user;
+      document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(credential.user); });
+      showAuthStatus("register-status", "Account created successfully.", "success");
+      window.ivoxaShowView("dashboard");
+    } catch (error) { showAuthStatus("register-status", friendlyAuthError(error)); }
+    finally { button.disabled = false; button.textContent = "Create account"; }
+  });
+
+  document.getElementById("login-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const button = document.getElementById("login-submit");
+    showAuthStatus("login-status", "", "");
+    button.disabled = true;
+    button.textContent = "Signing in…";
+    try { await signInWithEmailAndPassword(auth, email, password); window.ivoxaShowView("dashboard"); }
+    catch (error) { showAuthStatus("login-status", friendlyAuthError(error)); }
+    finally { button.disabled = false; button.textContent = "Sign in"; }
+  });
+
+  document.getElementById("forgot-password").addEventListener("click", async event => {
+    event.preventDefault();
+    const email = document.getElementById("login-email").value.trim();
+    if (!email) { showAuthStatus("login-status", "Enter your email first, then select Forgot password."); document.getElementById("login-email").focus(); return; }
+    try { await sendPasswordResetEmail(auth, email); showAuthStatus("login-status", "Password reset email sent. Check your inbox.", "success"); }
+    catch (error) { showAuthStatus("login-status", friendlyAuthError(error)); }
+  });
+
+  async function socialSignIn(provider, statusId, buttons) {
+    showAuthStatus(statusId, "", "");
+    buttons.forEach(button => { button.disabled = true; });
+    try {
+      await signInWithPopup(auth, provider);
+      window.ivoxaShowView("dashboard");
+    } catch (error) {
+      showAuthStatus(statusId, friendlyAuthError(error));
+    } finally {
+      buttons.forEach(button => { button.disabled = false; });
+    }
+  }
+
+  const googleProvider = new GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: "select_account" });
+  const appleProvider = new OAuthProvider("apple.com");
+  appleProvider.addScope("email");
+  appleProvider.addScope("name");
+  const googleButtons = [document.getElementById("login-google"), document.getElementById("register-google")];
+  const appleButtons = [document.getElementById("login-apple"), document.getElementById("register-apple")];
+  googleButtons.forEach((button, index) => button.addEventListener("click", () => socialSignIn(googleProvider, index === 0 ? "login-status" : "register-status", googleButtons)));
+  appleButtons.forEach((button, index) => button.addEventListener("click", () => socialSignIn(appleProvider, index === 0 ? "login-status" : "register-status", appleButtons)));
+
+  document.addEventListener("click", async event => {
+    const logout = event.target.closest("[data-auth-logout]");
+    if (!logout) return;
+    event.preventDefault();
+    await signOut(auth);
+    window.ivoxaShowView("login");
+  });
+  document.addEventListener("click", event => {
+    const link = event.target.closest("[data-goto]");
+    if (!link) return;
+    const destination = link.getAttribute("data-goto");
+    if (protectedViews.has(destination) && !currentUser) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showAuthStatus("login-status", "Please sign in to open your workspace.");
+      window.ivoxaShowView("login");
+    }
+  }, true);
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(user); });
+    document.querySelectorAll("[data-auth-logout]").forEach(el => { el.hidden = !user; });
+    const activeView = document.querySelector(".view.active");
+    if (!user && activeView && protectedViews.has(activeView.id.replace("view-", ""))) window.ivoxaShowView("login");
+  });
 </script>
