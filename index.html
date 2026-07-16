@@ -705,6 +705,58 @@
   /* ---- lightweight toast (NEW) ---- */
   .wt-toast { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 400; display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem; font-size: 0.85rem; font-weight: 600; animation: reveal-up 0.25s cubic-bezier(0.16,1,0.3,1); }
   .wt-toast .ic { color: hsl(142 71% 35%); }
+
+  /* ---- Phase 2B: command palette, quick actions FAB, inventory, files, team/roles, calendar drag-drop (NEW) ---- */
+  .app-nav { overflow-y: auto; }
+
+  .cmdk-overlay { position: fixed; inset: 0; z-index: 320; display: none; align-items: flex-start; justify-content: center; padding: 4rem 1rem 1rem; }
+  .cmdk-overlay.open { display: flex; }
+  .cmdk-panel { position: relative; z-index: 1; width: 100%; max-width: 34rem; border-radius: var(--radius-xl); overflow: hidden; animation: reveal-up 0.25s cubic-bezier(0.16,1,0.3,1); max-height: 70vh; display: flex; flex-direction: column; }
+  .cmdk-input-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid hsl(var(--border) / 0.6); flex-shrink: 0; }
+  .cmdk-input-row input { flex: 1; border: none; background: transparent; font-size: 0.95rem; outline: none; color: hsl(var(--fg)); }
+  .cmdk-list { overflow-y: auto; padding: 0.5rem; }
+  .cmdk-group-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: hsl(var(--muted-fg)); padding: 0.5rem 0.6rem 0.25rem; }
+  .cmdk-item { display: flex; align-items: center; gap: 0.65rem; width: 100%; border: none; background: none; border-radius: var(--radius-sm); padding: 0.55rem 0.6rem; text-align: left; font-size: 0.85rem; }
+  .cmdk-item:hover, .cmdk-item.active { background: hsl(var(--muted)); }
+  .cmdk-item .ic { width: 1.9rem; height: 1.9rem; border-radius: var(--radius-sm); background: hsl(var(--primary) / 0.1); color: hsl(var(--primary)); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+  .cmdk-item .meta { flex: 1; min-width: 0; }
+  .cmdk-item .meta .n { font-weight: 600; }
+  .cmdk-item .meta .t { font-size: 0.72rem; color: hsl(var(--muted-fg)); }
+  .cmdk-empty { padding: 2rem 1rem; text-align: center; font-size: 0.85rem; color: hsl(var(--muted-fg)); }
+  .cmdk-foot { display: flex; gap: 0.9rem; padding: 0.6rem 1.1rem; border-top: 1px solid hsl(var(--border) / 0.6); font-size: 0.7rem; color: hsl(var(--muted-fg)); flex-shrink: 0; }
+  .cmdk-foot kbd { border: 1px solid hsl(var(--border)); border-radius: 4px; padding: 0.05rem 0.3rem; margin-right: 0.25rem; }
+
+  .gfab-wrap { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 150; display: none; }
+  .gfab-wrap.show { display: block; }
+  .gfab-btn { width: 3.2rem; height: 3.2rem; border-radius: 999px; background: hsl(var(--primary)); color: hsl(var(--primary-fg)); border: none; font-size: 1.4rem; box-shadow: 0 12px 28px -8px hsl(var(--primary) / 0.5); transition: transform 0.15s; }
+  .gfab-btn:hover { transform: scale(1.06); }
+  .gfab-btn.open { transform: rotate(45deg); }
+  .gfab-menu { position: absolute; right: 0; bottom: calc(100% + 0.75rem); width: 15.5rem; display: none; padding: 0.4rem; }
+  .gfab-menu.open { display: block; animation: reveal-up 0.2s ease; }
+  .gfab-item { display: flex; align-items: center; gap: 0.65rem; width: 100%; border: none; background: none; border-radius: var(--radius-sm); padding: 0.55rem 0.6rem; text-align: left; font-size: 0.85rem; font-weight: 600; }
+  .gfab-item:hover { background: hsl(var(--muted)); }
+
+  .barcode-strip { display: flex; align-items: flex-end; gap: 1px; height: 1.3rem; width: 4.2rem; }
+  .barcode-strip span { display: block; background: hsl(var(--fg)); width: 2px; height: 100%; }
+
+  .stock-badge-ok { color: hsl(var(--success)); font-weight: 700; font-size: 0.75rem; white-space: nowrap; }
+  .stock-badge-low { color: hsl(var(--warning)); font-weight: 700; font-size: 0.75rem; white-space: nowrap; }
+  .stock-badge-out { color: hsl(var(--danger)); font-weight: 700; font-size: 0.75rem; white-space: nowrap; }
+
+  .cal-chip { cursor: grab; }
+  .cal-chip:active { cursor: grabbing; }
+  .cal-cell.drag-over { outline: 2px dashed hsl(var(--primary)); outline-offset: -2px; background: hsl(var(--primary) / 0.08); }
+  .agenda-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid hsl(var(--border)); }
+  .agenda-row:last-child { border-bottom: none; }
+  .agenda-dot { width: 0.55rem; height: 0.55rem; border-radius: 999px; flex-shrink: 0; }
+  .agenda-time { width: 4rem; flex-shrink: 0; font-size: 0.75rem; color: hsl(var(--muted-fg)); }
+
+  .file-thumb { height: 5.5rem; border-radius: var(--radius-sm); background: hsl(var(--muted)); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; overflow: hidden; margin-bottom: 0.5rem; }
+  .file-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .unread-dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: hsl(var(--primary)); flex-shrink: 0; margin-top: 0.3rem; }
+  .notif-item.read { opacity: 0.55; }
+  .notif-item.read .unread-dot { visibility: hidden; }
 </style>
 
 <div class="proto-banner">Interactive prototype of <b>IVOXA</b> — click the nav to explore. Visual preview only, not wired to a live backend.</div>
@@ -719,6 +771,87 @@
 <div class="cw-overlay" id="cw-overlay">
   <div class="ob-backdrop" id="cw-backdrop"></div>
   <div class="card glass-panel cw-panel" id="cw-panel"></div>
+</div>
+
+<!-- ============ ADD PRODUCT MODAL ============ -->
+<div class="cw-overlay" id="ap-overlay">
+  <div class="ob-backdrop" id="ap-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="ap-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add product / service</h3><button class="ob-skip" id="ap-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Name</label><input class="field" id="ap-name" placeholder="Wireless Mouse" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Type</label><select class="field" id="ap-type"><option value="product">Product</option><option value="service">Service</option></select></div>
+          <div><label class="field-label">Category</label><input class="field" id="ap-category" placeholder="Accessories" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;" id="ap-stock-fields">
+          <div><label class="field-label">SKU</label><input class="field" id="ap-sku" placeholder="WM-100" /></div>
+          <div><label class="field-label">Barcode</label><input class="field" id="ap-barcode" placeholder="8901234567890" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;" id="ap-qty-fields">
+          <div><label class="field-label">Stock qty</label><input class="field" type="number" min="0" id="ap-stock" value="0" /></div>
+          <div><label class="field-label">Min stock</label><input class="field" type="number" min="0" id="ap-minstock" value="5" /></div>
+          <div><label class="field-label">Unit</label><select class="field" id="ap-unit"><option>pcs</option><option>box</option><option>kg</option><option>hr</option><option>set</option></select></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Purchase price</label><input class="field" type="number" min="0" id="ap-purchase" value="0" /></div>
+          <div><label class="field-label">Selling price</label><input class="field" type="number" min="0" id="ap-selling" value="0" /></div>
+        </div>
+        <div id="ap-supplier-field"><label class="field-label">Supplier</label><select class="field" id="ap-supplier"></select></div>
+        <div><label class="field-label">Product image</label><input class="field" type="file" accept="image/*" id="ap-image" style="padding:0.4rem 0.6rem;" /><div id="ap-image-preview" style="margin-top:0.5rem;"></div></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="ap-submit">Add product</button></div>
+  </div>
+</div>
+
+<!-- ============ ADD TASK MODAL ============ -->
+<div class="cw-overlay" id="at-overlay">
+  <div class="ob-backdrop" id="at-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="at-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add task</h3><button class="ob-skip" id="at-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Title</label><input class="field" id="at-title" placeholder="Follow up with…" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Priority</label><select class="field" id="at-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div><label class="field-label">Due date</label><input class="field" type="date" id="at-due" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Label</label><input class="field" id="at-label" placeholder="Sales, Finance…" /></div>
+          <div><label class="field-label">Repeats</label><select class="field" id="at-recurring"><option value="0">One-time</option><option value="1">Recurring</option></select></div>
+        </div>
+        <div><label class="field-label">Notes</label><textarea class="field" id="at-notes" rows="2" placeholder="Optional notes…"></textarea></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="at-submit">Add task</button></div>
+  </div>
+</div>
+
+<!-- ============ GLOBAL SEARCH (command palette) ============ -->
+<div class="cmdk-overlay" id="cmdk-overlay">
+  <div class="ob-backdrop" id="cmdk-backdrop"></div>
+  <div class="card glass-panel cmdk-panel" id="cmdk-panel">
+    <div class="cmdk-input-row"><span>🔍</span><input id="cmdk-input" placeholder="Search invoices, clients, products, tasks…" autocomplete="off" /><kbd style="border:1px solid hsl(var(--border));border-radius:4px;padding:0.05rem 0.3rem;font-size:0.65rem;">Esc</kbd></div>
+    <div class="cmdk-list" id="cmdk-list"></div>
+    <div class="cmdk-foot"><span><kbd>↑↓</kbd>Navigate</span><span><kbd>↵</kbd>Open</span><span><kbd>Esc</kbd>Close</span></div>
+  </div>
+</div>
+
+<!-- ============ GLOBAL QUICK ACTIONS FAB ============ -->
+<div class="gfab-wrap" id="gfab-wrap">
+  <div class="card glass-panel gfab-menu" id="gfab-menu">
+    <button class="gfab-item" data-goto="invoice-new"><span>📄+</span>Create invoice</button>
+    <button class="gfab-item" data-goto="quotes"><span>🧾+</span>Create quote</button>
+    <button class="gfab-item" data-goto="clients"><span>👥+</span>Add customer</button>
+    <button class="gfab-item" data-goto="expenses"><span>💳+</span>Add expense</button>
+    <button class="gfab-item" data-goto="inventory"><span>📦+</span>Add product</button>
+    <button class="gfab-item" data-goto="tasks"><span>✅+</span>Create task</button>
+    <button class="gfab-item" data-goto="files"><span>🗂️+</span>Upload file</button>
+    <button class="gfab-item" data-goto="ai"><span>✨</span>Open AI Assistant</button>
+  </div>
+  <button class="btn gfab-btn" id="gfab-btn" aria-label="Quick actions" aria-haspopup="menu">+</button>
 </div>
 
 <!-- ============ LANDING ============ -->
@@ -986,7 +1119,7 @@
         <h2>Create your workspace</h2><p class="sub">Start free — no credit card required.</p>
         <button class="btn btn-outline" style="width:100%;margin-top:1.25rem;">🔵 Continue with Google</button>
         <div class="divider">OR</div>
-        <div class="field-group"><label class="field-label">Full name</label><input class="field" value="Ayesha Usman" /></div>
+        <div class="field-group"><label class="field-label">Full name</label><input class="field" placeholder="Your full name" /></div>
         <div class="field-group"><label class="field-label">Email</label><input class="field" type="email" /></div>
         <div class="field-group"><label class="field-label">Password</label><input class="field" type="password" /></div>
         <button class="btn btn-primary" style="width:100%;" data-goto="dashboard">Create account</button>
@@ -1246,10 +1379,12 @@
     { id: "invoices", label: "Invoices", ic: "📄" },
     { id: "quotes", label: "Quotes", ic: "🧾" },
     { id: "design-studio", label: "Design Studio", ic: "🎨" },
-    { id: "products", label: "Products", ic: "📦" },
+    { id: "inventory", label: "Inventory", ic: "📦" },
     { id: "expenses", label: "Expenses", ic: "💳" },
     { id: "tasks", label: "Tasks", ic: "✅" },
     { id: "calendar", label: "Calendar", ic: "📅" },
+    { id: "team", label: "Team", ic: "🧑‍🤝‍🧑" },
+    { id: "files", label: "Files", ic: "🗂️" },
     { id: "reports", label: "Reports", ic: "📊" },
     { id: "ai", label: "AI Assistant", ic: "✨" },
   ];
@@ -1276,14 +1411,14 @@
       '<div style="position:relative;">' +
       '<button class="btn btn-ghost btn-icon notif-btn" data-notif-trigger aria-label="Notifications">🔔<span class="notif-dot"></span></button>' +
       '<div class="notif-panel card glass-panel" data-notif-panel>' +
-      '<div style="padding:0.5rem 0.6rem;font-size:0.8rem;font-weight:700;">Notifications</div>' +
-      '<div class="notif-item"><span>✅</span><div><div class="nt">Invoice paid</div><div class="nm">INV-0006 — $1,240.00</div></div></div>' +
-      '<div class="notif-item"><span>🧾</span><div><div class="nt">Quote accepted</div><div class="nm">QUO-0010 — Atlas Studio</div></div></div>' +
-      '<div class="notif-item"><span>👤</span><div><div class="nt">New customer</div><div class="nm">Daniyal Raza was added</div></div></div>' +
-      '<div class="notif-item"><span>✅</span><div><div class="nt">Task due soon</div><div class="nm">Follow up with Nova Digital</div></div></div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.6rem;">' +
+      '<span style="font-size:0.8rem;font-weight:700;">Notifications</span>' +
+      '<button class="btn btn-ghost btn-sm" style="height:auto;padding:0.1rem 0.4rem;font-size:0.7rem;" data-notif-mark-all>Mark all read</button>' +
+      "</div>" +
+      '<div data-notif-list></div>' +
       "</div></div>" +
       '<button class="btn btn-ghost btn-icon theme-toggle" aria-label="Toggle theme">◐</button>' +
-      '<div class="avatar">AU</div></div>'
+      '<div class="avatar">ME</div></div>'
     );
   }
   document.write(''); // no-op to keep this a plain script block
@@ -1295,9 +1430,20 @@
     <div class="app-main">
       <div id="topbar-dashboard"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Dashboard</h1><p><span data-ws-dashboard-name></span>A snapshot of your business, in real time.</p></div><span class="hv-live" style="border:1px solid hsl(var(--border));border-radius:999px;padding:0.35rem 0.7rem;background:hsl(var(--surface));"><span class="dot"></span>Live</span></div>
+        <div class="page-head"><div><h1>Dashboard</h1><p><span data-ws-dashboard-name></span>A snapshot of your business, in real time.</p></div>
+          <div style="display:flex;align-items:center;gap:0.6rem;">
+            <span class="hv-live" style="border:1px solid hsl(var(--border));border-radius:999px;padding:0.35rem 0.7rem;background:hsl(var(--surface));"><span class="dot"></span>Live</span>
+            <div style="position:relative;">
+              <button class="btn btn-outline btn-sm" id="dash-customize-btn">⚙ Customize</button>
+              <div class="card glass-panel" id="dash-customize-panel" style="display:none;position:absolute;right:0;top:calc(100% + 0.5rem);z-index:40;width:14.5rem;padding:0.6rem;"></div>
+            </div>
+          </div>
+        </div>
         <div class="stat-grid">
           <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum" data-count="12840" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
+          <div class="card stat-card"><div><div class="lbl">Profit</div><div class="val tnum" data-count="8720" data-prefix="$">$0.00</div></div><div class="ic">📈</div></div>
+          <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum" data-count="4120" data-prefix="$">$0.00</div></div><div class="ic">💳</div></div>
+          <div class="card stat-card"><div><div class="lbl">Cash flow</div><div class="val tnum" data-count="6300" data-prefix="$">$0.00</div></div><div class="ic">💧</div></div>
           <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum" data-count="3480" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
           <div class="card stat-card"><div><div class="lbl">Invoices</div><div class="val tnum" data-count="24">0</div></div><div class="ic">📄</div></div>
           <div class="card stat-card"><div><div class="lbl">Quotes</div><div class="val tnum" data-count="9">0</div></div><div class="ic">🧾</div></div>
@@ -1308,7 +1454,7 @@
           <a href="#" class="qa-item" data-goto="invoice-new"><span>📄+</span>New invoice</a>
           <a href="#" class="qa-item" data-goto="quotes"><span>🧾+</span>New quote</a>
           <a href="#" class="qa-item" data-goto="clients"><span>👥+</span>Add client</a>
-          <a href="#" class="qa-item" data-goto="products"><span>📦+</span>Add product</a>
+          <a href="#" class="qa-item" data-goto="inventory"><span>📦+</span>Add product</a>
         </div>
 
         <div class="dash-grid">
@@ -1335,29 +1481,40 @@
           </div>
         </div>
 
-        <div class="widget-grid">
-          <div class="card card-pad">
-            <div class="card-title">💼 Sales pipeline</div>
+        <div class="widget-grid" id="dash-widget-grid">
+          <div class="card card-pad" data-widget-id="pipeline">
+            <div class="card-title">💼 CRM pipeline</div>
             <div class="pipeline-bars">
               <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">New</span><div class="bar-track"><div class="bar-fill" style="width:90%;"></div></div><span class="stage-count">3</span></div>
               <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Qualified</span><div class="bar-track"><div class="bar-fill" style="width:45%;"></div></div><span class="stage-count">2</span></div>
               <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Proposal</span><div class="bar-track"><div class="bar-fill" style="width:30%;"></div></div><span class="stage-count">1</span></div>
             </div>
           </div>
-          <div class="card card-pad">
+          <div class="card card-pad" data-widget-id="tasks">
             <div class="card-title">✅ Tasks due</div>
             <div class="widget-row"><span>Follow up with Nova Digital</span><span class="badge badge-danger">Overdue</span></div>
             <div class="widget-row"><span>Send Q3 proposal to Atlas</span><span class="badge badge-default">Jul 18</span></div>
           </div>
-          <div class="card card-pad">
-            <div class="card-title">📅 Upcoming</div>
+          <div class="card card-pad" data-widget-id="calendar">
+            <div class="card-title">📅 Calendar</div>
             <div class="widget-row"><span>INV-0005 due</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">Jun 28</span></div>
             <div class="widget-row"><span>QUO-0011 expires</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">Aug 04</span></div>
           </div>
-          <div class="card card-pad">
+          <div class="card card-pad" data-widget-id="inventory">
             <div class="card-title">📦 Inventory alerts</div>
             <div class="widget-row"><span>Logistics tracking module</span><span style="color:hsl(var(--danger));font-size:0.75rem;font-weight:600;">⚠ 4 left</span></div>
             <div class="widget-empty" style="margin-top:0.3rem;">Other stock levels look healthy.</div>
+          </div>
+          <div class="card card-pad" data-widget-id="notifications">
+            <div class="card-title">🔔 Notifications</div>
+            <div class="widget-row"><span>✅ Invoice paid — INV-0006</span></div>
+            <div class="widget-row"><span>⚠️ Low stock — Logistics tracking module</span></div>
+            <div class="widget-row"><span>👤 New team activity — Team Member 1</span></div>
+          </div>
+          <div class="card card-pad" data-widget-id="ai-insights">
+            <div class="card-title">✨ AI Insights</div>
+            <div id="dash-ai-insights-list"></div>
+            <div class="widget-row"><span><a href="#" class="link-strong" data-goto="ai">Ask the AI Assistant →</a></span></div>
           </div>
         </div>
       </div>
@@ -1371,21 +1528,16 @@
     <div class="app-main">
       <div id="topbar-invoices"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Invoices</h1><p>Create, send and track every invoice in one place.</p></div><a href="#" class="btn btn-primary" data-goto="invoice-new">+ New invoice</a></div>
+        <div class="page-head"><div><h1>Invoices</h1><p>Create, send and track every invoice in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="invoices" data-export-name="invoices.csv">⬇ Export CSV</button><a href="#" class="btn btn-primary" data-goto="invoice-new">+ New invoice</a></div></div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.1rem;" id="inv-pay-stat-grid"></div>
         <div class="toolbar">
-          <div class="search-wrap"><span class="ic">🔍</span><input class="field" placeholder="Search by number or client…" /></div>
-          <select class="field" style="width:12rem;"><option>All statuses</option><option>Draft</option><option>Sent</option><option>Viewed</option><option>Partially paid</option><option>Paid</option><option>Overdue</option><option>Cancelled</option><option>Refunded</option></select>
+          <div class="search-wrap"><span class="ic">🔍</span><input class="field" id="invoices-search" placeholder="Search by number or client…" /></div>
+          <select class="field" style="width:12rem;" id="invoices-status-filter"><option value="all">All statuses</option><option>Draft</option><option>Sent</option><option>Viewed</option><option>Partially paid</option><option>Paid</option><option>Overdue</option><option>Cancelled</option><option>Refunded</option></select>
         </div>
         <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Due date</th><th>Status</th><th style="text-align:right;">Total</th></tr></thead>
-            <tbody>
-              <tr><td class="link-strong">INV-0006</td><td>Atlas Studio</td><td>Jul 02, 2026</td><td>Jul 16, 2026</td><td><span class="badge badge-success">Paid</span></td><td class="tnum" style="text-align:right;font-weight:700;">$1,240.00</td></tr>
-              <tr><td class="link-strong">INV-0005</td><td>Nova Digital Agency</td><td>Jun 28, 2026</td><td>Jul 12, 2026</td><td><span class="badge badge-danger">Overdue</span></td><td class="tnum" style="text-align:right;font-weight:700;">$3,480.00</td></tr>
-              <tr><td class="link-strong">INV-0004</td><td>Harborline Logistics</td><td>Jun 15, 2026</td><td>Jun 29, 2026</td><td><span class="badge badge-warning">Partially paid</span></td><td class="tnum" style="text-align:right;font-weight:700;">$860.00</td></tr>
-              <tr><td class="link-strong">INV-0003</td><td>Kessler &amp; Voss LLP</td><td>Jun 02, 2026</td><td>Jun 16, 2026</td><td><span class="badge badge-info">Viewed</span></td><td class="tnum" style="text-align:right;font-weight:700;">$2,150.00</td></tr>
-              <tr><td class="link-strong">INV-0002</td><td>Atlas Studio</td><td>May 20, 2026</td><td>Jun 03, 2026</td><td><span class="badge badge-default">Draft</span></td><td class="tnum" style="text-align:right;font-weight:700;">$640.00</td></tr>
-            </tbody>
+          <table class="data-table" id="invoices-table">
+            <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Due date</th><th>Status</th><th style="text-align:right;">Total</th><th></th></tr></thead>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -1399,7 +1551,7 @@
     <div class="app-main">
       <div id="topbar-invoice-new"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>New invoice</h1><p>Fill in the details below to create an invoice.</p></div></div>
+        <div class="page-head"><div><h1>New invoice</h1><p>Fill in the details below to create an invoice.</p></div><button class="btn btn-outline btn-sm" id="invoice-print-btn">🖨 Print / Save PDF</button></div>
 
         <div class="card card-pad" style="margin-bottom:1.1rem;">
           <div class="card-title">Invoice details</div>
@@ -1509,17 +1661,12 @@
     <div class="app-main">
       <div id="topbar-clients"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Clients</h1><p>Manage every customer relationship in one place.</p></div><button class="btn btn-primary">+ Add client</button></div>
-        <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" placeholder="Search clients…" /></div></div>
+        <div class="page-head"><div><h1>Clients</h1><p>Manage every customer relationship in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="clients" data-export-name="clients.csv">⬇ Export CSV</button><button class="btn btn-primary" id="client-add-btn">+ Add client</button></div></div>
+        <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" id="clients-search" placeholder="Search clients…" /></div></div>
         <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Phone</th></tr></thead>
-            <tbody>
-              <tr><td class="link-strong">Ayesha Farooq</td><td>Nova Digital Agency</td><td>ayesha@novadigital.com</td><td>+92 300 1234567</td></tr>
-              <tr><td class="link-strong">Marcus Hail</td><td>Harborline Logistics</td><td>marcus@harborline.co</td><td>+1 415 555 0142</td></tr>
-              <tr><td class="link-strong">Elena Voss</td><td>Kessler &amp; Voss LLP</td><td>elena@kesslervoss.com</td><td>+44 20 7946 0958</td></tr>
-              <tr><td class="link-strong">Daniyal Raza</td><td>Atlas Studio</td><td>daniyal@atlasstudio.io</td><td>+92 321 9876543</td></tr>
-            </tbody>
+          <table class="data-table" id="clients-table">
+            <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Phone</th><th>Status</th><th>Tags</th></tr></thead>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -1527,15 +1674,135 @@
   </div>
 </section>
 
+<section class="view" id="view-client-detail">
+  <div class="app-shell">
+    <div id="sidebar-client-detail"></div>
+    <div class="app-main">
+      <div id="topbar-client-detail"></div>
+      <div class="app-content">
+        <div class="page-head">
+          <div>
+            <a href="#" data-goto="clients" style="font-size:0.8rem;color:hsl(var(--muted-fg));font-weight:600;">← Back to clients</a>
+            <h1 style="margin-top:0.4rem;" id="cd-name">Client name</h1>
+            <p id="cd-meta">Company · Status</p>
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-outline btn-sm" id="cd-log-activity-btn">📝 Log activity</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);" id="cd-stat-grid"></div>
+
+        <div class="dash-grid" style="margin-top:1.1rem;grid-template-columns:1fr 1.2fr;">
+          <div>
+            <div class="card card-pad">
+              <div class="card-title">✨ AI customer summary</div>
+              <p id="cd-ai-summary" style="font-size:0.85rem;line-height:1.6;color:hsl(var(--fg));"></p>
+            </div>
+            <div class="card card-pad" style="margin-top:1.1rem;">
+              <div class="card-title">🏷️ Tags</div>
+              <div class="chip-row" id="cd-tags" style="margin:0;"></div>
+            </div>
+            <div class="card card-pad" style="margin-top:1.1rem;">
+              <div class="card-title">👤 Contact persons</div>
+              <div id="cd-contacts"></div>
+            </div>
+            <div class="card card-pad" style="margin-top:1.1rem;">
+              <div class="card-title">📎 Attachments</div>
+              <div id="cd-attachments"></div>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title">🕒 Customer timeline</div>
+            <div id="cd-timeline"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADD CLIENT MODAL ============ -->
+<div class="cw-overlay" id="ac-overlay">
+  <div class="ob-backdrop" id="ac-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="ac-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add client</h3><button class="ob-skip" id="ac-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Name</label><input class="field" id="ac-name" placeholder="Contact name" /></div>
+        <div><label class="field-label">Company</label><input class="field" id="ac-company" placeholder="Acme Inc." /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Email</label><input class="field" type="email" id="ac-email" placeholder="name@company.com" /></div>
+          <div><label class="field-label">Phone</label><input class="field" id="ac-phone" placeholder="+1 415 555 0100" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Status</label><select class="field" id="ac-status"><option>Lead</option><option selected>Active</option><option>At risk</option><option>Churned</option></select></div>
+          <div><label class="field-label">Tags</label><input class="field" id="ac-tags" placeholder="VIP, Retainer" /></div>
+        </div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="ac-submit">Add client</button></div>
+  </div>
+</div>
+
+<!-- ============ PAYMENT HISTORY MODAL ============ -->
+<div class="cw-overlay" id="ph-overlay">
+  <div class="ob-backdrop" id="ph-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="ph-panel" style="max-width:37rem;"></div>
+</div>
+
+<!-- ============ ADD EXPENSE MODAL ============ -->
+<div class="cw-overlay" id="ae-overlay">
+  <div class="ob-backdrop" id="ae-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="ae-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add expense</h3><button class="ob-skip" id="ae-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Title</label><input class="field" id="ae-title" placeholder="Client onboarding lunch" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Category</label><select class="field" id="ae-category"></select></div>
+          <div><label class="field-label">Date</label><input class="field" type="date" id="ae-date" /></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Vendor</label><input class="field" id="ae-vendor" placeholder="Optional" /></div>
+          <div><label class="field-label">Amount</label><input class="field" type="number" min="0" step="0.01" id="ae-amount" value="0" /></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="ae-recurring" style="width:1.05rem;height:1.05rem;" /><label for="ae-recurring" style="font-size:0.85rem;font-weight:600;">Recurring expense</label></div>
+        <div>
+          <label class="field-label">Receipt <span class="badge badge-default" style="margin-left:0.3rem;">OCR scanning — Coming soon</span></label>
+          <input class="field" type="file" accept="image/*,.pdf" id="ae-receipt" style="padding:0.4rem 0.6rem;" />
+          <div id="ae-receipt-preview" style="margin-top:0.5rem;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="ae-submit">Add expense</button></div>
+  </div>
+</div>
+
+<!-- ============ LOG ACTIVITY MODAL ============ -->
+<div class="cw-overlay" id="la-overlay">
+  <div class="ob-backdrop" id="la-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="la-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Log activity</h3><button class="ob-skip" id="la-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Type</label><select class="field" id="la-type"><option value="note">Note</option><option value="call">Call</option><option value="meeting">Meeting</option><option value="email">Email</option></select></div>
+        <div><label class="field-label">Details</label><textarea class="field" id="la-text" rows="3" placeholder="What happened?"></textarea></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="la-submit">Add to timeline</button></div>
+  </div>
+</div>
+
 <section class="view" id="view-quotes">
   <div class="app-shell">
     <div id="sidebar-quotes"></div>
     <div class="app-main">
       <div id="topbar-quotes"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><button class="btn btn-primary">+ New quote</button></div>
+        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><button class="btn btn-primary">+ New quote</button></div></div>
         <div class="table-wrap">
-          <table class="data-table">
+          <table class="data-table" id="quotes-table">
             <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th></tr></thead>
             <tbody>
               <tr><td class="link-strong">QUO-0011</td><td>Nova Digital Agency</td><td>Jul 05, 2026</td><td>Aug 04, 2026</td><td><span class="badge badge-info">Sent</span></td><td class="tnum" style="text-align:right;font-weight:700;">$4,200.00</td></tr>
@@ -1549,22 +1816,81 @@
   </div>
 </section>
 
-<section class="view" id="view-products">
+<section class="view" id="view-inventory">
   <div class="app-shell">
-    <div id="sidebar-products"></div>
+    <div id="sidebar-inventory"></div>
     <div class="app-main">
-      <div id="topbar-products"></div>
+      <div id="topbar-inventory"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Products &amp; Services</h1><p>Reusable items you can add to invoices and quotes.</p></div><button class="btn btn-primary">+ Add product</button></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Name</th><th>Type</th><th>Category</th><th>SKU</th><th style="text-align:right;">Price</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:700;">Brand identity package</td><td><span class="badge badge-info">service</span></td><td>Design</td><td>BRD-001</td><td class="tnum" style="text-align:right;font-weight:700;">$1,800.00</td></tr>
-              <tr><td style="font-weight:700;">Monthly retainer — 20h</td><td><span class="badge badge-info">service</span></td><td>Consulting</td><td>RET-020</td><td class="tnum" style="text-align:right;font-weight:700;">$2,400.00</td></tr>
-              <tr><td style="font-weight:700;">Logistics tracking module</td><td><span class="badge badge-default">product</span></td><td>Software</td><td>LTM-114</td><td class="tnum" style="text-align:right;font-weight:700;">$540.00</td></tr>
-            </tbody>
-          </table>
+        <div class="page-head">
+          <div><h1>Inventory</h1><p>Products, services, stock levels and suppliers — all in one place.</p></div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" id="inv-import-btn">⬆ Import CSV</button>
+            <input type="file" accept=".csv,text/csv" id="inv-import-input" style="display:none;" />
+            <button class="btn btn-outline btn-sm" id="inv-export-btn">⬇ Export CSV</button>
+            <button class="btn btn-primary" id="inv-add-btn">+ Add product</button>
+          </div>
+        </div>
+
+        <div class="ds-tabs" id="inv-tabs">
+          <button class="on" data-inv-tab="dashboard">Dashboard</button>
+          <button data-inv-tab="products">Products</button>
+          <button data-inv-tab="services">Services</button>
+          <button data-inv-tab="categories">Categories</button>
+          <button data-inv-tab="suppliers">Suppliers</button>
+          <button data-inv-tab="alerts">Stock Alerts</button>
+        </div>
+
+        <div class="ds-panel on" id="inv-panel-dashboard">
+          <div class="stat-grid" id="inv-stat-grid"></div>
+          <div class="dash-grid">
+            <div class="card card-pad">
+              <div class="card-title">⚠️ Stock alerts</div>
+              <div id="inv-dash-alerts"></div>
+            </div>
+            <div class="card card-pad">
+              <div class="card-title">🕒 Inventory history</div>
+              <div id="inv-dash-history"></div>
+            </div>
+          </div>
+          <div class="card card-pad" style="margin-top:1.1rem;">
+            <div class="card-title">🏭 Future warehouse architecture</div>
+            <p style="font-size:0.85rem;color:hsl(var(--muted-fg));">Multi-location stock, transfers and bin tracking are on the roadmap — every item already carries supplier and unit metadata so warehouses can slot in later without a data model rebuild. <span class="badge badge-default">Coming soon</span></p>
+          </div>
+        </div>
+
+        <div class="ds-panel" id="inv-panel-products">
+          <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" id="inv-products-search" placeholder="Search products by name, SKU or category…" /></div></div>
+          <div class="table-wrap"><table class="data-table" id="inv-products-table">
+            <thead><tr><th>Item</th><th>SKU</th><th>Barcode</th><th>Category</th><th>Unit</th><th style="text-align:right;">Stock</th><th style="text-align:right;">Purchase</th><th style="text-align:right;">Selling</th><th>Supplier</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="inv-panel-services">
+          <div class="table-wrap"><table class="data-table" id="inv-services-table">
+            <thead><tr><th>Service</th><th>SKU</th><th>Category</th><th>Unit</th><th style="text-align:right;">Price</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="inv-panel-categories">
+          <div class="table-wrap"><table class="data-table" id="inv-categories-table">
+            <thead><tr><th>Category</th><th style="text-align:right;">Items</th><th style="text-align:right;">Stock value</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="inv-panel-suppliers">
+          <div class="page-head" style="margin-bottom:0.8rem;"><div></div><button class="btn btn-outline btn-sm" id="inv-export-suppliers-btn">⬇ Export CSV</button></div>
+          <div class="table-wrap"><table class="data-table" id="inv-suppliers-table">
+            <thead><tr><th>Supplier</th><th>Contact</th><th>Email</th><th>Phone</th><th style="text-align:right;">Products supplied</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="inv-panel-alerts">
+          <div id="inv-alerts-list"></div>
         </div>
       </div>
     </div>
@@ -1577,15 +1903,42 @@
     <div class="app-main">
       <div id="topbar-expenses"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Expenses</h1><p>Track business spending by category.</p></div><button class="btn btn-primary">+ Add expense</button></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Vendor</th><th style="text-align:right;">Amount</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:700;">Design software licenses</td><td><span class="badge">Software</span></td><td>Jul 01, 2026</td><td>Figma Inc.</td><td class="tnum" style="text-align:right;font-weight:700;">$45.00</td></tr>
-              <tr><td style="font-weight:700;">Client onboarding lunch</td><td><span class="badge">Travel</span></td><td>Jun 27, 2026</td><td>—</td><td class="tnum" style="text-align:right;font-weight:700;">$62.50</td></tr>
-            </tbody>
-          </table>
+        <div class="page-head">
+          <div><h1>Expenses</h1><p>Track business spending, approvals and recurring costs.</p></div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" data-export-csv="expenses" data-export-name="expenses.csv">⬇ CSV</button>
+            <button class="btn btn-outline btn-sm" data-export-excel="expenses" data-export-name-xls="expenses.xls">⬇ Excel</button>
+            <button class="btn btn-primary" id="expense-add-btn">+ Add expense</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);" id="exp-stat-grid"></div>
+
+        <div class="ds-tabs" id="exp-tabs" style="margin-top:1.1rem;">
+          <button class="on" data-exp-tab="monthly">Monthly</button>
+          <button data-exp-tab="annual">Annual</button>
+        </div>
+
+        <div class="ds-panel on" id="exp-panel-monthly">
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Spending by category</div>
+            <div class="pipeline-bars" id="exp-category-bars"></div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="expenses-table">
+              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Vendor</th><th style="text-align:right;">Amount</th><th>Status</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ds-panel" id="exp-panel-annual">
+          <div class="table-wrap">
+            <table class="data-table" id="exp-annual-table">
+              <thead><tr><th>Category</th><th style="text-align:right;">Year to date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -1598,12 +1951,40 @@
     <div class="app-main">
       <div id="topbar-reports"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Reports</h1><p>Understand where your business stands.</p></div></div>
+        <div class="page-head">
+          <div><h1>Reports</h1><p>Understand where your business stands.</p></div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" id="rpt-export-csv-btn">⬇ CSV</button>
+            <button class="btn btn-outline btn-sm" id="rpt-export-excel-btn">⬇ Excel</button>
+            <button class="btn btn-outline btn-sm" id="rpt-print-btn">🖨 Export PDF</button>
+          </div>
+        </div>
         <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
           <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum">$12,840.00</div></div><div class="ic">📈</div></div>
           <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum">$3,480.00</div></div><div class="ic">$</div></div>
           <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum">$1,860.00</div></div><div class="ic">📉</div></div>
           <div class="card stat-card"><div><div class="lbl">Net</div><div class="val tnum">$10,980.00</div></div><div class="ic">💼</div></div>
+        </div>
+
+        <div class="dash-grid" style="margin-top:1.1rem;">
+          <div class="card chart-wrap">
+            <div class="card-title">Monthly trend</div>
+            <svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">
+              <defs><linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="hsl(234 75% 58%)" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="hsl(234 75% 58%)" stop-opacity="0" />
+              </linearGradient></defs>
+              <g stroke="hsl(220 18% 87%)" stroke-width="1"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="70" x2="600" y2="70"/><line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="170" x2="600" y2="170"/></g>
+              <path d="M0,170 L100,150 L200,155 L300,110 L400,95 L500,60 L600,30 L600,220 L0,220 Z" fill="url(#rg2)" />
+              <path d="M0,170 L100,150 L200,155 L300,110 L400,95 L500,60 L600,30" fill="none" stroke="hsl(234 75% 58%)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="600" cy="30" r="4" fill="hsl(234 75% 58%)" />
+            </svg>
+            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:hsl(var(--muted-fg));padding:0 0.2rem;"><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span></div>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title">Yearly trend</div>
+            <div id="rpt-year-bars" style="display:flex;align-items:flex-end;gap:0.75rem;height:180px;padding:0 0.25rem;"></div>
+          </div>
         </div>
 
         <div class="card card-pad" style="margin-top:1.1rem;">
@@ -1625,6 +2006,22 @@
             </div>
           </div>
         </div>
+
+        <div class="dash-grid" style="margin-top:1.1rem;grid-template-columns:1fr 1fr;">
+          <div class="card card-pad">
+            <div class="card-title">🏆 Top customers</div>
+            <table class="data-table" id="rpt-top-customers-table"><tbody></tbody></table>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title">📦 Best selling products</div>
+            <table class="data-table" id="rpt-best-products-table"><tbody></tbody></table>
+          </div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:1.1rem;">
+          <div class="card-title">✨ AI Business Insights</div>
+          <div id="rpt-ai-insights"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1636,7 +2033,7 @@
     <div class="app-main">
       <div id="topbar-ai"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>AI Assistant</h1><p>Your intelligent business assistant — more capabilities rolling out soon.</p></div></div>
+        <div class="page-head"><div><h1>AI Business Assistant</h1><p>Ask about invoices, cash flow, inventory, tasks and performance — in plain language.</p></div></div>
         <div class="ai-layout">
           <div class="card card-pad">
             <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:hsl(var(--muted-fg));margin-bottom:0.5rem;">Capabilities</div>
@@ -1646,6 +2043,7 @@
             <button class="ai-cap">AI Reminder Writer <span class="badge badge-default">Soon</span></button>
             <button class="ai-cap">AI Tax Assistant <span class="badge badge-default">Soon</span></button>
             <button class="ai-cap">AI Contract Generator <span class="badge badge-default">Soon</span></button>
+            <button class="ai-cap">AI Inventory Analyst <span class="badge badge-default">Soon</span></button>
           </div>
           <div class="card">
             <div class="ai-chat">
@@ -1654,6 +2052,7 @@
               <div class="msg user">How much profit this month?</div>
               <div class="msg bot">This month: $12,840.00 revenue − $4,120.00 expenses = $8,720.00 profit.</div>
             </div>
+            <div class="chip-row" id="ai-suggest-chips" style="margin:0 1.25rem 0.75rem;"></div>
             <div class="ai-input-row"><input class="field" placeholder="Message AI Business Assistant…" /><button class="btn btn-primary btn-icon">➤</button></div>
           </div>
         </div>
@@ -1700,13 +2099,13 @@
         <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary">+ Add lead</button></div>
         <div class="kanban">
           <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>3</span></div>
-            <div class="card kcard"><div class="kt">Farah Iqbal</div><div class="ks">Crestline Retail</div><span class="badge badge-primary">$1,600</span></div>
-            <div class="card kcard"><div class="kt">Tom Reyes</div><div class="ks">Reyes &amp; Co</div><span class="badge badge-primary">$2,600</span></div>
-            <div class="card kcard"><div class="kt">Priya Nair</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$900</span></div>
+            <div class="card kcard"><div class="kt">Lead 1</div><div class="ks">Crestline Retail</div><span class="badge badge-primary">$1,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 2</div><div class="ks">Reyes &amp; Co</div><span class="badge badge-primary">$2,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 3</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$900</span></div>
           </div>
           <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>2</span></div>
-            <div class="card kcard"><div class="kt">Omar Siddiqui</div><div class="ks">Referral</div><span class="badge badge-primary">$1,500</span></div>
-            <div class="card kcard"><div class="kt">Lena Brooks</div><div class="ks">Brooks Studio</div><span class="badge badge-primary">$1,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 4</div><div class="ks">Referral</div><span class="badge badge-primary">$1,500</span></div>
+            <div class="card kcard"><div class="kt">Lead 5</div><div class="ks">Brooks Studio</div><span class="badge badge-primary">$1,600</span></div>
           </div>
           <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>2</span></div>
             <div class="card kcard"><div class="kt">Harborline Logistics</div><div class="ks">Referral</div><span class="badge badge-primary">$3,100</span></div>
@@ -1734,7 +2133,7 @@
       <div class="app-content">
         <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary">+ Add company</button></div>
         <div class="table-wrap">
-          <table class="data-table">
+          <table class="data-table" id="companies-table">
             <thead><tr><th>Name</th><th>Industry</th><th>Size</th><th>Website</th></tr></thead>
             <tbody>
               <tr><td class="link-strong">Nova Digital Agency</td><td>Marketing</td><td>11-50</td><td>novadigital.com</td></tr>
@@ -1755,21 +2154,23 @@
     <div class="app-main">
       <div id="topbar-tasks"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Tasks</h1><p>Follow-ups and to-dos across your business.</p></div><button class="btn btn-primary">+ Add task</button></div>
-        <div class="kanban">
-          <div class="kanban-col"><div class="kanban-col-head"><h4>To do</h4><span>3</span></div>
-            <div class="card kcard"><div class="kt">◯ Follow up with Nova Digital</div><span class="badge badge-danger">high</span> <span class="badge badge-default">Jul 15</span></div>
-            <div class="card kcard"><div class="kt">◯ Send Q3 proposal to Atlas</div><span class="badge badge-warning">medium</span> <span class="badge badge-default">Jul 18</span></div>
-            <div class="card kcard"><div class="kt">◯ Renew software subscriptions</div><span class="badge badge-default">low</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>In progress</h4><span>2</span></div>
-            <div class="card kcard"><div class="kt">◯ Draft Harborline contract</div><span class="badge badge-warning">medium</span> <span class="badge badge-default">Jul 20</span></div>
-            <div class="card kcard"><div class="kt">◯ Update brand kit assets</div><span class="badge badge-default">low</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Done</h4><span>2</span></div>
-            <div class="card kcard" style="opacity:0.6;"><div class="kt" style="text-decoration:line-through;">✓ Reconcile June expenses</div><span class="badge badge-default">low</span></div>
-            <div class="card kcard" style="opacity:0.6;"><div class="kt" style="text-decoration:line-through;">✓ Onboard Kessler &amp; Voss</div><span class="badge badge-warning">medium</span></div>
-          </div>
+        <div class="page-head"><div><h1>Tasks</h1><p>Follow-ups and to-dos across your business.</p></div><button class="btn btn-primary" id="task-add-btn">+ Add task</button></div>
+
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.1rem;" id="task-stat-grid"></div>
+
+        <div class="toolbar">
+          <div class="search-wrap"><span class="ic">🔍</span><input class="field" id="task-search" placeholder="Search tasks…" /></div>
+          <select class="field" id="task-priority-filter" style="width:10rem;"><option value="all">All priorities</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+          <select class="field" id="task-label-filter" style="width:10rem;"><option value="all">All labels</option></select>
+          <div class="ds-tabs" style="margin:0;" id="task-view-tabs"><button class="on" data-task-view="kanban">Kanban</button><button data-task-view="list">List</button></div>
+        </div>
+
+        <div id="task-kanban-wrap"><div class="kanban" id="task-kanban"></div></div>
+        <div id="task-list-wrap" style="display:none;">
+          <div class="table-wrap"><table class="data-table" id="task-list-table">
+            <thead><tr><th></th><th>Task</th><th>Priority</th><th>Due</th><th>Labels</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
         </div>
       </div>
     </div>
@@ -1782,17 +2183,103 @@
     <div class="app-main">
       <div id="topbar-calendar"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Calendar</h1><p>Invoices due, quote expiries, tasks and deadlines in one view.</p></div><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span></div>
-        <div class="card card-pad">
-          <div class="cal-grid" id="cal-grid"></div>
-          <div class="cal-legend">
-            <span><span class="cal-dot" style="background:hsl(var(--danger));"></span>Invoice due</span>
-            <span><span class="cal-dot" style="background:hsl(var(--warning));"></span>Quote expiry</span>
-            <span><span class="cal-dot" style="background:hsl(var(--primary));"></span>Task</span>
-            <span><span class="cal-dot" style="background:hsl(var(--info));"></span>Recurring expense</span>
-            <span><span class="cal-dot" style="background:hsl(var(--secondary));"></span>Tax date</span>
+        <div class="page-head"><div><h1>Business Calendar</h1><p>Invoices due, quote expiries, meetings, tasks, reminders, payments, expenses and tax deadlines — one view.</p></div><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span></div>
+
+        <div class="ds-tabs" id="cal-tabs">
+          <button class="on" data-cal-tab="month">Month</button>
+          <button data-cal-tab="week">Week</button>
+          <button data-cal-tab="day">Day</button>
+        </div>
+
+        <div class="ds-panel on" id="cal-panel-month">
+          <div class="card card-pad">
+            <div class="cal-grid" id="cal-grid"></div>
+            <div class="cal-legend" id="cal-legend"></div>
+            <p style="margin-top:0.8rem;font-size:0.72rem;color:hsl(var(--muted-fg));">Drag an event dot onto another day to reschedule it.</p>
           </div>
         </div>
+
+        <div class="ds-panel" id="cal-panel-week">
+          <div class="card card-pad">
+            <div class="card-title" id="cal-week-label">This week</div>
+            <div id="cal-week-list"></div>
+          </div>
+        </div>
+
+        <div class="ds-panel" id="cal-panel-day">
+          <div class="card card-pad">
+            <div class="card-title" id="cal-day-label">Today</div>
+            <div id="cal-day-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="view-team">
+  <div class="app-shell">
+    <div id="sidebar-team"></div>
+    <div class="app-main">
+      <div id="topbar-team"></div>
+      <div class="app-content">
+        <div class="page-head"><div><h1>Team</h1><p>Manage members, invitations and role-based permissions.</p></div></div>
+
+        <div class="ds-tabs" id="team-tabs">
+          <button class="on" data-team-tab="members">Members</button>
+          <button data-team-tab="invites">Pending Invitations</button>
+          <button data-team-tab="roles">Roles &amp; Permissions</button>
+        </div>
+
+        <div class="ds-panel on" id="team-panel-members">
+          <div class="table-wrap"><table class="data-table" id="team-members-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="team-panel-invites">
+          <div class="card card-pad" style="margin-bottom:1rem;">
+            <div class="card-title">Invite a team member</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:0.7rem;align-items:end;">
+              <div><label class="field-label">Email address</label><input class="field" id="invite-email" placeholder="name@company.com" type="email" /></div>
+              <div><label class="field-label">Role</label><select class="field" id="invite-role"></select></div>
+              <button class="btn btn-primary" id="invite-send-btn">Send invite</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table class="data-table" id="team-invites-table">
+            <thead><tr><th>Email</th><th>Role</th><th>Sent</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+
+        <div class="ds-panel" id="team-panel-roles">
+          <p style="font-size:0.85rem;color:hsl(var(--muted-fg));margin-bottom:0.9rem;">Toggle module access per role. Owner always has full access.</p>
+          <div class="table-wrap"><table class="data-table" id="perm-matrix-table"></table></div>
+          <div class="card card-pad" style="margin-top:1.1rem;">
+            <div class="card-title">🧭 Future-ready architecture</div>
+            <p style="font-size:0.85rem;color:hsl(var(--muted-fg));margin-bottom:0.8rem;">This permission model is scoped per module, so new modules slot into the same matrix as they ship.</p>
+            <div class="feature-grid" id="roadmap-grid" style="padding:0;grid-template-columns:repeat(4,1fr);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="view-files">
+  <div class="app-shell">
+    <div id="sidebar-files"></div>
+    <div class="app-main">
+      <div id="topbar-files"></div>
+      <div class="app-content">
+        <div class="page-head">
+          <div><h1>Files</h1><p>Store and organize invoices, quotes, contracts, receipts and documents.</p></div>
+          <div><input type="file" id="file-upload-input" multiple style="display:none;" /><button class="btn btn-primary" id="file-upload-btn">⬆ Upload file</button></div>
+        </div>
+        <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" id="file-search" placeholder="Search files…" /></div></div>
+        <div class="chip-row" id="file-folders" style="margin:0 0 1rem;"></div>
+        <div class="tool-grid" id="file-grid"></div>
       </div>
     </div>
   </div>
@@ -1812,6 +2299,9 @@
   <button data-goto="leads">Leads</button>
   <button data-goto="tasks">Tasks</button>
   <button data-goto="calendar">Calendar</button>
+  <button data-goto="inventory">Inventory</button>
+  <button data-goto="team">Team</button>
+  <button data-goto="files">Files</button>
   <button data-goto="invoices">Invoices</button>
   <button data-goto="ai">Assistant</button>
   <button class="replay-onboarding">✨ Onboarding</button>
@@ -1819,11 +2309,11 @@
 
 <script>
   (function () {
-    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "products", "expenses", "tasks", "calendar", "reports", "ai"];
+    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "reports", "ai"];
     appViews.forEach(function (id) {
       var sb = document.getElementById("sidebar-" + id);
       var tb = document.getElementById("topbar-" + id);
-      var navId = id === "invoice-new" ? "invoices" : id;
+      var navId = id === "invoice-new" ? "invoices" : id === "client-detail" ? "clients" : id;
       if (sb) sb.outerHTML = renderSidebar(navId);
       if (tb) tb.outerHTML = renderTopbar();
     });
@@ -1925,11 +2415,46 @@
       if (el) el.addEventListener("input", recalcTax);
     });
 
-    // ---- calendar: real "today", illustrative events ----
-    var calRendered = false;
-    function renderCalendar() {
-      if (calRendered) return;
-      calRendered = true;
+    // ---- business calendar: real "today", illustrative events, month/week/day + drag-drop reschedule ----
+    var CAL_TYPES = {
+      invoice_due: { label: "Invoice due", color: "danger", icon: "📄" },
+      quote_expiry: { label: "Quote expiry", color: "warning", icon: "🧾" },
+      meeting: { label: "Meeting", color: "primary", icon: "🤝" },
+      task: { label: "Task", color: "secondary", icon: "✅" },
+      reminder: { label: "Reminder", color: "info", icon: "🔔" },
+      payment: { label: "Payment", color: "success", icon: "💰" },
+      expense: { label: "Expense", color: "info", icon: "💳" },
+      tax_deadline: { label: "Tax deadline", color: "secondary", icon: "🏛️" },
+      business_event: { label: "Business event", color: "primary", icon: "📌" },
+    };
+    var CAL_EVENTS = [];
+    function buildCalEvents() {
+      var today = new Date();
+      var d = today.getDate();
+      var daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      function clamp(n) { return Math.max(1, Math.min(daysInMonth, n)); }
+      CAL_EVENTS = [
+        { id: "e1", day: d, type: "meeting", title: "Kickoff call with Atlas Studio", time: "10:00 AM" },
+        { id: "e2", day: clamp(d + 1), type: "expense", title: "Design software licenses renew", time: "" },
+        { id: "e3", day: clamp(d + 2), type: "task", title: "Send Q3 proposal to Atlas", time: "" },
+        { id: "e4", day: clamp(d + 3), type: "invoice_due", title: "INV-0005 due — Harborline Logistics", time: "" },
+        { id: "e5", day: clamp(d + 5), type: "payment", title: "Payment received — Kessler & Voss", time: "" },
+        { id: "e6", day: clamp(d + 7), type: "quote_expiry", title: "QUO-0011 expires — Nova Digital", time: "" },
+        { id: "e7", day: clamp(d + 9), type: "business_event", title: "Team offsite planning", time: "2:00 PM" },
+        { id: "e8", day: clamp(d + 12), type: "reminder", title: "Renew software subscriptions", time: "9:00 AM" },
+        { id: "e9", day: 15, type: "tax_deadline", title: "Quarterly VAT filing due", time: "" },
+      ];
+    }
+    function calRingColor(type) { return "hsl(var(--" + CAL_TYPES[type].color + "))"; }
+    function renderCalLegend() {
+      var legend = document.getElementById("cal-legend");
+      if (!legend) return;
+      legend.innerHTML = Object.keys(CAL_TYPES).map(function (k) {
+        var t = CAL_TYPES[k];
+        return '<span><span class="cal-dot" style="background:' + calRingColor(k) + ';"></span>' + t.icon + " " + t.label + "</span>";
+      }).join("");
+    }
+    function renderCalMonthGrid() {
       var grid = document.getElementById("cal-grid");
       var label = document.getElementById("cal-month-label");
       if (!grid) return;
@@ -1939,29 +2464,105 @@
       var first = new Date(year, month, 1);
       var startOffset = first.getDay();
       var daysInMonth = new Date(year, month + 1, 0).getDate();
-      var events = {};
-      function addEvent(day, color) {
-        if (day < 1 || day > daysInMonth) return;
-        events[day] = events[day] || [];
-        events[day].push(color);
-      }
-      addEvent(today.getDate(), "primary");
-      addEvent(Math.min(today.getDate() + 3, daysInMonth), "danger");
-      addEvent(Math.min(today.getDate() + 7, daysInMonth), "warning");
-      addEvent(Math.min(today.getDate() + 12, daysInMonth), "info");
-      addEvent(15, "secondary");
       var html = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(function (d) {
         return '<div class="cal-dow">' + d + "</div>";
       }).join("");
       for (var i = 0; i < startOffset; i++) html += '<div class="cal-cell"></div>';
       for (var d = 1; d <= daysInMonth; d++) {
         var isToday = d === today.getDate();
-        var dots = (events[d] || []).map(function (c) {
-          return '<span class="cal-dot" style="background:hsl(var(--' + c + '));"></span>';
+        var dayEvents = CAL_EVENTS.filter(function (ev) { return ev.day === d; });
+        var dots = dayEvents.map(function (ev) {
+          var t = CAL_TYPES[ev.type];
+          return '<span class="cal-dot cal-chip" draggable="true" data-event-id="' + ev.id + '" title="' + t.label + ": " + ev.title.replace(/"/g, "") + '" style="background:' + calRingColor(ev.type) + ';"></span>';
         }).join("");
-        html += '<div class="cal-cell' + (isToday ? " today" : "") + '">' + d + '<div class="dots">' + dots + "</div></div>";
+        html += '<div class="cal-cell' + (isToday ? " today" : "") + '" data-cal-day="' + d + '">' + d + '<div class="dots">' + dots + "</div></div>";
       }
       grid.innerHTML = html;
+    }
+    function currentWeekDays() {
+      var today = new Date();
+      var dow = today.getDay();
+      var days = [];
+      for (var i = -dow; i <= 6 - dow; i++) {
+        var dt = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+        if (dt.getMonth() === today.getMonth()) days.push(dt.getDate());
+      }
+      return days;
+    }
+    function renderCalAgenda(scopeDays, listId, labelId, labelText) {
+      var wrap = document.getElementById(listId);
+      if (!wrap) return;
+      var today = new Date();
+      var labelEl = document.getElementById(labelId);
+      if (labelEl) labelEl.textContent = labelText;
+      var evs = CAL_EVENTS.filter(function (ev) { return scopeDays.indexOf(ev.day) !== -1; }).sort(function (a, b) { return a.day - b.day; });
+      wrap.innerHTML = evs.length ? evs.map(function (ev) {
+        var t = CAL_TYPES[ev.type];
+        var dateLabel = new Date(today.getFullYear(), today.getMonth(), ev.day).toLocaleString("en", { month: "short", day: "numeric" });
+        return (
+          '<div class="agenda-row"><span class="agenda-dot" style="background:' + calRingColor(ev.type) + ';"></span>' +
+          '<span class="agenda-time">' + (ev.time || dateLabel) + '</span>' +
+          '<span style="flex:1;">' + t.icon + " " + ev.title + "</span>" +
+          '<span class="badge badge-default">' + t.label + "</span></div>"
+        );
+      }).join("") : '<p class="widget-empty">No events in this range.</p>';
+    }
+    function wireCalDragDrop() {
+      var grid = document.getElementById("cal-grid");
+      if (!grid || grid.__wired) return;
+      grid.__wired = true;
+      grid.addEventListener("dragstart", function (e) {
+        var chip = e.target.closest("[data-event-id]");
+        if (!chip) return;
+        e.dataTransfer.setData("text/plain", chip.getAttribute("data-event-id"));
+        e.dataTransfer.effectAllowed = "move";
+      });
+      grid.addEventListener("dragover", function (e) {
+        var cell = e.target.closest(".cal-cell[data-cal-day]");
+        if (!cell) return;
+        e.preventDefault();
+        cell.classList.add("drag-over");
+      });
+      grid.addEventListener("dragleave", function (e) {
+        var cell = e.target.closest(".cal-cell[data-cal-day]");
+        if (cell) cell.classList.remove("drag-over");
+      });
+      grid.addEventListener("drop", function (e) {
+        var cell = e.target.closest(".cal-cell[data-cal-day]");
+        if (!cell) return;
+        e.preventDefault();
+        cell.classList.remove("drag-over");
+        var id = e.dataTransfer.getData("text/plain");
+        var ev = CAL_EVENTS.filter(function (x) { return x.id === id; })[0];
+        if (!ev) return;
+        var newDay = Number(cell.getAttribute("data-cal-day"));
+        if (newDay === ev.day) return;
+        ev.day = newDay;
+        renderCalMonthGrid();
+        showToast('Moved "' + ev.title + '" to day ' + newDay);
+        playSound("click");
+      });
+    }
+    var calRendered = false;
+    function renderCalendarInit() {
+      if (calRendered) return;
+      calRendered = true;
+      buildCalEvents();
+      renderCalLegend();
+      renderCalMonthGrid();
+      wireCalDragDrop();
+    }
+    var calTabsEl = document.getElementById("cal-tabs");
+    if (calTabsEl) {
+      calTabsEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-cal-tab]");
+        if (!btn) return;
+        var tab = btn.getAttribute("data-cal-tab");
+        calTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+        document.querySelectorAll("#view-calendar .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "cal-panel-" + tab); });
+        if (tab === "week") renderCalAgenda(currentWeekDays(), "cal-week-list", "cal-week-label", "This week");
+        if (tab === "day") renderCalAgenda([new Date().getDate()], "cal-day-list", "cal-day-label", new Date().toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" }));
+      });
     }
 
     function showView(id) {
@@ -1980,8 +2581,16 @@
         }
       }
       if (id === "crm") runCounters(target);
-      if (id === "calendar") renderCalendar();
+      if (id === "calendar") renderCalendarInit();
+      if (id === "inventory") renderInventoryInit();
+      if (id === "tasks") renderTasksInit();
+      if (id === "team") renderTeamInit();
+      if (id === "files") renderFilesInit();
+      if (id === "clients") renderClientsInit();
+      if (id === "expenses") renderExpensesInit();
+      if (id === "invoices") renderInvoicesInit();
       if (id === "reports") {
+        renderReportsInit();
         requestAnimationFrame(function () {
           target.querySelectorAll(".ring").forEach(function (ring) {
             var pct = parseFloat(ring.getAttribute("data-pct")) || 0;
@@ -1990,6 +2599,8 @@
           });
         });
       }
+      var gfab = document.getElementById("gfab-wrap");
+      if (gfab) gfab.classList.toggle("show", appViews.indexOf(id) !== -1);
     }
 
     document.body.addEventListener("click", function (e) {
@@ -2131,7 +2742,28 @@
       if (!reduceMotion) wfTimer = setInterval(wfTick, 2800);
     }
 
-    // ---- AI assistant: interactive send with typing indicator ----
+    // ---- AI assistant: interactive send, keyword-matched canned answers, suggestion chips ----
+    var AI_QA = [
+      { k: ["overdue"], reply: "1 overdue invoice totaling $3,480.00:<br>• INV-0005 — Harborline Logistics — $3,480.00 (due Jun 28, 2026)" },
+      { k: ["unpaid customer", "unpaid customers", "hasn't paid", "unpaid"], reply: "Customers with unpaid balances:<br>• Harborline Logistics — $3,480.00 overdue<br>• Kessler &amp; Voss LLP — $2,150.00 (viewed, not yet paid)" },
+      { k: ["follow-up task", "follow up task", "create follow-up", "create task"], reply: "Created 2 follow-up tasks:<br>• Follow up with Harborline Logistics — overdue invoice<br>• Follow up with Kessler &amp; Voss LLP — viewed invoice, no payment yet" },
+      { k: ["monthly profit", "profit this month", "how much profit"], reply: "This month: $12,840.00 revenue − $4,120.00 expenses = $8,720.00 profit." },
+      { k: ["stock alert", "low stock", "stock alerts"], reply: "3 stock alerts:<br>• Logistics tracking module — 4 pcs left (min 10)<br>• A4 Printer Paper — 6 box left (min 20)<br>• Ergonomic Office Chair — out of stock" },
+      { k: ["inventory report", "generate inventory"], reply: "Inventory snapshot: 4 stocked products, 2 low stock, 1 out of stock. Full breakdown is in Inventory → Dashboard." },
+      { k: ["summarize", "business performance", "summary"], reply: "This month: $12,840.00 revenue, $8,720.00 profit, 24 invoices (86% paid), 9 quotes (72% accepted), 3 stock alerts, 5 tasks due." },
+      { k: ["next action", "suggest next", "what should i do"], reply: "Suggested next actions:<br>1. Follow up on the overdue Harborline invoice<br>2. Reorder the Logistics tracking module (4 left)<br>3. Send the Q3 proposal to Atlas Studio (due Jul 18)" },
+      { k: ["recommend", "improvement"], reply: "Recommendations:<br>• Automate reminders for invoices 7+ days overdue<br>• Set reorder points for your 2 low-stock items<br>• Convert QUO-0011 before it expires Aug 04" },
+      { k: ["cash flow"], reply: "Cash flow this month: $12,840.00 in, $4,120.00 out, net +$8,720.00. $3,480.00 is still outstanding from clients." },
+    ];
+    function aiFindReply(text) {
+      var lower = text.toLowerCase();
+      for (var i = 0; i < AI_QA.length; i++) {
+        for (var j = 0; j < AI_QA[i].k.length; j++) {
+          if (lower.indexOf(AI_QA[i].k[j]) !== -1) return AI_QA[i].reply;
+        }
+      }
+      return null;
+    }
     var aiChat = document.querySelector(".ai-chat");
     var aiInput = document.querySelector(".ai-input-row input");
     var aiSendBtn = document.querySelector(".ai-input-row button");
@@ -2153,7 +2785,8 @@
         aiChat.scrollTop = aiChat.scrollHeight;
 
         setTimeout(function () {
-          typing.textContent = "AI Business Assistant is coming soon. This workspace is wired up and ready — connect an AI provider to enable it.";
+          var reply = aiFindReply(text);
+          typing.innerHTML = reply || "I don't have a canned answer for that yet — try one of the suggested prompts below, or connect an AI provider to enable open-ended answers.";
           aiChat.scrollTop = aiChat.scrollHeight;
         }, 900);
       }
@@ -2161,6 +2794,17 @@
       aiInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") aiSend();
       });
+      var AI_SUGGESTIONS = ["Show overdue invoices", "Create follow-up tasks", "Find unpaid customers", "Show monthly profit", "Show stock alerts", "Generate inventory report", "Summarize business performance", "Suggest next actions", "Recommend improvements"];
+      var aiSuggestChipsEl = document.getElementById("ai-suggest-chips");
+      if (aiSuggestChipsEl) {
+        aiSuggestChipsEl.innerHTML = AI_SUGGESTIONS.map(function (s) { return '<button class="chip" data-ai-prompt="' + s + '">' + s + "</button>"; }).join("");
+        aiSuggestChipsEl.addEventListener("click", function (e) {
+          var chip = e.target.closest("[data-ai-prompt]");
+          if (!chip) return;
+          aiInput.value = chip.getAttribute("data-ai-prompt");
+          aiSend();
+        });
+      }
     }
 
     // ---- sound architecture: synthesized Web Audio tones, opt-in, off by default ----
@@ -2714,5 +3358,1535 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && document.getElementById("cw-overlay").classList.contains("open")) cwClose();
     });
+
+    // ==================================================================
+    // Phase 2B: Inventory, Tasks, Team & Roles, Files, Global Search,
+    // Quick Actions, Notification Center, Dashboard customization, CSV.
+    // ==================================================================
+
+    // ---- CSV helpers (real Blob download; used by Inventory + Invoices/Quotes/Clients/Expenses) ----
+    function csvEscape(val) {
+      return '"' + String(val == null ? "" : val).replace(/"/g, '""') + '"';
+    }
+    function triggerCSVDownload(csv, filename) {
+      var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+    function downloadCSVRows(rows, filename) {
+      triggerCSVDownload(rows.map(function (r) { return r.map(csvEscape).join(","); }).join("\r\n"), filename);
+    }
+    function exportTableToCSV(table, filename) {
+      var rows = Array.prototype.slice.call(table.querySelectorAll("tr")).map(function (tr) {
+        return Array.prototype.slice.call(tr.querySelectorAll("th,td")).map(function (cell) { return cell.textContent.replace(/\s+/g, " ").trim(); });
+      });
+      downloadCSVRows(rows, filename);
+    }
+    function downloadExcelHtml(html, filename) {
+      var doc = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body>' + html + "</body></html>";
+      var blob = new Blob([doc], { type: "application/vnd.ms-excel" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+    function exportTableToExcel(table, filename) {
+      downloadExcelHtml(table.outerHTML, filename);
+    }
+    document.body.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-export-csv]");
+      if (!btn) return;
+      var key = btn.getAttribute("data-export-csv");
+      var table = document.getElementById(key + "-table");
+      if (!table) return;
+      var filename = btn.getAttribute("data-export-name") || key + ".csv";
+      exportTableToCSV(table, filename);
+      showToast("Exported " + filename);
+    });
+    document.body.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-export-excel]");
+      if (!btn) return;
+      var key = btn.getAttribute("data-export-excel");
+      var table = document.getElementById(key + "-table");
+      if (!table) return;
+      var filename = btn.getAttribute("data-export-name-xls") || key + ".xls";
+      exportTableToExcel(table, filename);
+      showToast("Exported " + filename);
+    });
+    var invoicePrintBtn = document.getElementById("invoice-print-btn");
+    if (invoicePrintBtn) invoicePrintBtn.addEventListener("click", function () { window.print(); });
+
+    // ---- Inventory Management ----
+    var SUPPLIERS = [
+      { id: "s1", name: "Figma Inc.", contact: "Sales Team", email: "sales@figma.com", phone: "+1 415 555 0100" },
+      { id: "s2", name: "TechSource Distributors", contact: "Supplier Contact 1", email: "contact@techsource.pk", phone: "+92 300 1112233" },
+      { id: "s3", name: "Global Office Supplies", contact: "Supplier Contact 2", email: "contact@globaloffice.com", phone: "+92 321 4455667" },
+    ];
+    var PRODUCTS = [
+      { id: "p1", name: "Brand identity package", type: "service", category: "Design", sku: "BRD-001", barcode: "", stock: null, minStock: null, unit: "pkg", purchase: 0, selling: 1800, supplierId: null, image: null },
+      { id: "p2", name: "Monthly retainer — 20h", type: "service", category: "Consulting", sku: "RET-020", barcode: "", stock: null, minStock: null, unit: "hr", purchase: 0, selling: 2400, supplierId: null, image: null },
+      { id: "p3", name: "Logistics tracking module", type: "product", category: "Software", sku: "LTM-114", barcode: "8901234500014", stock: 4, minStock: 10, unit: "pcs", purchase: 320, selling: 540, supplierId: "s2", image: null },
+      { id: "p4", name: "Wireless Mouse", type: "product", category: "Accessories", sku: "WM-100", barcode: "8901234500021", stock: 42, minStock: 15, unit: "pcs", purchase: 8, selling: 18, supplierId: "s2", image: null },
+      { id: "p5", name: "A4 Printer Paper (Ream)", type: "product", category: "Office Supplies", sku: "PPR-500", barcode: "8901234500038", stock: 6, minStock: 20, unit: "box", purchase: 3.5, selling: 6.5, supplierId: "s3", image: null },
+      { id: "p6", name: "Ergonomic Office Chair", type: "product", category: "Furniture", sku: "CHR-220", barcode: "8901234500045", stock: 0, minStock: 5, unit: "pcs", purchase: 90, selling: 160, supplierId: "s3", image: null },
+    ];
+    var INV_HISTORY = [
+      { date: "Jul 14, 2026", text: "Stock added: 50 units — Wireless Mouse" },
+      { date: "Jul 12, 2026", text: "Stock sold: 8 units — Logistics tracking module" },
+      { date: "Jul 09, 2026", text: "Stock added: 100 units — A4 Printer Paper" },
+      { date: "Jul 03, 2026", text: "Stock sold: 5 units — Ergonomic Office Chair (now out of stock)" },
+    ];
+    function supplierName(id) {
+      var s = SUPPLIERS.filter(function (x) { return x.id === id; })[0];
+      return s ? s.name : "—";
+    }
+    function invBarcodeHtml(code) {
+      if (!code) return "";
+      var bars = code.split("").map(function (ch) {
+        return '<span style="width:' + ((ch.charCodeAt(0) % 3) + 1) + 'px;"></span>';
+      }).join("");
+      return '<div class="barcode-strip" title="' + code + '">' + bars + "</div>";
+    }
+    function invStockBadge(item) {
+      if (item.stock === null) return '<span style="color:hsl(var(--muted-fg));font-size:0.75rem;">—</span>';
+      var status = item.stock <= 0 ? "out" : item.stock <= item.minStock ? "low" : "ok";
+      var cls = status === "out" ? "stock-badge-out" : status === "low" ? "stock-badge-low" : "stock-badge-ok";
+      var label = status === "out" ? "Out of stock" : status === "low" ? "Low" : "OK";
+      return '<span class="' + cls + '">' + item.stock + " " + item.unit + " · " + label + "</span>";
+    }
+    function invRenderProducts(filterText) {
+      var tbody = document.querySelector("#inv-products-table tbody");
+      if (!tbody) return;
+      var q = (filterText || "").toLowerCase();
+      var rows = PRODUCTS.filter(function (p) { return p.type === "product"; }).filter(function (p) {
+        return !q || p.name.toLowerCase().indexOf(q) !== -1 || p.sku.toLowerCase().indexOf(q) !== -1 || p.category.toLowerCase().indexOf(q) !== -1;
+      });
+      tbody.innerHTML = rows.length ? rows.map(function (p) {
+        return (
+          '<tr><td style="font-weight:700;">' + p.name + "</td><td>" + p.sku + "</td><td>" + invBarcodeHtml(p.barcode) + "</td><td>" + p.category + "</td><td>" + p.unit + "</td>" +
+          '<td style="text-align:right;">' + invStockBadge(p) + "</td>" +
+          '<td class="tnum" style="text-align:right;">' + currency(p.purchase) + "</td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(p.selling) + "</td>" +
+          "<td>" + supplierName(p.supplierId) + "</td></tr>"
+        );
+      }).join("") : '<tr><td colspan="9" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No products match your search.</td></tr>';
+    }
+    function invRenderServices() {
+      var tbody = document.querySelector("#inv-services-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = PRODUCTS.filter(function (p) { return p.type === "service"; }).map(function (p) {
+        return '<tr><td style="font-weight:700;">' + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + p.unit + '</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(p.selling) + "</td></tr>";
+      }).join("");
+    }
+    function invRenderCategories() {
+      var tbody = document.querySelector("#inv-categories-table tbody");
+      if (!tbody) return;
+      var cats = {};
+      PRODUCTS.forEach(function (p) {
+        cats[p.category] = cats[p.category] || { count: 0, value: 0 };
+        cats[p.category].count++;
+        cats[p.category].value += (p.stock || 0) * p.purchase;
+      });
+      tbody.innerHTML = Object.keys(cats).map(function (c) {
+        return '<tr><td style="font-weight:700;">' + c + '</td><td style="text-align:right;">' + cats[c].count + '</td><td class="tnum" style="text-align:right;">' + currency(cats[c].value) + "</td></tr>";
+      }).join("");
+    }
+    function invRenderSuppliers() {
+      var tbody = document.querySelector("#inv-suppliers-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = SUPPLIERS.map(function (s) {
+        var count = PRODUCTS.filter(function (p) { return p.supplierId === s.id; }).length;
+        return '<tr><td style="font-weight:700;">' + s.name + "</td><td>" + s.contact + "</td><td>" + s.email + "</td><td>" + s.phone + '</td><td style="text-align:right;">' + count + "</td></tr>";
+      }).join("");
+    }
+    function invRenderAlerts() {
+      var wrap = document.getElementById("inv-alerts-list");
+      if (!wrap) return;
+      var alerts = PRODUCTS.filter(function (p) { return p.stock !== null && p.stock <= p.minStock; });
+      wrap.innerHTML = alerts.length ? '<div class="table-wrap"><table class="data-table"><thead><tr><th>Item</th><th>SKU</th><th style="text-align:right;">Stock</th><th style="text-align:right;">Min stock</th><th>Status</th></tr></thead><tbody>' +
+        alerts.map(function (p) {
+          var out = p.stock <= 0;
+          return '<tr><td style="font-weight:700;">' + p.name + "</td><td>" + p.sku + '</td><td class="tnum" style="text-align:right;">' + p.stock + " " + p.unit + '</td><td class="tnum" style="text-align:right;">' + p.minStock + " " + p.unit + '</td><td><span class="badge ' + (out ? "badge-danger" : "badge-warning") + '">' + (out ? "Out of stock" : "Low stock") + "</span></td></tr>";
+        }).join("") + "</tbody></table></div>"
+        : '<div class="empty-state"><div class="ic">✅</div><h3>All stock levels look healthy</h3><p>No products are below their minimum stock threshold right now.</p></div>';
+    }
+    function invRenderDashboard() {
+      var grid = document.getElementById("inv-stat-grid");
+      if (!grid) return;
+      var products = PRODUCTS.filter(function (p) { return p.type === "product"; });
+      var lowStock = products.filter(function (p) { return p.stock > 0 && p.stock <= p.minStock; }).length;
+      var outOfStock = products.filter(function (p) { return p.stock <= 0; }).length;
+      var stockValue = products.reduce(function (sum, p) { return sum + p.stock * p.purchase; }, 0);
+      grid.innerHTML =
+        '<div class="card stat-card"><div><div class="lbl">Total products</div><div class="val tnum">' + products.length + '</div></div><div class="ic">📦</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Low stock</div><div class="val tnum" style="color:hsl(var(--warning));">' + lowStock + '</div></div><div class="ic">⚠️</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Out of stock</div><div class="val tnum" style="color:hsl(var(--danger));">' + outOfStock + '</div></div><div class="ic">🚫</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Stock value</div><div class="val tnum">' + currency(stockValue) + "</div></div><div class=\"ic\">💰</div></div>";
+      var dashAlerts = document.getElementById("inv-dash-alerts");
+      if (dashAlerts) {
+        var alertItems = products.filter(function (p) { return p.stock <= p.minStock; });
+        dashAlerts.innerHTML = alertItems.length ? alertItems.map(function (p) {
+          return '<div class="widget-row"><span>' + p.name + '</span><span class="' + (p.stock <= 0 ? "stock-badge-out" : "stock-badge-low") + '">' + (p.stock <= 0 ? "Out of stock" : p.stock + " " + p.unit + " left") + "</span></div>";
+        }).join("") : '<div class="widget-empty">All stock levels look healthy.</div>';
+      }
+      var dashHistory = document.getElementById("inv-dash-history");
+      if (dashHistory) {
+        dashHistory.innerHTML = INV_HISTORY.map(function (h) {
+          return '<div class="activity-row"><div class="meta">' + h.date + '</div><div style="text-align:right;font-size:0.82rem;">' + h.text + "</div></div>";
+        }).join("");
+      }
+    }
+    function invPopulateSupplierSelect() {
+      var sel = document.getElementById("ap-supplier");
+      if (!sel) return;
+      sel.innerHTML = '<option value="">No supplier</option>' + SUPPLIERS.map(function (s) { return '<option value="' + s.id + '">' + s.name + "</option>"; }).join("");
+    }
+    function invRenderAll() {
+      invRenderDashboard();
+      var searchEl = document.getElementById("inv-products-search");
+      invRenderProducts(searchEl ? searchEl.value : "");
+      invRenderServices();
+      invRenderCategories();
+      invRenderSuppliers();
+      invRenderAlerts();
+      invPopulateSupplierSelect();
+    }
+    var invInitDone = false;
+    function renderInventoryInit() {
+      if (invInitDone) return;
+      invInitDone = true;
+      invRenderAll();
+    }
+    var invTabsEl = document.getElementById("inv-tabs");
+    if (invTabsEl) {
+      invTabsEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-inv-tab]");
+        if (!btn) return;
+        var tab = btn.getAttribute("data-inv-tab");
+        invTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+        document.querySelectorAll("#view-inventory .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "inv-panel-" + tab); });
+      });
+    }
+    var invSearchEl = document.getElementById("inv-products-search");
+    if (invSearchEl) invSearchEl.addEventListener("input", function (e) { invRenderProducts(e.target.value); });
+
+    // add-product modal
+    var apImageDataUrl = null;
+    function apToggleTypeFields() {
+      var isService = document.getElementById("ap-type").value === "service";
+      document.getElementById("ap-qty-fields").style.display = isService ? "none" : "grid";
+    }
+    function apOpen() {
+      apImageDataUrl = null;
+      ["ap-name", "ap-category", "ap-sku", "ap-barcode"].forEach(function (id) { document.getElementById(id).value = ""; });
+      document.getElementById("ap-type").value = "product";
+      document.getElementById("ap-stock").value = "0";
+      document.getElementById("ap-minstock").value = "5";
+      document.getElementById("ap-unit").value = "pcs";
+      document.getElementById("ap-purchase").value = "0";
+      document.getElementById("ap-selling").value = "0";
+      document.getElementById("ap-supplier").value = "";
+      document.getElementById("ap-image").value = "";
+      document.getElementById("ap-image-preview").innerHTML = "";
+      apToggleTypeFields();
+      document.getElementById("ap-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function apClose() {
+      document.getElementById("ap-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var apTypeEl = document.getElementById("ap-type");
+    if (apTypeEl) apTypeEl.addEventListener("change", apToggleTypeFields);
+    var apImageEl = document.getElementById("ap-image");
+    if (apImageEl) apImageEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        apImageDataUrl = reader.result;
+        document.getElementById("ap-image-preview").innerHTML = '<img src="' + apImageDataUrl + '" style="width:4rem;height:4rem;border-radius:var(--radius-sm);object-fit:cover;" />';
+      };
+      reader.readAsDataURL(file);
+    });
+    var apCloseBtn = document.getElementById("ap-close");
+    if (apCloseBtn) apCloseBtn.addEventListener("click", apClose);
+    var apBackdropEl = document.getElementById("ap-backdrop");
+    if (apBackdropEl) apBackdropEl.addEventListener("click", apClose);
+    var apSubmitBtn = document.getElementById("ap-submit");
+    if (apSubmitBtn) apSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("ap-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      var isService = document.getElementById("ap-type").value === "service";
+      PRODUCTS.push({
+        id: "p" + Date.now(),
+        name: name,
+        type: isService ? "service" : "product",
+        category: document.getElementById("ap-category").value.trim() || "Uncategorized",
+        sku: document.getElementById("ap-sku").value.trim() || "SKU-" + Math.floor(Math.random() * 9000 + 1000),
+        barcode: isService ? "" : document.getElementById("ap-barcode").value.trim(),
+        stock: isService ? null : parseFloat(document.getElementById("ap-stock").value) || 0,
+        minStock: isService ? null : parseFloat(document.getElementById("ap-minstock").value) || 0,
+        unit: document.getElementById("ap-unit").value,
+        purchase: parseFloat(document.getElementById("ap-purchase").value) || 0,
+        selling: parseFloat(document.getElementById("ap-selling").value) || 0,
+        supplierId: document.getElementById("ap-supplier").value || null,
+        image: apImageDataUrl,
+      });
+      invRenderAll();
+      apClose();
+      showToast(name + " added to inventory");
+      playSound("success");
+    });
+    var invAddBtn = document.getElementById("inv-add-btn");
+    if (invAddBtn) invAddBtn.addEventListener("click", apOpen);
+
+    // inventory CSV import/export
+    var invExportBtn = document.getElementById("inv-export-btn");
+    if (invExportBtn) invExportBtn.addEventListener("click", function () {
+      var rows = [["Name", "Type", "Category", "SKU", "Barcode", "Stock", "Min Stock", "Unit", "Purchase Price", "Selling Price", "Supplier"]];
+      PRODUCTS.forEach(function (p) {
+        rows.push([p.name, p.type, p.category, p.sku, p.barcode, p.stock === null ? "" : p.stock, p.minStock === null ? "" : p.minStock, p.unit, p.purchase, p.selling, supplierName(p.supplierId)]);
+      });
+      downloadCSVRows(rows, "inventory.csv");
+      showToast("Exported inventory.csv");
+    });
+    var invExportSuppliersBtn = document.getElementById("inv-export-suppliers-btn");
+    if (invExportSuppliersBtn) invExportSuppliersBtn.addEventListener("click", function () {
+      var rows = [["Supplier", "Contact", "Email", "Phone", "Products supplied"]];
+      SUPPLIERS.forEach(function (s) {
+        rows.push([s.name, s.contact, s.email, s.phone, PRODUCTS.filter(function (p) { return p.supplierId === s.id; }).length]);
+      });
+      downloadCSVRows(rows, "suppliers.csv");
+      showToast("Exported suppliers.csv");
+    });
+    var invImportBtn = document.getElementById("inv-import-btn");
+    var invImportInput = document.getElementById("inv-import-input");
+    if (invImportBtn && invImportInput) {
+      invImportBtn.addEventListener("click", function () { invImportInput.click(); });
+      invImportInput.addEventListener("change", function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          var lines = String(reader.result).split(/\r?\n/).filter(function (l) { return l.trim(); });
+          var added = 0;
+          lines.slice(1).forEach(function (line) {
+            var cols = line.split(",").map(function (c) { return c.replace(/^"|"$/g, "").trim(); });
+            if (!cols[0]) return;
+            var isService = cols[1] === "service";
+            PRODUCTS.push({
+              id: "pimp" + Date.now() + added,
+              name: cols[0] || "Imported item",
+              type: isService ? "service" : "product",
+              category: cols[2] || "Uncategorized",
+              sku: cols[3] || "SKU-" + Math.floor(Math.random() * 9000 + 1000),
+              barcode: cols[4] || "",
+              stock: isService ? null : (cols[5] ? parseFloat(cols[5]) : 0),
+              minStock: isService ? null : (cols[6] ? parseFloat(cols[6]) : 5),
+              unit: cols[7] || "pcs",
+              purchase: parseFloat(cols[8]) || 0,
+              selling: parseFloat(cols[9]) || 0,
+              supplierId: null,
+              image: null,
+            });
+            added++;
+          });
+          invRenderAll();
+          showToast("Imported " + added + " item(s) from " + file.name);
+          e.target.value = "";
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    // ---- CRM: Customer 360 / Client detail ----
+    var CLIENTS = [
+      {
+        id: "cl1", name: "Client Contact 1", company: "Nova Digital Agency", email: "contact1@novadigital.com", phone: "+92 300 1234567",
+        status: "Active", tags: ["VIP", "Retainer"], since: "2025-02-10",
+        contacts: [{ name: "Client Contact 1", role: "Marketing Director", email: "contact1@novadigital.com", phone: "+92 300 1234567" }],
+        timeline: [
+          { type: "invoice", text: "INV-0002 sent — $640.00", date: "2026-05-20" },
+          { type: "call", text: "Discussed Q3 retainer renewal", date: "2026-06-18" },
+          { type: "quote", text: "QUO-0011 sent — $4,200.00", date: "2026-07-05" },
+        ],
+      },
+      {
+        id: "cl2", name: "Client Contact 2", company: "Harborline Logistics", email: "contact2@harborline.co", phone: "+1 415 555 0142",
+        status: "At risk", tags: ["Overdue"], since: "2025-11-02",
+        contacts: [{ name: "Client Contact 2", role: "Operations Lead", email: "contact2@harborline.co", phone: "+1 415 555 0142" }],
+        timeline: [
+          { type: "invoice", text: "INV-0005 sent — $3,480.00", date: "2026-06-28" },
+        ],
+      },
+      {
+        id: "cl3", name: "Client Contact 3", company: "Kessler & Voss LLP", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958",
+        status: "Active", tags: ["Legal"], since: "2025-08-15",
+        contacts: [{ name: "Client Contact 3", role: "Partner", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958" }],
+        timeline: [
+          { type: "invoice", text: "INV-0003 viewed — $2,150.00", date: "2026-06-02" },
+          { type: "meeting", text: "Onboarding call", date: "2026-06-05" },
+        ],
+      },
+      {
+        id: "cl4", name: "Client Contact 4", company: "Atlas Studio", email: "contact4@atlasstudio.io", phone: "+92 321 9876543",
+        status: "Active", tags: ["VIP"], since: "2024-12-01",
+        contacts: [{ name: "Client Contact 4", role: "Founder", email: "contact4@atlasstudio.io", phone: "+92 321 9876543" }],
+        timeline: [
+          { type: "invoice", text: "INV-0006 paid — $1,240.00", date: "2026-07-02" },
+          { type: "note", text: "Interested in a new brand refresh package", date: "2026-07-08" },
+        ],
+      },
+    ];
+    function clientStatusBadgeClass(s) { return s === "Active" ? "badge-success" : s === "Lead" ? "badge-info" : s === "At risk" ? "badge-warning" : "badge-danger"; }
+    function findClientByCompany(company) { return CLIENTS.filter(function (c) { return c.company === company; })[0]; }
+    function renderClientsTable(filterText) {
+      var tbody = document.querySelector("#clients-table tbody");
+      if (!tbody) return;
+      var q = (filterText || "").toLowerCase();
+      var rows = CLIENTS.filter(function (c) {
+        return !q || c.name.toLowerCase().indexOf(q) !== -1 || c.company.toLowerCase().indexOf(q) !== -1 || c.email.toLowerCase().indexOf(q) !== -1;
+      });
+      tbody.innerHTML = rows.length ? rows.map(function (c) {
+        var tags = c.tags.map(function (t) { return '<span class="badge badge-default">' + t + "</span>"; }).join(" ");
+        return (
+          '<tr><td class="link-strong" data-client-open="' + c.id + '" style="cursor:pointer;">' + c.name + "</td><td>" + c.company + "</td><td>" + c.email + "</td><td>" + c.phone + "</td>" +
+          '<td><span class="badge ' + clientStatusBadgeClass(c.status) + '">' + c.status + "</span></td><td>" + tags + "</td></tr>"
+        );
+      }).join("") : '<tr><td colspan="6" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No clients match your search.</td></tr>';
+    }
+    var clientsInitDone = false;
+    function renderClientsInit() {
+      if (clientsInitDone) return;
+      clientsInitDone = true;
+      renderClientsTable("");
+    }
+    var clientsSearchEl = document.getElementById("clients-search");
+    if (clientsSearchEl) clientsSearchEl.addEventListener("input", function (e) { renderClientsTable(e.target.value); });
+
+    var ACTIVITY_ICONS = { note: "📝", call: "📞", meeting: "🤝", email: "✉️", invoice: "📄", quote: "🧾" };
+    function clientLifetimeValue(c) {
+      var total = 0;
+      c.timeline.forEach(function (t) {
+        var m = t.text.match(/\$([\d,]+(\.\d+)?)/);
+        if (m && t.type === "invoice") total += parseFloat(m[1].replace(/,/g, ""));
+      });
+      return total;
+    }
+    function aiCustomerSummary(c) {
+      var ltv = clientLifetimeValue(c);
+      var lastActivity = c.timeline[c.timeline.length - 1];
+      var sinceLabel = new Date(c.since + "T00:00:00").toLocaleDateString("en", { month: "short", year: "numeric" });
+      var riskNote = c.status === "At risk" ? " This account has an overdue balance and may need a personal follow-up." : c.status === "Active" ? " Relationship is healthy with no overdue balance." : "";
+      return c.name + " (" + c.company + ") has been a client since " + sinceLabel + ", with " + currency(ltv) + " in lifetime invoiced revenue. Last activity: " + (lastActivity ? lastActivity.text.toLowerCase() : "none") + "." + riskNote;
+    }
+    var cdActiveClientId = null;
+    function renderClientDetail(id) {
+      var c = CLIENTS.filter(function (x) { return x.id === id; })[0];
+      if (!c) return;
+      cdActiveClientId = id;
+      document.getElementById("cd-name").textContent = c.name;
+      document.getElementById("cd-meta").innerHTML = c.company + ' · <span class="badge ' + clientStatusBadgeClass(c.status) + '">' + c.status + "</span>";
+      document.getElementById("cd-stat-grid").innerHTML =
+        '<div class="card stat-card"><div><div class="lbl">Lifetime value</div><div class="val tnum">' + currency(clientLifetimeValue(c)) + '</div></div><div class="ic">💰</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Client since</div><div class="val" style="font-size:1.1rem;">' + new Date(c.since + "T00:00:00").toLocaleDateString("en", { month: "short", year: "numeric" }) + '</div></div><div class="ic">📅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Timeline events</div><div class="val tnum">' + c.timeline.length + '</div></div><div class="ic">🕒</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Contacts</div><div class="val tnum">' + c.contacts.length + "</div></div><div class=\"ic\">👤</div></div>";
+      document.getElementById("cd-ai-summary").textContent = aiCustomerSummary(c);
+      document.getElementById("cd-tags").innerHTML = c.tags.length ? c.tags.map(function (t) { return '<span class="chip on">' + t + "</span>"; }).join("") : '<p class="widget-empty">No tags yet.</p>';
+      document.getElementById("cd-contacts").innerHTML = c.contacts.length ? c.contacts.map(function (p) {
+        return '<div class="activity-row"><div><div class="num">' + p.name + '</div><div class="meta">' + p.role + '</div></div><div style="text-align:right;font-size:0.78rem;color:hsl(var(--muted-fg));">' + p.email + "<br>" + p.phone + "</div></div>";
+      }).join("") : '<p class="widget-empty">No contact persons yet.</p>';
+      var clientFiles = (typeof FILES !== "undefined" ? FILES : []).filter(function (f) { return f.clientId === c.id; });
+      document.getElementById("cd-attachments").innerHTML = clientFiles.length ? clientFiles.map(function (f) {
+        return '<div class="widget-row"><span>' + (FILE_ICONS[f.type] || "📁") + " " + f.name + '</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">' + f.size + "</span></div>";
+      }).join("") : '<p class="widget-empty">No files linked to this client yet.</p>';
+      var timeline = c.timeline.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+      document.getElementById("cd-timeline").innerHTML = timeline.map(function (t) {
+        return (
+          '<div class="activity-row"><div style="display:flex;gap:0.6rem;align-items:flex-start;"><span>' + (ACTIVITY_ICONS[t.type] || "•") + '</span>' +
+          '<div><div class="num" style="font-weight:600;">' + t.text + '</div><div class="meta">' + new Date(t.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) + "</div></div></div></div>"
+        );
+      }).join("");
+    }
+    document.body.addEventListener("click", function (e) {
+      var openBtn = e.target.closest("[data-client-open]");
+      if (!openBtn) return;
+      renderClientDetail(openBtn.getAttribute("data-client-open"));
+      showView("client-detail");
+    });
+
+    // add-client modal
+    function acOpen() {
+      ["ac-name", "ac-company", "ac-email", "ac-phone", "ac-tags"].forEach(function (id) { document.getElementById(id).value = ""; });
+      document.getElementById("ac-status").value = "Active";
+      document.getElementById("ac-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function acClose() {
+      document.getElementById("ac-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var acCloseBtn = document.getElementById("ac-close");
+    if (acCloseBtn) acCloseBtn.addEventListener("click", acClose);
+    var acBackdropEl = document.getElementById("ac-backdrop");
+    if (acBackdropEl) acBackdropEl.addEventListener("click", acClose);
+    var acSubmitBtn = document.getElementById("ac-submit");
+    if (acSubmitBtn) acSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("ac-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      var tagsRaw = document.getElementById("ac-tags").value.trim();
+      CLIENTS.push({
+        id: "cl" + Date.now(),
+        name: name,
+        company: document.getElementById("ac-company").value.trim() || "—",
+        email: document.getElementById("ac-email").value.trim(),
+        phone: document.getElementById("ac-phone").value.trim(),
+        status: document.getElementById("ac-status").value,
+        tags: tagsRaw ? tagsRaw.split(",").map(function (t) { return t.trim(); }).filter(Boolean) : [],
+        since: new Date().toISOString().slice(0, 10),
+        contacts: [],
+        timeline: [{ type: "note", text: "Client added", date: new Date().toISOString().slice(0, 10) }],
+      });
+      renderClientsTable(document.getElementById("clients-search") ? document.getElementById("clients-search").value : "");
+      acClose();
+      showToast(name + " added to Clients");
+      playSound("success");
+    });
+    var clientAddBtnEl = document.getElementById("client-add-btn");
+    if (clientAddBtnEl) clientAddBtnEl.addEventListener("click", acOpen);
+
+    // log-activity modal
+    function laOpen() {
+      document.getElementById("la-type").value = "note";
+      document.getElementById("la-text").value = "";
+      document.getElementById("la-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function laClose() {
+      document.getElementById("la-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var laCloseBtn = document.getElementById("la-close");
+    if (laCloseBtn) laCloseBtn.addEventListener("click", laClose);
+    var laBackdropEl = document.getElementById("la-backdrop");
+    if (laBackdropEl) laBackdropEl.addEventListener("click", laClose);
+    var laSubmitBtn = document.getElementById("la-submit");
+    if (laSubmitBtn) laSubmitBtn.addEventListener("click", function () {
+      var textEl = document.getElementById("la-text");
+      var text = textEl.value.trim();
+      if (!text || !cdActiveClientId) { textEl.focus(); return; }
+      var c = CLIENTS.filter(function (x) { return x.id === cdActiveClientId; })[0];
+      if (!c) return;
+      c.timeline.push({ type: document.getElementById("la-type").value, text: text, date: new Date().toISOString().slice(0, 10) });
+      renderClientDetail(cdActiveClientId);
+      laClose();
+      showToast("Activity logged");
+      playSound("success");
+    });
+    var cdLogActivityBtn = document.getElementById("cd-log-activity-btn");
+    if (cdLogActivityBtn) cdLogActivityBtn.addEventListener("click", laOpen);
+
+    // ---- Payment Tracking (Invoices) ----
+    var INVOICES = [
+      { id: "INV-0006", client: "Atlas Studio", issue: "2026-07-02", due: "2026-07-16", status: "Paid", total: 1240.00, payments: [{ date: "2026-07-03", amount: 1240.00, method: "Card" }] },
+      { id: "INV-0005", client: "Nova Digital Agency", issue: "2026-06-28", due: "2026-07-12", status: "Overdue", total: 3480.00, payments: [] },
+      { id: "INV-0004", client: "Harborline Logistics", issue: "2026-06-15", due: "2026-06-29", status: "Partially paid", total: 860.00, payments: [{ date: "2026-06-20", amount: 400.00, method: "Bank transfer" }] },
+      { id: "INV-0003", client: "Kessler & Voss LLP", issue: "2026-06-02", due: "2026-06-16", status: "Viewed", total: 2150.00, payments: [] },
+      { id: "INV-0002", client: "Atlas Studio", issue: "2026-05-20", due: "2026-06-03", status: "Draft", total: 640.00, payments: [] },
+    ];
+    function invoiceBalance(inv) {
+      var paid = inv.payments.reduce(function (s, p) { return s + p.amount; }, 0);
+      return Math.max(0, inv.total - paid);
+    }
+    function invoiceStatusBadgeClass(s) {
+      return s === "Paid" ? "badge-success" : s === "Overdue" ? "badge-danger" : s === "Partially paid" ? "badge-warning" : s === "Viewed" ? "badge-info" : "badge-default";
+    }
+    var invoiceFilter = { q: "", status: "all" };
+    function renderInvoicesTable() {
+      var tbody = document.querySelector("#invoices-table tbody");
+      if (!tbody) return;
+      var q = invoiceFilter.q.toLowerCase();
+      var rows = INVOICES.filter(function (inv) {
+        var matchesQ = !q || inv.id.toLowerCase().indexOf(q) !== -1 || inv.client.toLowerCase().indexOf(q) !== -1;
+        var matchesStatus = invoiceFilter.status === "all" || inv.status === invoiceFilter.status;
+        return matchesQ && matchesStatus;
+      });
+      tbody.innerHTML = rows.length ? rows.map(function (inv) {
+        var balance = invoiceBalance(inv);
+        var canRemind = balance > 0 && ["Sent", "Viewed", "Partially paid", "Overdue"].indexOf(inv.status) !== -1;
+        return (
+          '<tr><td class="link-strong" data-invoice-open="' + inv.id + '" style="cursor:pointer;">' + inv.id + "</td><td>" + inv.client + "</td><td>" +
+          new Date(inv.issue + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + "</td><td>" +
+          new Date(inv.due + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + '</td><td><span class="badge ' + invoiceStatusBadgeClass(inv.status) + '">' + inv.status + "</span></td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(inv.total) + "</td>" +
+          "<td>" + (canRemind ? '<button class="btn btn-ghost btn-sm" data-invoice-remind="' + inv.id + '">🔔 Remind</button>' : "") + "</td></tr>"
+        );
+      }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No invoices match your filters.</td></tr>';
+    }
+    function renderInvoiceStats() {
+      var grid = document.getElementById("inv-pay-stat-grid");
+      if (!grid) return;
+      var outstanding = 0, overdueCount = 0, paidThisMonth = 0, dayDiffs = [];
+      var now = new Date();
+      INVOICES.forEach(function (inv) {
+        var balance = invoiceBalance(inv);
+        if (["Sent", "Viewed", "Partially paid", "Overdue"].indexOf(inv.status) !== -1) outstanding += balance;
+        if (inv.status === "Overdue") overdueCount++;
+        inv.payments.forEach(function (p) {
+          var d = new Date(p.date);
+          if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) paidThisMonth += p.amount;
+          dayDiffs.push(Math.round((d - new Date(inv.issue)) / 86400000));
+        });
+      });
+      var avgDays = dayDiffs.length ? Math.round(dayDiffs.reduce(function (a, b) { return a + b; }, 0) / dayDiffs.length) : 0;
+      grid.innerHTML =
+        '<div class="card stat-card"><div><div class="lbl">Outstanding balance</div><div class="val tnum" style="color:hsl(var(--danger));">' + currency(outstanding) + '</div></div><div class="ic">💰</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Overdue invoices</div><div class="val tnum" style="color:hsl(var(--warning));">' + overdueCount + '</div></div><div class="ic">⏰</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Paid this month</div><div class="val tnum" style="color:hsl(var(--success));">' + currency(paidThisMonth) + '</div></div><div class="ic">✅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Avg days to pay</div><div class="val tnum">' + avgDays + "</div></div><div class=\"ic\">📆</div></div>";
+    }
+    function renderInvoicesAll() {
+      renderInvoiceStats();
+      renderInvoicesTable();
+    }
+    var invoicesInitDone = false;
+    function renderInvoicesInit() {
+      if (invoicesInitDone) return;
+      invoicesInitDone = true;
+      renderInvoicesAll();
+    }
+    var invoicesSearchEl = document.getElementById("invoices-search");
+    if (invoicesSearchEl) invoicesSearchEl.addEventListener("input", function (e) { invoiceFilter.q = e.target.value; renderInvoicesTable(); });
+    var invoicesStatusFilterEl = document.getElementById("invoices-status-filter");
+    if (invoicesStatusFilterEl) invoicesStatusFilterEl.addEventListener("change", function (e) { invoiceFilter.status = e.target.value; renderInvoicesTable(); });
+
+    function phRender(inv) {
+      var balance = invoiceBalance(inv);
+      var overdue = inv.status === "Overdue";
+      return (
+        '<div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">' + inv.id + " — " + inv.client + '</h3><button class="ob-skip" id="ph-close">Close</button></div>' +
+        '<div class="cw-body">' +
+        (overdue ? '<div class="callout" style="border-color:hsl(var(--danger)/0.4);background:hsl(var(--danger)/0.08);"><span>⚠️</span><span>This invoice is overdue — due date was ' + new Date(inv.due + "T00:00:00").toLocaleDateString("en", { month: "long", day: "numeric", year: "numeric" }) + ".</span></div>" : "") +
+        '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1rem;">' +
+        '<div class="card stat-card"><div><div class="lbl">Total</div><div class="val tnum">' + currency(inv.total) + '</div></div><div class="ic">📄</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Paid</div><div class="val tnum" style="color:hsl(var(--success));">' + currency(inv.total - balance) + '</div></div><div class="ic">✅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Balance due</div><div class="val tnum" style="color:' + (balance > 0 ? "hsl(var(--danger))" : "hsl(var(--success))") + ';">' + currency(balance) + "</div></div><div class=\"ic\">💰</div></div>" +
+        "</div>" +
+        '<div class="card-title" style="margin-bottom:0.5rem;">Payment history</div>' +
+        (inv.payments.length ? inv.payments.map(function (p) {
+          return '<div class="activity-row"><div><div class="num">' + currency(p.amount) + '</div><div class="meta">' + p.method + "</div></div><div style=\"text-align:right;font-size:0.78rem;color:hsl(var(--muted-fg));\">" + new Date(p.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) + "</div></div>";
+        }).join("") : '<p class="widget-empty">No payments recorded yet.</p>') +
+        "</div>" +
+        '<div class="cw-foot"><span></span>' + (balance > 0 ? '<button class="btn btn-primary btn-sm" data-invoice-remind="' + inv.id + '">🔔 Send reminder</button>' : "") + "</div>"
+      );
+    }
+    function phOpen(id) {
+      var inv = INVOICES.filter(function (x) { return x.id === id; })[0];
+      if (!inv) return;
+      document.getElementById("ph-panel").innerHTML = phRender(inv);
+      document.getElementById("ph-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function phClose() {
+      document.getElementById("ph-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var phBackdropEl = document.getElementById("ph-backdrop");
+    if (phBackdropEl) phBackdropEl.addEventListener("click", phClose);
+    var phPanelEl = document.getElementById("ph-panel");
+    if (phPanelEl) phPanelEl.addEventListener("click", function (e) { if (e.target.closest("#ph-close")) phClose(); });
+    document.body.addEventListener("click", function (e) {
+      var openBtn = e.target.closest("[data-invoice-open]");
+      if (openBtn) { phOpen(openBtn.getAttribute("data-invoice-open")); return; }
+      var remindBtn = e.target.closest("[data-invoice-remind]");
+      if (remindBtn) {
+        var inv = INVOICES.filter(function (x) { return x.id === remindBtn.getAttribute("data-invoice-remind"); })[0];
+        if (!inv) return;
+        var client = findClientByCompany(inv.client);
+        if (client) client.timeline.push({ type: "email", text: "Payment reminder sent for " + inv.id + " (" + currency(invoiceBalance(inv)) + " due)", date: new Date().toISOString().slice(0, 10) });
+        showToast("Reminder sent to " + inv.client);
+        playSound("success");
+        var overlay = document.getElementById("ph-overlay");
+        if (overlay && overlay.classList.contains("open")) phClose();
+      }
+    });
+
+    // ---- Expense Management ----
+    var EXPENSE_CATEGORIES = ["Travel", "Fuel", "Office", "Equipment", "Marketing", "Software", "Salary", "Utilities", "Maintenance", "Tax", "Other"];
+    var EXPENSES = [
+      { id: "e1", title: "Design software licenses", category: "Software", date: "2026-07-01", vendor: "Figma Inc.", amount: 45.00, approval: "Approved", recurring: true, receipt: null },
+      { id: "e2", title: "Client onboarding lunch", category: "Travel", date: "2026-06-27", vendor: "", amount: 62.50, approval: "Approved", recurring: false, receipt: null },
+      { id: "e3", title: "Office internet bill", category: "Utilities", date: "2026-07-05", vendor: "PTCL", amount: 38.00, approval: "Pending", recurring: true, receipt: null },
+      { id: "e4", title: "New laptop charger", category: "Equipment", date: "2026-06-20", vendor: "TechSource Distributors", amount: 22.00, approval: "Approved", recurring: false, receipt: null },
+      { id: "e5", title: "Facebook ads — July", category: "Marketing", date: "2026-07-10", vendor: "Meta", amount: 150.00, approval: "Pending", recurring: true, receipt: null },
+      { id: "e6", title: "Fuel — site visit", category: "Fuel", date: "2026-06-30", vendor: "—", amount: 18.00, approval: "Approved", recurring: false, receipt: null },
+    ];
+    function expApprovalBadgeClass(s) { return s === "Approved" ? "badge-success" : s === "Rejected" ? "badge-danger" : "badge-warning"; }
+    function renderExpensesTable() {
+      var tbody = document.querySelector("#expenses-table tbody");
+      if (!tbody) return;
+      var sorted = EXPENSES.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+      tbody.innerHTML = sorted.length ? sorted.map(function (e) {
+        return (
+          '<tr><td style="font-weight:700;">' + e.title + (e.recurring ? ' <span title="Recurring expense">🔁</span>' : "") + '</td><td><span class="badge">' + e.category + "</span></td><td>" +
+          new Date(e.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + "</td><td>" + (e.vendor || "—") + "</td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(e.amount) + "</td>" +
+          '<td><span class="badge ' + expApprovalBadgeClass(e.approval) + '">' + e.approval + "</span></td>" +
+          "<td>" + (e.approval === "Pending" ? '<button class="btn btn-ghost btn-sm" data-exp-approve="' + e.id + '">✓ Approve</button> <button class="btn btn-ghost btn-sm" data-exp-reject="' + e.id + '">✕ Reject</button>' : "") + "</td></tr>"
+        );
+      }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No expenses yet.</td></tr>';
+    }
+    function renderExpenseCategoryBars() {
+      var wrap = document.getElementById("exp-category-bars");
+      if (!wrap) return;
+      var totals = {};
+      EXPENSES.forEach(function (e) { totals[e.category] = (totals[e.category] || 0) + e.amount; });
+      var cats = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
+      var max = cats.length ? totals[cats[0]] : 1;
+      wrap.innerHTML = cats.length ? cats.map(function (c) {
+        var pct = Math.round((totals[c] / max) * 100);
+        return '<div class="pipeline-row"><span class="stage-lbl" style="width:6.5rem;">' + c + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;"></div></div><span class="stage-val">' + currency(totals[c]) + "</span></div>";
+      }).join("") : '<p class="widget-empty">No expenses recorded yet.</p>';
+    }
+    function renderExpenseStats() {
+      var grid = document.getElementById("exp-stat-grid");
+      if (!grid) return;
+      var now = new Date();
+      var monthTotal = EXPENSES.filter(function (e) { var d = new Date(e.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }).reduce(function (s, e) { return s + e.amount; }, 0);
+      var yearTotal = EXPENSES.filter(function (e) { return new Date(e.date).getFullYear() === now.getFullYear(); }).reduce(function (s, e) { return s + e.amount; }, 0);
+      var pending = EXPENSES.filter(function (e) { return e.approval === "Pending"; }).length;
+      var recurring = EXPENSES.filter(function (e) { return e.recurring; }).length;
+      grid.innerHTML =
+        '<div class="card stat-card"><div><div class="lbl">This month</div><div class="val tnum">' + currency(monthTotal) + '</div></div><div class="ic">💳</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Year to date</div><div class="val tnum">' + currency(yearTotal) + '</div></div><div class="ic">📆</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Pending approval</div><div class="val tnum" style="color:hsl(var(--warning));">' + pending + '</div></div><div class="ic">⏳</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Recurring</div><div class="val tnum">' + recurring + "</div></div><div class=\"ic\">🔁</div></div>";
+    }
+    function renderExpenseAnnual() {
+      var tbody = document.querySelector("#exp-annual-table tbody");
+      if (!tbody) return;
+      var now = new Date();
+      var totals = {};
+      EXPENSES.forEach(function (e) { if (new Date(e.date).getFullYear() === now.getFullYear()) totals[e.category] = (totals[e.category] || 0) + e.amount; });
+      var cats = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
+      tbody.innerHTML = cats.length ? cats.map(function (c) {
+        return '<tr><td style="font-weight:700;">' + c + '</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(totals[c]) + "</td></tr>";
+      }).join("") : '<tr><td colspan="2" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No expenses this year.</td></tr>';
+    }
+    function renderExpensesAll() {
+      renderExpenseStats();
+      renderExpenseCategoryBars();
+      renderExpensesTable();
+      renderExpenseAnnual();
+    }
+    function populateExpenseCategorySelect() {
+      var sel = document.getElementById("ae-category");
+      if (!sel) return;
+      sel.innerHTML = EXPENSE_CATEGORIES.map(function (c) { return "<option>" + c + "</option>"; }).join("");
+    }
+    var expensesInitDone = false;
+    function renderExpensesInit() {
+      if (expensesInitDone) return;
+      expensesInitDone = true;
+      populateExpenseCategorySelect();
+      renderExpensesAll();
+    }
+    var expTabsEl = document.getElementById("exp-tabs");
+    if (expTabsEl) expTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-exp-tab]");
+      if (!btn) return;
+      var tab = btn.getAttribute("data-exp-tab");
+      expTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+      document.querySelectorAll("#view-expenses .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "exp-panel-" + tab); });
+    });
+    document.body.addEventListener("click", function (e) {
+      var approveBtn = e.target.closest("[data-exp-approve]");
+      if (approveBtn) {
+        var ea = EXPENSES.filter(function (x) { return x.id === approveBtn.getAttribute("data-exp-approve"); })[0];
+        if (ea) { ea.approval = "Approved"; renderExpensesAll(); showToast(ea.title + " approved"); }
+        return;
+      }
+      var rejectBtn = e.target.closest("[data-exp-reject]");
+      if (rejectBtn) {
+        var er = EXPENSES.filter(function (x) { return x.id === rejectBtn.getAttribute("data-exp-reject"); })[0];
+        if (er) { er.approval = "Rejected"; renderExpensesAll(); showToast(er.title + " rejected"); }
+      }
+    });
+
+    // add-expense modal
+    var aeReceiptDataUrl = null;
+    function aeOpen() {
+      document.getElementById("ae-title").value = "";
+      populateExpenseCategorySelect();
+      document.getElementById("ae-date").value = new Date().toISOString().slice(0, 10);
+      document.getElementById("ae-vendor").value = "";
+      document.getElementById("ae-amount").value = "0";
+      document.getElementById("ae-recurring").checked = false;
+      document.getElementById("ae-receipt").value = "";
+      document.getElementById("ae-receipt-preview").innerHTML = "";
+      aeReceiptDataUrl = null;
+      document.getElementById("ae-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function aeClose() {
+      document.getElementById("ae-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var aeCloseBtn = document.getElementById("ae-close");
+    if (aeCloseBtn) aeCloseBtn.addEventListener("click", aeClose);
+    var aeBackdropEl = document.getElementById("ae-backdrop");
+    if (aeBackdropEl) aeBackdropEl.addEventListener("click", aeClose);
+    var aeReceiptEl = document.getElementById("ae-receipt");
+    if (aeReceiptEl) aeReceiptEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file || file.type.indexOf("image/") !== 0) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        aeReceiptDataUrl = reader.result;
+        document.getElementById("ae-receipt-preview").innerHTML = '<img src="' + aeReceiptDataUrl + '" style="width:4rem;height:4rem;border-radius:var(--radius-sm);object-fit:cover;" />';
+      };
+      reader.readAsDataURL(file);
+    });
+    var aeSubmitBtn = document.getElementById("ae-submit");
+    if (aeSubmitBtn) aeSubmitBtn.addEventListener("click", function () {
+      var titleEl = document.getElementById("ae-title");
+      var title = titleEl.value.trim();
+      if (!title) { titleEl.focus(); return; }
+      EXPENSES.push({
+        id: "e" + Date.now(),
+        title: title,
+        category: document.getElementById("ae-category").value,
+        date: document.getElementById("ae-date").value || new Date().toISOString().slice(0, 10),
+        vendor: document.getElementById("ae-vendor").value.trim(),
+        amount: parseFloat(document.getElementById("ae-amount").value) || 0,
+        approval: "Pending",
+        recurring: document.getElementById("ae-recurring").checked,
+        receipt: aeReceiptDataUrl,
+      });
+      renderExpensesAll();
+      aeClose();
+      showToast(title + " added — pending approval");
+      playSound("success");
+    });
+    var expenseAddBtnEl = document.getElementById("expense-add-btn");
+    if (expenseAddBtnEl) expenseAddBtnEl.addEventListener("click", aeOpen);
+
+    // ---- AI Business Insights (shared: Dashboard widget + Reports panel) ----
+    var AI_INSIGHTS = [
+      { ic: "📈", text: "Revenue is increasing — up 18% compared to last month." },
+      { ic: "🏆", text: "Top customer this month: Atlas Studio, with $1,240.00 in paid invoices." },
+      { ic: "⏰", text: "1 invoice is overdue, totaling $3,480.00 — Harborline Logistics." },
+      { ic: "💧", text: "Cash flow warning: outstanding balance ($3,480.00) exceeds this month's expenses." },
+      { ic: "📝", text: "Suggested follow-up: reach out to Nova Digital Agency about QUO-0011 before it expires Aug 04." },
+      { ic: "🚀", text: "Business growth prediction: on current trend, revenue could reach roughly $15,200 next month." },
+      { ic: "✂️", text: "Expense optimization: Marketing spend is up 40% this month — review ad campaigns for ROI." },
+      { ic: "🗒️", text: "Monthly summary: $12,840.00 revenue, $8,720.00 profit, 24 invoices, 9 quotes, 3 stock alerts." },
+    ];
+    function renderAIInsights(containerId, limit) {
+      var wrap = document.getElementById(containerId);
+      if (!wrap) return;
+      var items = limit ? AI_INSIGHTS.slice(0, limit) : AI_INSIGHTS;
+      wrap.innerHTML = items.map(function (i) { return '<div class="widget-row"><span>' + i.ic + " " + i.text + "</span></div>"; }).join("");
+    }
+    renderAIInsights("dash-ai-insights-list", 3);
+
+    // ---- Reports & Analytics ----
+    var YEARLY_TREND = [{ y: "2023", v: 64000 }, { y: "2024", v: 89000 }, { y: "2025", v: 121000 }, { y: "2026", v: 96000 }];
+    var BEST_SELLERS = [
+      { name: "Monthly retainer — 20h", unitsSold: 14, revenue: 16800 },
+      { name: "Logistics tracking module", unitsSold: 22, revenue: 11880 },
+      { name: "Brand identity package", unitsSold: 6, revenue: 10800 },
+      { name: "Wireless Mouse", unitsSold: 58, revenue: 1044 },
+    ];
+    function renderYearlyTrend() {
+      var wrap = document.getElementById("rpt-year-bars");
+      if (!wrap) return;
+      var max = Math.max.apply(null, YEARLY_TREND.map(function (y) { return y.v; }));
+      wrap.innerHTML = YEARLY_TREND.map(function (y) {
+        var h = Math.round((y.v / max) * 100);
+        return (
+          '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.4rem;height:100%;justify-content:flex-end;">' +
+          '<span style="font-size:0.68rem;font-weight:700;color:hsl(var(--muted-fg));">' + currency(y.v) + "</span>" +
+          '<div style="width:100%;max-width:2.6rem;height:' + h + '%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,hsl(var(--primary)),hsl(var(--secondary)));"></div>' +
+          '<span style="font-size:0.78rem;font-weight:700;">' + y.y + "</span></div>"
+        );
+      }).join("");
+    }
+    function renderTopCustomers() {
+      var tbody = document.querySelector("#rpt-top-customers-table tbody");
+      if (!tbody) return;
+      var ranked = CLIENTS.slice().map(function (c) { return { c: c, ltv: clientLifetimeValue(c) }; }).sort(function (a, b) { return b.ltv - a.ltv; }).slice(0, 5);
+      tbody.innerHTML = ranked.map(function (r, i) {
+        return '<tr><td style="font-weight:700;">' + (i + 1) + ". " + r.c.company + '</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(r.ltv) + "</td></tr>";
+      }).join("");
+    }
+    function renderBestSellers() {
+      var tbody = document.querySelector("#rpt-best-products-table tbody");
+      if (!tbody) return;
+      var ranked = BEST_SELLERS.slice().sort(function (a, b) { return b.revenue - a.revenue; });
+      tbody.innerHTML = ranked.map(function (p, i) {
+        return '<tr><td style="font-weight:700;">' + (i + 1) + ". " + p.name + '</td><td style="text-align:right;">' + p.unitsSold + ' sold</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(p.revenue) + "</td></tr>";
+      }).join("");
+    }
+    var reportsInitDone = false;
+    function renderReportsInit() {
+      if (reportsInitDone) return;
+      reportsInitDone = true;
+      renderYearlyTrend();
+      renderTopCustomers();
+      renderBestSellers();
+      renderAIInsights("rpt-ai-insights");
+    }
+    var rptExportCsvBtn = document.getElementById("rpt-export-csv-btn");
+    if (rptExportCsvBtn) rptExportCsvBtn.addEventListener("click", function () {
+      var rows = [["Metric", "Value"], ["Revenue", "$12,840.00"], ["Outstanding", "$3,480.00"], ["Expenses", "$1,860.00"], ["Net", "$10,980.00"], [], ["Top customers", ""]];
+      CLIENTS.slice().map(function (c) { return { c: c, ltv: clientLifetimeValue(c) }; }).sort(function (a, b) { return b.ltv - a.ltv; }).forEach(function (r) {
+        rows.push([r.c.company, currency(r.ltv)]);
+      });
+      rows.push([], ["Best selling products", ""]);
+      BEST_SELLERS.slice().sort(function (a, b) { return b.revenue - a.revenue; }).forEach(function (p) {
+        rows.push([p.name, currency(p.revenue)]);
+      });
+      downloadCSVRows(rows, "business-report.csv");
+      showToast("Exported business-report.csv");
+    });
+    var rptExportExcelBtn = document.getElementById("rpt-export-excel-btn");
+    if (rptExportExcelBtn) rptExportExcelBtn.addEventListener("click", function () {
+      var html = "<h3>Top Customers</h3>" + document.getElementById("rpt-top-customers-table").outerHTML + "<h3>Best Selling Products</h3>" + document.getElementById("rpt-best-products-table").outerHTML;
+      downloadExcelHtml(html, "business-report.xls");
+      showToast("Exported business-report.xls");
+    });
+    var rptPrintBtn = document.getElementById("rpt-print-btn");
+    if (rptPrintBtn) rptPrintBtn.addEventListener("click", function () { window.print(); });
+
+    // ---- Task Management ----
+    var TASKS = [
+      { id: "t1", title: "Follow up with Nova Digital", status: "todo", priority: "high", due: "2026-07-15", labels: ["Sales"], recurring: false, attachments: 0 },
+      { id: "t2", title: "Send Q3 proposal to Atlas", status: "todo", priority: "medium", due: "2026-07-18", labels: ["Sales"], recurring: false, attachments: 1 },
+      { id: "t3", title: "Renew software subscriptions", status: "todo", priority: "low", due: null, labels: ["Admin"], recurring: true, attachments: 0 },
+      { id: "t4", title: "Draft Harborline contract", status: "inprogress", priority: "medium", due: "2026-07-20", labels: ["Legal"], recurring: false, attachments: 2 },
+      { id: "t5", title: "Update brand kit assets", status: "inprogress", priority: "low", due: null, labels: ["Design"], recurring: false, attachments: 0 },
+      { id: "t6", title: "Reconcile June expenses", status: "done", priority: "low", due: null, labels: ["Finance"], recurring: true, attachments: 0 },
+      { id: "t7", title: "Onboard Kessler & Voss", status: "done", priority: "medium", due: null, labels: ["Sales"], recurring: false, attachments: 0 },
+    ];
+    var taskFilter = { q: "", priority: "all", label: "all" };
+    function isOverdue(t) {
+      if (!t.due || t.status === "done") return false;
+      return new Date(t.due) < new Date(new Date().toDateString());
+    }
+    function taskDueLabel(t) {
+      if (!t.due) return "";
+      return new Date(t.due + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric" });
+    }
+    function taskPriorityBadgeClass(p) { return p === "high" ? "badge-danger" : p === "medium" ? "badge-warning" : "badge-default"; }
+    function taskMatches(t) {
+      var q = taskFilter.q.toLowerCase();
+      var matchesQ = !q || t.title.toLowerCase().indexOf(q) !== -1;
+      var matchesP = taskFilter.priority === "all" || t.priority === taskFilter.priority;
+      var matchesL = taskFilter.label === "all" || t.labels.indexOf(taskFilter.label) !== -1;
+      return matchesQ && matchesP && matchesL;
+    }
+    function taskLabelChips(t) {
+      return t.labels.map(function (l) { return '<span class="badge badge-default">' + l + "</span>"; }).join(" ");
+    }
+    function taskMetaLine(t) {
+      var parts = [];
+      if (t.recurring) parts.push("🔁");
+      if (t.attachments) parts.push("📎" + t.attachments);
+      return parts.join(" ");
+    }
+    function renderTaskStats() {
+      var grid = document.getElementById("task-stat-grid");
+      if (!grid) return;
+      var overdue = TASKS.filter(isOverdue).length;
+      var todayStr = new Date().toISOString().slice(0, 10);
+      var dueToday = TASKS.filter(function (t) { return t.due === todayStr && t.status !== "done"; }).length;
+      var completed = TASKS.filter(function (t) { return t.status === "done"; }).length;
+      grid.innerHTML =
+        '<div class="card stat-card"><div><div class="lbl">Total tasks</div><div class="val tnum">' + TASKS.length + '</div></div><div class="ic">✅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Overdue</div><div class="val tnum" style="color:hsl(var(--danger));">' + overdue + '</div></div><div class="ic">⏰</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Due today</div><div class="val tnum" style="color:hsl(var(--warning));">' + dueToday + '</div></div><div class="ic">📅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Completed</div><div class="val tnum" style="color:hsl(var(--success));">' + completed + "</div></div><div class=\"ic\">🎉</div></div>";
+    }
+    function renderTaskKanban() {
+      var wrap = document.getElementById("task-kanban");
+      if (!wrap) return;
+      var cols = [{ key: "todo", label: "To do" }, { key: "inprogress", label: "In progress" }, { key: "done", label: "Done" }];
+      wrap.innerHTML = cols.map(function (col) {
+        var items = TASKS.filter(function (t) { return t.status === col.key && taskMatches(t); });
+        var cards = items.map(function (t) {
+          var done = t.status === "done";
+          return (
+            '<div class="card kcard" style="' + (done ? "opacity:0.6;" : "") + '">' +
+            '<div class="kt" style="' + (done ? "text-decoration:line-through;" : "") + '">' + (done ? "✓ " : "◯ ") + t.title + "</div>" +
+            (t.due ? '<div class="ks">' + taskDueLabel(t) + (isOverdue(t) ? " · overdue" : "") + "</div>" : "") +
+            '<div style="margin-top:0.4rem;display:flex;gap:0.3rem;flex-wrap:wrap;align-items:center;">' +
+            '<span class="badge ' + taskPriorityBadgeClass(t.priority) + '">' + t.priority + "</span>" + taskLabelChips(t) +
+            (taskMetaLine(t) ? '<span style="font-size:0.75rem;color:hsl(var(--muted-fg));">' + taskMetaLine(t) + "</span>" : "") +
+            "</div></div>"
+          );
+        }).join("");
+        return '<div class="kanban-col"><div class="kanban-col-head"><h4>' + col.label + "</h4><span>" + items.length + "</span></div>" + (cards || '<p class="widget-empty">No tasks.</p>') + "</div>";
+      }).join("");
+    }
+    function renderTaskList() {
+      var tbody = document.querySelector("#task-list-table tbody");
+      if (!tbody) return;
+      var items = TASKS.filter(taskMatches);
+      tbody.innerHTML = items.length ? items.map(function (t) {
+        var done = t.status === "done";
+        return (
+          "<tr><td>" + (done ? "✓" : "◯") + '</td><td style="' + (done ? "text-decoration:line-through;color:hsl(var(--muted-fg));" : "font-weight:600;") + '">' + t.title + " " + taskMetaLine(t) + "</td>" +
+          '<td><span class="badge ' + taskPriorityBadgeClass(t.priority) + '">' + t.priority + "</span></td>" +
+          "<td>" + (t.due ? taskDueLabel(t) + (isOverdue(t) ? ' <span class="badge badge-danger">overdue</span>' : "") : "—") + "</td>" +
+          "<td>" + taskLabelChips(t) + "</td>" +
+          '<td><span class="badge badge-default">' + (t.status === "todo" ? "To do" : t.status === "inprogress" ? "In progress" : "Done") + "</span></td></tr>"
+        );
+      }).join("") : '<tr><td colspan="6" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No tasks match your filters.</td></tr>';
+    }
+    function populateTaskLabelFilter() {
+      var sel = document.getElementById("task-label-filter");
+      if (!sel) return;
+      var labels = [];
+      TASKS.forEach(function (t) { t.labels.forEach(function (l) { if (labels.indexOf(l) === -1) labels.push(l); }); });
+      var current = sel.value;
+      sel.innerHTML = '<option value="all">All labels</option>' + labels.map(function (l) { return '<option value="' + l + '">' + l + "</option>"; }).join("");
+      if (labels.indexOf(current) !== -1) sel.value = current;
+    }
+    function renderTasksAll() {
+      populateTaskLabelFilter();
+      renderTaskStats();
+      renderTaskKanban();
+      renderTaskList();
+    }
+    var tasksInitDone = false;
+    function renderTasksInit() {
+      if (tasksInitDone) return;
+      tasksInitDone = true;
+      renderTasksAll();
+    }
+    var taskSearchEl = document.getElementById("task-search");
+    if (taskSearchEl) taskSearchEl.addEventListener("input", function (e) { taskFilter.q = e.target.value; renderTaskKanban(); renderTaskList(); });
+    var taskPriorityFilterEl = document.getElementById("task-priority-filter");
+    if (taskPriorityFilterEl) taskPriorityFilterEl.addEventListener("change", function (e) { taskFilter.priority = e.target.value; renderTaskKanban(); renderTaskList(); });
+    var taskLabelFilterEl = document.getElementById("task-label-filter");
+    if (taskLabelFilterEl) taskLabelFilterEl.addEventListener("change", function (e) { taskFilter.label = e.target.value; renderTaskKanban(); renderTaskList(); });
+    var taskViewTabsEl = document.getElementById("task-view-tabs");
+    if (taskViewTabsEl) taskViewTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-task-view]");
+      if (!btn) return;
+      var view = btn.getAttribute("data-task-view");
+      taskViewTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+      document.getElementById("task-kanban-wrap").style.display = view === "kanban" ? "" : "none";
+      document.getElementById("task-list-wrap").style.display = view === "list" ? "" : "none";
+    });
+
+    // add-task modal
+    function atOpen() {
+      document.getElementById("at-title").value = "";
+      document.getElementById("at-priority").value = "medium";
+      document.getElementById("at-due").value = "";
+      document.getElementById("at-label").value = "";
+      document.getElementById("at-recurring").value = "0";
+      document.getElementById("at-notes").value = "";
+      document.getElementById("at-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function atClose() {
+      document.getElementById("at-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var atCloseBtn = document.getElementById("at-close");
+    if (atCloseBtn) atCloseBtn.addEventListener("click", atClose);
+    var atBackdropEl = document.getElementById("at-backdrop");
+    if (atBackdropEl) atBackdropEl.addEventListener("click", atClose);
+    var atSubmitBtn = document.getElementById("at-submit");
+    if (atSubmitBtn) atSubmitBtn.addEventListener("click", function () {
+      var titleEl = document.getElementById("at-title");
+      var title = titleEl.value.trim();
+      if (!title) { titleEl.focus(); return; }
+      var label = document.getElementById("at-label").value.trim();
+      TASKS.push({
+        id: "t" + Date.now(),
+        title: title,
+        status: "todo",
+        priority: document.getElementById("at-priority").value,
+        due: document.getElementById("at-due").value || null,
+        labels: label ? [label] : [],
+        recurring: document.getElementById("at-recurring").value === "1",
+        attachments: 0,
+      });
+      renderTasksAll();
+      atClose();
+      showToast("Task added");
+      playSound("success");
+    });
+    var taskAddBtnEl = document.getElementById("task-add-btn");
+    if (taskAddBtnEl) taskAddBtnEl.addEventListener("click", atOpen);
+
+    // ---- Team Management + Roles & Permissions ----
+    var ROLE_LIST = ["Owner", "Admin", "Manager", "Accountant", "Sales", "Employee", "Viewer"];
+    var TEAM_MEMBERS = [
+      { id: "m1", name: "Team Member 1", email: "member1@ivoxa.com", role: "Owner", status: "Active" },
+      { id: "m2", name: "Team Member 2", email: "member2@ivoxa.com", role: "Admin", status: "Active" },
+      { id: "m3", name: "Team Member 3", email: "member3@ivoxa.com", role: "Accountant", status: "Active" },
+      { id: "m4", name: "Team Member 4", email: "member4@ivoxa.com", role: "Sales", status: "Active" },
+      { id: "m5", name: "Team Member 5", email: "member5@ivoxa.com", role: "Employee", status: "Suspended" },
+    ];
+    var PENDING_INVITES = [
+      { email: "invitee@atlasstudio.io", role: "Viewer", sent: "Jul 12, 2026", status: "Pending" },
+    ];
+    var MODULE_LIST = ["Dashboard", "Invoices", "Quotes", "Clients", "CRM", "Inventory", "Expenses", "Reports", "Settings", "Company Profiles"];
+    var PERMISSIONS = {};
+    MODULE_LIST.forEach(function (mod) {
+      PERMISSIONS[mod] = {};
+      ROLE_LIST.forEach(function (role) {
+        var val;
+        if (role === "Owner" || role === "Admin") val = true;
+        else if (role === "Manager") val = mod !== "Settings" && mod !== "Company Profiles";
+        else if (role === "Accountant") val = ["Dashboard", "Invoices", "Expenses", "Reports"].indexOf(mod) !== -1;
+        else if (role === "Sales") val = ["Dashboard", "Quotes", "Clients", "CRM"].indexOf(mod) !== -1;
+        else if (role === "Employee") val = mod === "Dashboard";
+        else val = mod === "Dashboard";
+        PERMISSIONS[mod][role] = val;
+      });
+    });
+    function renderTeamMembers() {
+      var tbody = document.querySelector("#team-members-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = TEAM_MEMBERS.map(function (m) {
+        var statusCls = m.status === "Active" ? "badge-success" : m.status === "Suspended" ? "badge-danger" : "badge-default";
+        var roleOptions = ROLE_LIST.map(function (r) { return "<option" + (r === m.role ? " selected" : "") + ">" + r + "</option>"; }).join("");
+        return (
+          '<tr><td style="font-weight:700;">' + m.name + "</td><td>" + m.email + "</td>" +
+          '<td><select class="field" style="height:2rem;width:9.5rem;" data-member-role="' + m.id + '"' + (m.role === "Owner" ? " disabled" : "") + ">" + roleOptions + "</select></td>" +
+          '<td><span class="badge ' + statusCls + '">' + m.status + "</span></td></tr>"
+        );
+      }).join("");
+    }
+    function renderInvites() {
+      var tbody = document.querySelector("#team-invites-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = PENDING_INVITES.length ? PENDING_INVITES.map(function (inv, i) {
+        return (
+          "<tr><td>" + inv.email + '</td><td><span class="badge badge-default">' + inv.role + "</span></td><td>" + inv.sent + '</td><td><span class="badge badge-warning">' + inv.status + "</span></td>" +
+          '<td><button class="btn btn-ghost btn-sm" data-revoke-invite="' + i + '">Revoke</button></td></tr>'
+        );
+      }).join("") : '<tr><td colspan="5" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No pending invitations.</td></tr>';
+    }
+    function populateInviteRoleSelect() {
+      var sel = document.getElementById("invite-role");
+      if (!sel) return;
+      sel.innerHTML = ROLE_LIST.filter(function (r) { return r !== "Owner"; }).map(function (r) { return "<option>" + r + "</option>"; }).join("");
+    }
+    function renderPermMatrix() {
+      var table = document.getElementById("perm-matrix-table");
+      if (!table) return;
+      var thead = "<thead><tr><th>Module</th>" + ROLE_LIST.map(function (r) { return '<th style="text-align:center;">' + r + "</th>"; }).join("") + "</tr></thead>";
+      var tbody = "<tbody>" + MODULE_LIST.map(function (mod) {
+        return "<tr><td style=\"font-weight:700;\">" + mod + "</td>" + ROLE_LIST.map(function (role) {
+          var locked = role === "Owner";
+          var checked = PERMISSIONS[mod][role];
+          return '<td style="text-align:center;"><input type="checkbox" ' + (checked ? "checked" : "") + (locked ? " disabled" : "") + ' data-perm-module="' + mod + '" data-perm-role="' + role + '" style="width:1.05rem;height:1.05rem;" /></td>';
+        }).join("") + "</tr>";
+      }).join("") + "</tbody>";
+      table.innerHTML = thead + tbody;
+    }
+    function renderRoadmapGrid() {
+      var grid = document.getElementById("roadmap-grid");
+      if (!grid) return;
+      var items = [
+        { ic: "📁", t: "Projects" }, { ic: "🤖", t: "CRM Automation" }, { ic: "💰", t: "Payroll" }, { ic: "🧑‍💼", t: "HR" },
+        { ic: "🌐", t: "Client Portal" }, { ic: "🚚", t: "Vendor Portal" }, { ic: "📝", t: "Purchase Orders" }, { ic: "🏭", t: "Warehouse" },
+        { ic: "⚙️", t: "Manufacturing" }, { ic: "🔌", t: "Public API" }, { ic: "🛒", t: "Marketplace" }, { ic: "🔗", t: "Integrations" },
+      ];
+      grid.innerHTML = items.map(function (i) {
+        return '<div class="card feature-card" style="padding:1rem;"><div class="feature-icon" style="margin-bottom:0.5rem;">' + i.ic + '</div><h3 style="font-size:0.85rem;">' + i.t + ' <span class="badge badge-default">Soon</span></h3></div>';
+      }).join("");
+    }
+    var teamInitDone = false;
+    function renderTeamInit() {
+      if (teamInitDone) return;
+      teamInitDone = true;
+      renderTeamMembers();
+      renderInvites();
+      populateInviteRoleSelect();
+      renderPermMatrix();
+      renderRoadmapGrid();
+    }
+    var teamTabsEl = document.getElementById("team-tabs");
+    if (teamTabsEl) teamTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-team-tab]");
+      if (!btn) return;
+      var tab = btn.getAttribute("data-team-tab");
+      teamTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+      document.querySelectorAll("#view-team .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "team-panel-" + tab); });
+    });
+    document.body.addEventListener("change", function (e) {
+      var sel = e.target.closest("[data-member-role]");
+      if (sel) {
+        var m = TEAM_MEMBERS.filter(function (x) { return x.id === sel.getAttribute("data-member-role"); })[0];
+        if (m) { m.role = sel.value; showToast(m.name + "'s role changed to " + m.role); }
+        return;
+      }
+      var chk = e.target.closest("[data-perm-module]");
+      if (chk) PERMISSIONS[chk.getAttribute("data-perm-module")][chk.getAttribute("data-perm-role")] = chk.checked;
+    });
+    document.body.addEventListener("click", function (e) {
+      var revoke = e.target.closest("[data-revoke-invite]");
+      if (!revoke) return;
+      var i = Number(revoke.getAttribute("data-revoke-invite"));
+      var inv = PENDING_INVITES[i];
+      PENDING_INVITES.splice(i, 1);
+      renderInvites();
+      showToast("Invitation to " + inv.email + " revoked");
+    });
+    var inviteSendBtnEl = document.getElementById("invite-send-btn");
+    if (inviteSendBtnEl) inviteSendBtnEl.addEventListener("click", function () {
+      var emailEl = document.getElementById("invite-email");
+      var roleEl = document.getElementById("invite-role");
+      var email = emailEl.value.trim();
+      if (!email || email.indexOf("@") === -1) { emailEl.focus(); return; }
+      PENDING_INVITES.push({ email: email, role: roleEl.value, sent: new Date().toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }), status: "Pending" });
+      emailEl.value = "";
+      renderInvites();
+      showToast("Invitation sent to " + email);
+      playSound("success");
+    });
+
+    // ---- File Manager ----
+    var FILE_FOLDERS = ["All", "Invoices", "Quotes", "Contracts", "Receipts", "Documents"];
+    var FILE_ACTIVE_FOLDER = "All";
+    var FILES = [
+      { id: "f1", name: "INV-0006.pdf", folder: "Invoices", size: "182 KB", type: "pdf", url: null },
+      { id: "f2", name: "QUO-0011.pdf", folder: "Quotes", size: "164 KB", type: "pdf", url: null },
+      { id: "f3", name: "Harborline-MSA-signed.pdf", folder: "Contracts", size: "540 KB", type: "pdf", url: null },
+      { id: "f4", name: "figma-receipt-jul.pdf", folder: "Receipts", size: "88 KB", type: "pdf", url: null },
+      { id: "f5", name: "brand-guidelines.docx", folder: "Documents", size: "1.2 MB", type: "doc", url: null },
+    ];
+    var FILE_ICONS = { pdf: "📄", doc: "📝", img: "🖼️", xls: "📊", other: "📁" };
+    function fileIconFor(f) {
+      if (f.type === "img" && f.url) return '<img src="' + f.url + '" alt="" />';
+      return FILE_ICONS[f.type] || FILE_ICONS.other;
+    }
+    function renderFileFolders() {
+      var wrap = document.getElementById("file-folders");
+      if (!wrap) return;
+      wrap.innerHTML = FILE_FOLDERS.map(function (f) {
+        var count = f !== "All" ? " (" + FILES.filter(function (x) { return x.folder === f; }).length + ")" : "";
+        return '<button class="chip' + (FILE_ACTIVE_FOLDER === f ? " on" : "") + '" data-file-folder="' + f + '">' + f + count + "</button>";
+      }).join("");
+    }
+    function renderFileGrid(query) {
+      var grid = document.getElementById("file-grid");
+      if (!grid) return;
+      var q = (query || "").toLowerCase();
+      var items = FILES.filter(function (f) {
+        var matchesFolder = FILE_ACTIVE_FOLDER === "All" || f.folder === FILE_ACTIVE_FOLDER;
+        var matchesQ = !q || f.name.toLowerCase().indexOf(q) !== -1;
+        return matchesFolder && matchesQ;
+      });
+      grid.innerHTML = items.length ? items.map(function (f) {
+        return (
+          '<div class="card tool-card" data-file-id="' + f.id + '">' +
+          '<div class="file-thumb">' + fileIconFor(f) + "</div>" +
+          '<h3 style="font-size:0.85rem;font-weight:700;word-break:break-word;">' + f.name + "</h3>" +
+          '<p style="font-size:0.75rem;color:hsl(var(--muted-fg));margin-top:0.2rem;">' + f.folder + " · " + f.size + "</p>" +
+          '<button class="btn btn-ghost btn-sm" style="margin-top:0.6rem;" data-remove-file="' + f.id + '">Remove</button>' +
+          "</div>"
+        );
+      }).join("") : '<div class="empty-state" style="grid-column:1/-1;"><div class="ic">🗂️</div><h3>No files found</h3><p>Upload a file or adjust your search to see it here.</p></div>';
+    }
+    function renderFilesAll() {
+      renderFileFolders();
+      var searchEl = document.getElementById("file-search");
+      renderFileGrid(searchEl ? searchEl.value : "");
+    }
+    var filesInitDone = false;
+    function renderFilesInit() {
+      if (filesInitDone) return;
+      filesInitDone = true;
+      renderFilesAll();
+    }
+    document.body.addEventListener("click", function (e) {
+      var folderBtn = e.target.closest("[data-file-folder]");
+      if (folderBtn) { FILE_ACTIVE_FOLDER = folderBtn.getAttribute("data-file-folder"); renderFilesAll(); return; }
+      var removeBtn = e.target.closest("[data-remove-file]");
+      if (removeBtn) {
+        FILES = FILES.filter(function (f) { return f.id !== removeBtn.getAttribute("data-remove-file"); });
+        renderFilesAll();
+        showToast("File removed");
+      }
+    });
+    var fileSearchEl = document.getElementById("file-search");
+    if (fileSearchEl) fileSearchEl.addEventListener("input", function (e) { renderFileGrid(e.target.value); });
+    var fileUploadBtnEl = document.getElementById("file-upload-btn");
+    var fileUploadInputEl = document.getElementById("file-upload-input");
+    if (fileUploadBtnEl && fileUploadInputEl) {
+      fileUploadBtnEl.addEventListener("click", function () { fileUploadInputEl.click(); });
+      fileUploadInputEl.addEventListener("change", function (e) {
+        var files = Array.prototype.slice.call(e.target.files);
+        files.forEach(function (file, i) {
+          var isImg = file.type.indexOf("image/") === 0;
+          var ext = file.name.split(".").pop().toLowerCase();
+          var type = isImg ? "img" : ["doc", "docx"].indexOf(ext) !== -1 ? "doc" : ["xls", "xlsx", "csv"].indexOf(ext) !== -1 ? "xls" : ext === "pdf" ? "pdf" : "other";
+          var rec = {
+            id: "fup" + Date.now() + i,
+            name: file.name,
+            folder: FILE_ACTIVE_FOLDER === "All" ? "Documents" : FILE_ACTIVE_FOLDER,
+            size: file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(1) + " MB" : Math.round(file.size / 1024) + " KB",
+            type: type,
+            url: null,
+          };
+          if (isImg) rec.url = URL.createObjectURL(file);
+          FILES.unshift(rec);
+        });
+        renderFilesAll();
+        showToast(files.length + " file(s) uploaded");
+        playSound("success");
+        e.target.value = "";
+      });
+    }
+
+    // ---- Notification Center 2.0 ----
+    var NOTIFICATIONS = [
+      { id: "n1", icon: "✅", type: "Invoice paid", text: "INV-0006 — $1,240.00", read: false },
+      { id: "n2", icon: "⚠️", type: "Low stock", text: "Logistics tracking module — 4 pcs left", read: false },
+      { id: "n3", icon: "⏰", type: "Invoice overdue", text: "INV-0005 — Harborline Logistics — $3,480.00", read: false },
+      { id: "n4", icon: "✅", type: "Task reminder", text: "Follow up with Nova Digital is due", read: false },
+      { id: "n5", icon: "🤝", type: "Meeting reminder", text: "Kickoff call with Atlas Studio at 10:00 AM", read: true },
+      { id: "n6", icon: "✨", type: "AI suggestion", text: "3 clients haven't paid in 30+ days — send reminders?", read: true },
+      { id: "n7", icon: "🔒", type: "Security alert", text: "New sign-in from a Windows device in Lahore", read: true },
+      { id: "n8", icon: "👤", type: "Team activity", text: "Team Member 2 updated the Harborline quote", read: true },
+    ];
+    function renderAllNotifPanels() {
+      var unread = NOTIFICATIONS.filter(function (n) { return !n.read; }).length;
+      document.querySelectorAll("[data-notif-list]").forEach(function (list) {
+        list.innerHTML = NOTIFICATIONS.map(function (n) {
+          return (
+            '<div class="notif-item' + (n.read ? " read" : "") + '" data-notif-id="' + n.id + '">' +
+            '<span class="unread-dot"></span><span>' + n.icon + "</span>" +
+            '<div><div class="nt">' + n.type + '</div><div class="nm">' + n.text + "</div></div></div>"
+          );
+        }).join("");
+      });
+      document.querySelectorAll(".notif-dot").forEach(function (dot) { dot.style.display = unread ? "" : "none"; });
+    }
+    document.body.addEventListener("click", function (e) {
+      var item = e.target.closest("[data-notif-id]");
+      if (item) {
+        var n = NOTIFICATIONS.filter(function (x) { return x.id === item.getAttribute("data-notif-id"); })[0];
+        if (n) { n.read = true; renderAllNotifPanels(); }
+        return;
+      }
+      if (e.target.closest("[data-notif-mark-all]")) {
+        NOTIFICATIONS.forEach(function (n) { n.read = true; });
+        renderAllNotifPanels();
+      }
+    });
+    renderAllNotifPanels();
+
+    // ---- Dashboard customize (Smart Dashboard) ----
+    var DASH_WIDGET_DEFS = [
+      { id: "pipeline", label: "CRM pipeline" },
+      { id: "tasks", label: "Tasks due" },
+      { id: "calendar", label: "Calendar" },
+      { id: "inventory", label: "Inventory alerts" },
+      { id: "notifications", label: "Notifications" },
+      { id: "ai-insights", label: "AI Insights" },
+    ];
+    var dashWidgetVisibility = {};
+    DASH_WIDGET_DEFS.forEach(function (w) { dashWidgetVisibility[w.id] = true; });
+    function renderDashCustomizePanel() {
+      var panel = document.getElementById("dash-customize-panel");
+      if (!panel) return;
+      panel.innerHTML = '<p style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:hsl(var(--muted-fg));margin-bottom:0.4rem;padding:0 0.3rem;">Show widgets</p>' +
+        DASH_WIDGET_DEFS.map(function (w) {
+          return '<label style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0.3rem;font-size:0.82rem;cursor:pointer;"><input type="checkbox" data-dash-widget-toggle="' + w.id + '" ' + (dashWidgetVisibility[w.id] ? "checked" : "") + " />" + w.label + "</label>";
+        }).join("");
+    }
+    function applyDashWidgetVisibility() {
+      document.querySelectorAll("#dash-widget-grid [data-widget-id]").forEach(function (card) {
+        card.style.display = dashWidgetVisibility[card.getAttribute("data-widget-id")] === false ? "none" : "";
+      });
+    }
+    var dashCustomizeBtn = document.getElementById("dash-customize-btn");
+    if (dashCustomizeBtn) {
+      dashCustomizeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var panel = document.getElementById("dash-customize-panel");
+        var willOpen = panel.style.display === "none" || !panel.style.display;
+        panel.style.display = willOpen ? "block" : "none";
+        if (willOpen) renderDashCustomizePanel();
+      });
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest("#dash-customize-btn") && !e.target.closest("#dash-customize-panel")) {
+          document.getElementById("dash-customize-panel").style.display = "none";
+        }
+      });
+      document.body.addEventListener("change", function (e) {
+        var chk = e.target.closest("[data-dash-widget-toggle]");
+        if (!chk) return;
+        dashWidgetVisibility[chk.getAttribute("data-dash-widget-toggle")] = chk.checked;
+        applyDashWidgetVisibility();
+      });
+    }
+
+    // ---- Global Search (command palette) ----
+    function buildSearchIndex() {
+      var idx = [];
+      function addFromTable(tableId, group, icon, gotoId, labelCol, subCol) {
+        var el = document.getElementById(tableId);
+        if (!el) return;
+        el.querySelectorAll("tbody tr").forEach(function (tr) {
+          var cells = tr.querySelectorAll("td");
+          if (!cells.length) return;
+          var label = cells[labelCol] ? cells[labelCol].textContent.trim() : "";
+          var sub = subCol != null && cells[subCol] ? cells[subCol].textContent.trim() : "";
+          if (label) idx.push({ group: group, icon: icon, label: label, sub: sub, goto: gotoId });
+        });
+      }
+      INVOICES.forEach(function (inv) { idx.push({ group: "Invoices", icon: "📄", label: inv.id, sub: inv.client, goto: "invoices" }); });
+      addFromTable("quotes-table", "Quotes", "🧾", "quotes", 0, 1);
+      CLIENTS.forEach(function (c) { idx.push({ group: "Clients", icon: "👥", label: c.name, sub: c.company, goto: "client-detail", openClient: c.id }); });
+      addFromTable("companies-table", "Companies", "🏢", "companies", 0, 1);
+      EXPENSES.forEach(function (e) { idx.push({ group: "Expenses", icon: "💳", label: e.title, sub: e.category, goto: "expenses" }); });
+      PRODUCTS.forEach(function (p) { idx.push({ group: "Inventory", icon: p.type === "service" ? "🧰" : "📦", label: p.name, sub: p.sku, goto: "inventory" }); });
+      TASKS.forEach(function (t) { idx.push({ group: "Tasks", icon: "✅", label: t.title, sub: t.priority, goto: "tasks" }); });
+      FILES.forEach(function (f) { idx.push({ group: "Files", icon: "🗂️", label: f.name, sub: f.folder, goto: "files" }); });
+      TEAM_MEMBERS.forEach(function (m) { idx.push({ group: "Team", icon: "🧑", label: m.name, sub: m.role, goto: "team" }); });
+      var pages = [
+        { group: "Pages", icon: "▦", label: "Dashboard", goto: "dashboard" },
+        { group: "Pages", icon: "💼", label: "CRM", goto: "crm" },
+        { group: "Pages", icon: "🎯", label: "Leads", goto: "leads" },
+        { group: "Pages", icon: "🏢", label: "Companies", goto: "companies" },
+        { group: "Pages", icon: "🧾", label: "Quotes", goto: "quotes" },
+        { group: "Pages", icon: "🎨", label: "Design Studio", goto: "design-studio" },
+        { group: "Pages", icon: "📅", label: "Calendar", goto: "calendar" },
+        { group: "Pages", icon: "📊", label: "Reports", goto: "reports" },
+        { group: "Pages", icon: "✨", label: "AI Assistant", goto: "ai" },
+        { group: "Pages", icon: "🧑‍🤝‍🧑", label: "Team & Roles", goto: "team" },
+        { group: "Pages", icon: "🗂️", label: "Files", goto: "files" },
+        { group: "Pages", icon: "⚙️", label: "Settings (via Team)", goto: "team" },
+      ];
+      return idx.concat(pages);
+    }
+    var cmdkQuery = "";
+    var cmdkActiveIndex = 0;
+    var cmdkResults = [];
+    function cmdkFilter(idx, q) {
+      q = q.toLowerCase();
+      if (!q) return idx.slice(0, 40);
+      return idx.filter(function (item) {
+        return item.label.toLowerCase().indexOf(q) !== -1 || (item.sub || "").toLowerCase().indexOf(q) !== -1 || item.group.toLowerCase().indexOf(q) !== -1;
+      }).slice(0, 40);
+    }
+    function cmdkRender() {
+      cmdkResults = cmdkFilter(buildSearchIndex(), cmdkQuery);
+      var list = document.getElementById("cmdk-list");
+      if (!cmdkResults.length) {
+        list.innerHTML = '<div class="cmdk-empty">No results for "' + cmdkQuery + '"</div>';
+        return;
+      }
+      var groups = [];
+      cmdkResults.forEach(function (item) { if (groups.indexOf(item.group) === -1) groups.push(item.group); });
+      var html = "";
+      var flatIndex = 0;
+      groups.forEach(function (g) {
+        html += '<div class="cmdk-group-label">' + g + "</div>";
+        cmdkResults.forEach(function (item) {
+          if (item.group !== g) return;
+          var i = flatIndex++;
+          html +=
+            '<button class="cmdk-item' + (i === cmdkActiveIndex ? " active" : "") + '" data-cmdk-index="' + i + '" data-goto="' + item.goto + '"' + (item.openClient ? ' data-open-client="' + item.openClient + '"' : "") + '>' +
+            '<span class="ic">' + item.icon + "</span>" +
+            '<span class="meta"><span class="n">' + item.label + "</span>" + (item.sub ? '<span class="t">' + item.sub + "</span>" : "") + "</span>" +
+            "</button>";
+        });
+      });
+      list.innerHTML = html;
+    }
+    function cmdkOpen() {
+      cmdkQuery = "";
+      cmdkActiveIndex = 0;
+      document.getElementById("cmdk-input").value = "";
+      cmdkRender();
+      document.getElementById("cmdk-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+      setTimeout(function () { document.getElementById("cmdk-input").focus(); }, 30);
+    }
+    function cmdkClose() {
+      document.getElementById("cmdk-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("cmdk-backdrop").addEventListener("click", cmdkClose);
+    document.getElementById("cmdk-input").addEventListener("input", function (e) {
+      cmdkQuery = e.target.value;
+      cmdkActiveIndex = 0;
+      cmdkRender();
+    });
+    document.getElementById("cmdk-list").addEventListener("click", function (e) {
+      var openClientBtn = e.target.closest("[data-open-client]");
+      if (openClientBtn) renderClientDetail(openClientBtn.getAttribute("data-open-client"));
+      if (e.target.closest("[data-goto]")) cmdkClose();
+    });
+    document.querySelectorAll(".search-trigger").forEach(function (btn) { btn.addEventListener("click", cmdkOpen); });
+    document.addEventListener("keydown", function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        cmdkOpen();
+        return;
+      }
+      if (!document.getElementById("cmdk-overlay").classList.contains("open")) return;
+      if (e.key === "Escape") { cmdkClose(); return; }
+      if (e.key === "ArrowDown") { e.preventDefault(); cmdkActiveIndex = Math.min(cmdkActiveIndex + 1, cmdkResults.length - 1); cmdkRender(); return; }
+      if (e.key === "ArrowUp") { e.preventDefault(); cmdkActiveIndex = Math.max(cmdkActiveIndex - 1, 0); cmdkRender(); return; }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        var item = cmdkResults[cmdkActiveIndex];
+        if (item) {
+          cmdkClose();
+          if (item.openClient) renderClientDetail(item.openClient);
+          showView(item.goto);
+        }
+      }
+    });
+
+    // ---- Global Quick Actions FAB ----
+    var gfabBtn = document.getElementById("gfab-btn");
+    var gfabMenu = document.getElementById("gfab-menu");
+    if (gfabBtn && gfabMenu) {
+      gfabBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var open = gfabMenu.classList.toggle("open");
+        gfabBtn.classList.toggle("open", open);
+      });
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".gfab-wrap")) {
+          gfabMenu.classList.remove("open");
+          gfabBtn.classList.remove("open");
+        }
+      });
+      gfabMenu.addEventListener("click", function (e) {
+        if (e.target.closest("[data-goto]")) {
+          gfabMenu.classList.remove("open");
+          gfabBtn.classList.remove("open");
+        }
+      });
+    }
   })();
 </script>
