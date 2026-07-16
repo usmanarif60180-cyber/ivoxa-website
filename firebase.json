@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "ivoxa",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "README.md",
+      "CNAME",
+      ".github/**",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false
+  }
+}
