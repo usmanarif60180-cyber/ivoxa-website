@@ -369,7 +369,7 @@
     font-size: 0.875rem; font-weight: 600; color: hsl(var(--muted-fg));
   }
   .app-nav a:hover, .app-nav-footer a:hover { background: hsl(var(--muted)); color: hsl(var(--fg)); }
-  .app-nav a.current { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
+  .app-nav a.current, .app-nav-footer a.current { background: hsl(var(--primary) / 0.12); color: hsl(var(--primary)); }
   .app-nav-footer { padding: 0.75rem; border-top: 1px solid hsl(var(--border)); }
   .app-main { flex: 1; min-width: 0; }
   .app-topbar {
@@ -1452,7 +1452,7 @@
     return (
       '<aside class="app-sidebar"><div class="logo"><span class="logo-mark">IX</span>IVOXA</div>' +
       '<nav class="app-nav">' + nav + "</nav>" +
-      '<div class="app-nav-footer"><a href="#" data-goto="dashboard">⚙ Settings</a></div></aside>'
+      '<div class="app-nav-footer"><a href="#" data-goto="settings" class="' + (active === "settings" ? "current" : "") + '">⚙ Settings</a></div></aside>'
     );
   }
   function renderTopbar() {
@@ -1497,15 +1497,15 @@
             </div>
           </div>
         </div>
-        <div class="stat-grid">
-          <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum" data-count="12840" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
-          <div class="card stat-card"><div><div class="lbl">Profit</div><div class="val tnum" data-count="8720" data-prefix="$">$0.00</div></div><div class="ic">📈</div></div>
-          <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum" data-count="4120" data-prefix="$">$0.00</div></div><div class="ic">💳</div></div>
-          <div class="card stat-card"><div><div class="lbl">Cash flow</div><div class="val tnum" data-count="6300" data-prefix="$">$0.00</div></div><div class="ic">💧</div></div>
-          <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum" data-count="3480" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
-          <div class="card stat-card"><div><div class="lbl">Invoices</div><div class="val tnum" data-count="24">0</div></div><div class="ic">📄</div></div>
-          <div class="card stat-card"><div><div class="lbl">Quotes</div><div class="val tnum" data-count="9">0</div></div><div class="ic">🧾</div></div>
-          <div class="card stat-card"><div><div class="lbl">Clients</div><div class="val tnum" data-count="12">0</div></div><div class="ic">👥</div></div>
+        <div class="stat-grid" id="dash-stat-grid">
+          <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
+          <div class="card stat-card"><div><div class="lbl">Profit</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">📈</div></div>
+          <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">💳</div></div>
+          <div class="card stat-card"><div><div class="lbl">Cash flow</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">💧</div></div>
+          <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">$</div></div>
+          <div class="card stat-card"><div><div class="lbl">Invoices</div><div class="val tnum" data-count="0">0</div></div><div class="ic">📄</div></div>
+          <div class="card stat-card"><div><div class="lbl">Quotes</div><div class="val tnum" data-count="0">0</div></div><div class="ic">🧾</div></div>
+          <div class="card stat-card"><div><div class="lbl">Clients</div><div class="val tnum" data-count="0">0</div></div><div class="ic">👥</div></div>
         </div>
 
         <div class="card quick-actions" style="margin-top:1.1rem;">
@@ -1518,24 +1518,11 @@
         <div class="dash-grid">
           <div class="card chart-wrap">
             <div class="card-title">Revenue</div>
-            <svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">
-              <defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="hsl(234 75% 58%)" stop-opacity="0.35" />
-                <stop offset="100%" stop-color="hsl(234 75% 58%)" stop-opacity="0" />
-              </linearGradient></defs>
-              <g stroke="hsl(220 18% 87%)" stroke-width="1"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="70" x2="600" y2="70"/><line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="170" x2="600" y2="170"/></g>
-              <path d="M0,150 L100,110 L200,130 L300,70 L400,90 L500,40 L600,20 L600,220 L0,220 Z" fill="url(#rg)" />
-              <path d="M0,150 L100,110 L200,130 L300,70 L400,90 L500,40 L600,20" fill="none" stroke="hsl(234 75% 58%)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              <circle cx="600" cy="20" r="4" fill="hsl(234 75% 58%)" />
-            </svg>
-            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:hsl(var(--muted-fg));padding:0 0.2rem;"><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span></div>
+            <div id="dash-revenue-chart"></div>
           </div>
           <div class="card card-pad">
             <div class="card-title">Recent activity</div>
-            <div class="activity-row"><div><div class="num">INV-0006</div><div class="meta">Jul 02, 2026</div></div><div style="text-align:right;"><div class="tnum" style="font-weight:700;">$1,240.00</div><span class="badge badge-success">Paid</span></div></div>
-            <div class="activity-row"><div><div class="num">INV-0005</div><div class="meta">Jun 28, 2026</div></div><div style="text-align:right;"><div class="tnum" style="font-weight:700;">$3,480.00</div><span class="badge badge-danger">Overdue</span></div></div>
-            <div class="activity-row"><div><div class="num">INV-0004</div><div class="meta">Jun 15, 2026</div></div><div style="text-align:right;"><div class="tnum" style="font-weight:700;">$860.00</div><span class="badge badge-warning">Pending</span></div></div>
-            <div class="activity-row"><div><div class="num">INV-0003</div><div class="meta">Jun 02, 2026</div></div><div style="text-align:right;"><div class="tnum" style="font-weight:700;">$2,150.00</div><span class="badge badge-success">Paid</span></div></div>
+            <div id="dash-recent-activity"></div>
           </div>
         </div>
 
@@ -1543,36 +1530,36 @@
           <div class="card card-pad" data-widget-id="pipeline">
             <div class="card-title">💼 CRM pipeline</div>
             <div class="pipeline-bars">
-              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">New</span><div class="bar-track"><div class="bar-fill" style="width:90%;"></div></div><span class="stage-count">3</span></div>
-              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Qualified</span><div class="bar-track"><div class="bar-fill" style="width:45%;"></div></div><span class="stage-count">2</span></div>
-              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Proposal</span><div class="bar-track"><div class="bar-fill" style="width:30%;"></div></div><span class="stage-count">1</span></div>
+              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">New</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span></div>
+              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Qualified</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span></div>
+              <div class="pipeline-row"><span class="stage-lbl" style="width:4.5rem;">Proposal</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span></div>
             </div>
           </div>
           <div class="card card-pad" data-widget-id="tasks">
             <div class="card-title">✅ Tasks due</div>
-            <div class="widget-row"><span>Follow up with Nova Digital</span><span class="badge badge-danger">Overdue</span></div>
-            <div class="widget-row"><span>Send Q3 proposal to Atlas</span><span class="badge badge-default">Jul 18</span></div>
+            <div id="dash-tasks-widget"></div>
           </div>
           <div class="card card-pad" data-widget-id="calendar">
             <div class="card-title">📅 Calendar</div>
-            <div class="widget-row"><span>INV-0005 due</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">Jun 28</span></div>
-            <div class="widget-row"><span>QUO-0011 expires</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">Aug 04</span></div>
+            <div id="dash-calendar-widget"></div>
           </div>
           <div class="card card-pad" data-widget-id="inventory">
             <div class="card-title">📦 Inventory alerts</div>
-            <div class="widget-row"><span>Logistics tracking module</span><span style="color:hsl(var(--danger));font-size:0.75rem;font-weight:600;">⚠ 4 left</span></div>
-            <div class="widget-empty" style="margin-top:0.3rem;">Other stock levels look healthy.</div>
+            <div id="dash-inventory-widget"></div>
           </div>
           <div class="card card-pad" data-widget-id="notifications">
             <div class="card-title">🔔 Notifications</div>
-            <div class="widget-row"><span>✅ Invoice paid — INV-0006</span></div>
-            <div class="widget-row"><span>⚠️ Low stock — Logistics tracking module</span></div>
-            <div class="widget-row"><span>👤 New team activity — Team Member 1</span></div>
+            <div id="dash-notifications-widget"></div>
           </div>
           <div class="card card-pad" data-widget-id="ai-insights">
             <div class="card-title">✨ AI Insights</div>
             <div id="dash-ai-insights-list"></div>
             <div class="widget-row"><span><a href="#" class="link-strong" data-goto="ai">Ask the AI Assistant →</a></span></div>
+          </div>
+          <div class="card card-pad" data-widget-id="compliance">
+            <div class="card-title">🛡️ Compliance</div>
+            <div id="dash-compliance-summary"></div>
+            <div class="widget-row"><span><a href="#" class="link-strong" data-goto="settings">Open Compliance Center →</a></span></div>
           </div>
         </div>
       </div>
@@ -1613,12 +1600,14 @@
 
         <div class="card card-pad" style="margin-bottom:1.1rem;">
           <div class="card-title">Invoice details</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
             <div><label class="field-label">Client</label><select class="field"><option>Nova Digital Agency</option><option>Atlas Studio</option><option>Harborline Logistics</option></select></div>
             <div><label class="field-label">Issue date</label><input class="field" type="date" value="2026-07-10" /></div>
             <div><label class="field-label">Due date</label><input class="field" type="date" value="2026-07-24" /></div>
             <div><label class="field-label">Currency</label><select class="field"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
+            <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
           </div>
+          <div id="inv-compliance-banner" style="margin-top:1rem;"></div>
         </div>
 
         <div class="card card-pad" style="margin-bottom:1.1rem;">
@@ -1780,6 +1769,25 @@
   </div>
 </section>
 
+<!-- ============ NEW QUOTE MODAL ============ -->
+<div class="cw-overlay" id="aq-overlay">
+  <div class="ob-backdrop" id="aq-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="aq-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">New quote</h3><button class="ob-skip" id="aq-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Client</label><select class="field" id="aq-client"></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Issue date</label><input class="field" type="date" id="aq-issue" /></div>
+          <div><label class="field-label">Valid until</label><input class="field" type="date" id="aq-valid" /></div>
+        </div>
+        <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="aq-submit">Create quote</button></div>
+  </div>
+</div>
+
 <!-- ============ ADD CLIENT MODAL ============ -->
 <div class="cw-overlay" id="ac-overlay">
   <div class="ob-backdrop" id="ac-backdrop"></div>
@@ -1858,15 +1866,11 @@
     <div class="app-main">
       <div id="topbar-quotes"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><button class="btn btn-primary">+ New quote</button></div></div>
+        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><button class="btn btn-primary" id="quote-add-btn">+ New quote</button></div></div>
         <div class="table-wrap">
           <table class="data-table" id="quotes-table">
             <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th></tr></thead>
-            <tbody>
-              <tr><td class="link-strong">QUO-0011</td><td>Nova Digital Agency</td><td>Jul 05, 2026</td><td>Aug 04, 2026</td><td><span class="badge badge-info">Sent</span></td><td class="tnum" style="text-align:right;font-weight:700;">$4,200.00</td></tr>
-              <tr><td class="link-strong">QUO-0010</td><td>Atlas Studio</td><td>Jun 22, 2026</td><td>Jul 22, 2026</td><td><span class="badge badge-success">Accepted</span></td><td class="tnum" style="text-align:right;font-weight:700;">$1,900.00</td></tr>
-              <tr><td class="link-strong">QUO-0009</td><td>Harborline Logistics</td><td>Jun 10, 2026</td><td>Jul 10, 2026</td><td><span class="badge badge-primary">Converted</span></td><td class="tnum" style="text-align:right;font-weight:700;">$860.00</td></tr>
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -2017,27 +2021,17 @@
             <button class="btn btn-outline btn-sm" id="rpt-print-btn">🖨 Export PDF</button>
           </div>
         </div>
-        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
-          <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum">$12,840.00</div></div><div class="ic">📈</div></div>
-          <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum">$3,480.00</div></div><div class="ic">$</div></div>
-          <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum">$1,860.00</div></div><div class="ic">📉</div></div>
-          <div class="card stat-card"><div><div class="lbl">Net</div><div class="val tnum">$10,980.00</div></div><div class="ic">💼</div></div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);" id="rpt-stat-grid">
+          <div class="card stat-card"><div><div class="lbl">Revenue</div><div class="val tnum">$0.00</div></div><div class="ic">📈</div></div>
+          <div class="card stat-card"><div><div class="lbl">Outstanding</div><div class="val tnum">$0.00</div></div><div class="ic">$</div></div>
+          <div class="card stat-card"><div><div class="lbl">Expenses</div><div class="val tnum">$0.00</div></div><div class="ic">📉</div></div>
+          <div class="card stat-card"><div><div class="lbl">Net</div><div class="val tnum">$0.00</div></div><div class="ic">💼</div></div>
         </div>
 
         <div class="dash-grid" style="margin-top:1.1rem;">
           <div class="card chart-wrap">
             <div class="card-title">Monthly trend</div>
-            <svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">
-              <defs><linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="hsl(234 75% 58%)" stop-opacity="0.35" />
-                <stop offset="100%" stop-color="hsl(234 75% 58%)" stop-opacity="0" />
-              </linearGradient></defs>
-              <g stroke="hsl(220 18% 87%)" stroke-width="1"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="70" x2="600" y2="70"/><line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="170" x2="600" y2="170"/></g>
-              <path d="M0,170 L100,150 L200,155 L300,110 L400,95 L500,60 L600,30 L600,220 L0,220 Z" fill="url(#rg2)" />
-              <path d="M0,170 L100,150 L200,155 L300,110 L400,95 L500,60 L600,30" fill="none" stroke="hsl(234 75% 58%)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              <circle cx="600" cy="30" r="4" fill="hsl(234 75% 58%)" />
-            </svg>
-            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:hsl(var(--muted-fg));padding:0 0.2rem;"><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span></div>
+            <div id="rpt-month-chart"></div>
           </div>
           <div class="card card-pad">
             <div class="card-title">Yearly trend</div>
@@ -2047,20 +2041,20 @@
 
         <div class="card card-pad" style="margin-top:1.1rem;">
           <div class="card-title">Conversion</div>
-          <div style="display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;padding:0.5rem 0;">
+          <div style="display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;padding:0.5rem 0;" id="rpt-conversion-rings">
             <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
               <svg width="112" height="112" style="transform:rotate(-90deg);">
                 <circle cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--muted))" stroke-width="8"/>
-                <circle class="ring" data-pct="72" cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--primary))" stroke-width="8" stroke-linecap="round" stroke-dasharray="307.9" stroke-dashoffset="307.9" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);"/>
+                <circle class="ring" data-pct="0" cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--primary))" stroke-width="8" stroke-linecap="round" stroke-dasharray="307.9" stroke-dashoffset="307.9" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);"/>
               </svg>
-              <p style="font-size:0.85rem;font-weight:700;">72% <span style="font-weight:500;color:hsl(var(--muted-fg));">Quotes accepted</span></p>
+              <p style="font-size:0.85rem;font-weight:700;" id="rpt-ring-quotes-lbl">0% <span style="font-weight:500;color:hsl(var(--muted-fg));">Quotes accepted</span></p>
             </div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
               <svg width="112" height="112" style="transform:rotate(-90deg);">
                 <circle cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--muted))" stroke-width="8"/>
-                <circle class="ring" data-pct="86" cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--primary))" stroke-width="8" stroke-linecap="round" stroke-dasharray="307.9" stroke-dashoffset="307.9" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);"/>
+                <circle class="ring" data-pct="0" cx="56" cy="56" r="49" fill="none" stroke="hsl(var(--primary))" stroke-width="8" stroke-linecap="round" stroke-dasharray="307.9" stroke-dashoffset="307.9" style="transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1);"/>
               </svg>
-              <p style="font-size:0.85rem;font-weight:700;">86% <span style="font-weight:500;color:hsl(var(--muted-fg));">Invoices paid</span></p>
+              <p style="font-size:0.85rem;font-weight:700;" id="rpt-ring-invoices-lbl">0% <span style="font-weight:500;color:hsl(var(--muted-fg));">Invoices paid</span></p>
             </div>
           </div>
         </div>
@@ -2105,10 +2099,7 @@
           </div>
           <div class="card">
             <div class="ai-chat">
-              <div class="msg user">Show overdue invoices</div>
-              <div class="msg bot">1 overdue invoice totaling $3,480.00:<br>• INV-0005 — Harborline Logistics — $3,480.00 (due Jun 28, 2026)</div>
-              <div class="msg user">How much profit this month?</div>
-              <div class="msg bot">This month: $12,840.00 revenue − $4,120.00 expenses = $8,720.00 profit.</div>
+              <div class="msg bot">Hi — ask me about invoices, cash flow, inventory, tasks or performance, or try one of the suggestions below.</div>
             </div>
             <div class="chip-row" id="ai-suggest-chips" style="margin:0 1.25rem 0.75rem;"></div>
             <div class="ai-input-row"><input class="field" placeholder="Message AI Business Assistant…" /><button class="btn btn-primary btn-icon">➤</button></div>
@@ -2126,20 +2117,20 @@
       <div id="topbar-crm"></div>
       <div class="app-content">
         <div class="page-head"><div><h1>CRM</h1><p>Your sales pipeline and customer relationships at a glance.</p></div></div>
-        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
-          <div class="card stat-card"><div><div class="lbl">New leads</div><div class="val tnum" data-count="9">0</div></div><div class="ic">💼</div></div>
-          <div class="card stat-card"><div><div class="lbl">Active clients</div><div class="val tnum" data-count="12">0</div></div><div class="ic">👤</div></div>
-          <div class="card stat-card"><div><div class="lbl">Lost deals</div><div class="val tnum" data-count="2">0</div></div><div class="ic">👋</div></div>
-          <div class="card stat-card"><div><div class="lbl">Revenue forecast</div><div class="val tnum" data-count="18600" data-prefix="$">$0.00</div></div><div class="ic">📈</div></div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);" id="crm-stat-grid">
+          <div class="card stat-card"><div><div class="lbl">New leads</div><div class="val tnum" data-count="0">0</div></div><div class="ic">💼</div></div>
+          <div class="card stat-card"><div><div class="lbl">Active clients</div><div class="val tnum" data-count="0">0</div></div><div class="ic">👤</div></div>
+          <div class="card stat-card"><div><div class="lbl">Lost deals</div><div class="val tnum" data-count="0">0</div></div><div class="ic">👋</div></div>
+          <div class="card stat-card"><div><div class="lbl">Revenue forecast</div><div class="val tnum" data-count="0" data-prefix="$">$0.00</div></div><div class="ic">📈</div></div>
         </div>
         <div class="card card-pad" style="margin-top:1.1rem;">
           <div class="card-title">Sales pipeline</div>
-          <div class="pipeline-bars">
-            <div class="pipeline-row"><span class="stage-lbl">New</span><div class="bar-track"><div class="bar-fill" style="width:90%;"></div></div><span class="stage-count">3</span><span class="stage-val">$4,200</span></div>
-            <div class="pipeline-row"><span class="stage-lbl">Contacted</span><div class="bar-track"><div class="bar-fill" style="width:60%;"></div></div><span class="stage-count">2</span><span class="stage-val">$3,100</span></div>
-            <div class="pipeline-row"><span class="stage-lbl">Qualified</span><div class="bar-track"><div class="bar-fill" style="width:45%;"></div></div><span class="stage-count">2</span><span class="stage-val">$5,800</span></div>
-            <div class="pipeline-row"><span class="stage-lbl">Proposal</span><div class="bar-track"><div class="bar-fill" style="width:30%;"></div></div><span class="stage-count">1</span><span class="stage-val">$2,400</span></div>
-            <div class="pipeline-row"><span class="stage-lbl">Negotiation</span><div class="bar-track"><div class="bar-fill" style="width:15%;"></div></div><span class="stage-count">1</span><span class="stage-val">$3,100</span></div>
+          <div class="pipeline-bars" id="crm-pipeline-bars">
+            <div class="pipeline-row"><span class="stage-lbl">New</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span><span class="stage-val">$0</span></div>
+            <div class="pipeline-row"><span class="stage-lbl">Contacted</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span><span class="stage-val">$0</span></div>
+            <div class="pipeline-row"><span class="stage-lbl">Qualified</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span><span class="stage-val">$0</span></div>
+            <div class="pipeline-row"><span class="stage-lbl">Proposal</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span><span class="stage-val">$0</span></div>
+            <div class="pipeline-row"><span class="stage-lbl">Negotiation</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="stage-count">0</span><span class="stage-val">$0</span></div>
           </div>
           <p style="margin-top:1rem;padding-top:1rem;border-top:1px solid hsl(var(--border));font-size:0.75rem;color:hsl(var(--muted-fg));">Revenue forecast is an estimate — each stage's open value weighted by a typical win probability, not a prediction.</p>
         </div>
@@ -2156,27 +2147,13 @@
       <div class="app-content">
         <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary">+ Add lead</button></div>
         <div class="kanban">
-          <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>3</span></div>
-            <div class="card kcard"><div class="kt">Lead 1</div><div class="ks">Crestline Retail</div><span class="badge badge-primary">$1,600</span></div>
-            <div class="card kcard"><div class="kt">Lead 2</div><div class="ks">Reyes &amp; Co</div><span class="badge badge-primary">$2,600</span></div>
-            <div class="card kcard"><div class="kt">Lead 3</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$900</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>2</span></div>
-            <div class="card kcard"><div class="kt">Lead 4</div><div class="ks">Referral</div><span class="badge badge-primary">$1,500</span></div>
-            <div class="card kcard"><div class="kt">Lead 5</div><div class="ks">Brooks Studio</div><span class="badge badge-primary">$1,600</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>2</span></div>
-            <div class="card kcard"><div class="kt">Harborline Logistics</div><div class="ks">Referral</div><span class="badge badge-primary">$3,100</span></div>
-            <div class="card kcard"><div class="kt">Nova Digital</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$2,700</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Proposal</h4><span>1</span></div>
-            <div class="card kcard"><div class="kt">Kessler &amp; Voss LLP</div><div class="ks">Referral</div><span class="badge badge-primary">$2,400</span></div>
-          </div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Negotiation</h4><span>1</span></div>
-            <div class="card kcard"><div class="kt">Atlas Studio</div><div class="ks">Referral</div><span class="badge badge-primary">$3,100</span></div>
-          </div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>Proposal</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>Negotiation</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
           <div class="kanban-col"><div class="kanban-col-head"><h4>Won</h4><span>0</span></div></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Lost</h4><span>2</span></div></div>
+          <div class="kanban-col"><div class="kanban-col-head"><h4>Lost</h4><span>0</span></div></div>
         </div>
       </div>
     </div>
@@ -2194,10 +2171,7 @@
           <table class="data-table" id="companies-table">
             <thead><tr><th>Name</th><th>Industry</th><th>Size</th><th>Website</th></tr></thead>
             <tbody>
-              <tr><td class="link-strong">Nova Digital Agency</td><td>Marketing</td><td>11-50</td><td>novadigital.com</td></tr>
-              <tr><td class="link-strong">Harborline Logistics</td><td>Logistics</td><td>51-200</td><td>harborline.co</td></tr>
-              <tr><td class="link-strong">Kessler &amp; Voss LLP</td><td>Legal</td><td>11-50</td><td>kesslervoss.com</td></tr>
-              <tr><td class="link-strong">Atlas Studio</td><td>Design</td><td>1-10</td><td>atlasstudio.io</td></tr>
+              <tr><td colspan="4" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No companies yet.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2343,6 +2317,81 @@
   </div>
 </section>
 
+<section class="view" id="view-settings">
+  <div class="app-shell">
+    <div id="sidebar-settings"></div>
+    <div class="app-main">
+      <div id="topbar-settings"></div>
+      <div class="app-content">
+        <div class="page-head"><div><h1>Settings</h1><p>Workspace preferences and the Global Compliance Center.</p></div></div>
+
+        <div class="ds-tabs" id="settings-tabs">
+          <button class="on" data-settings-tab="general">General</button>
+          <button data-settings-tab="compliance">Compliance Center</button>
+        </div>
+
+        <div class="ds-panel on" id="settings-panel-general">
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Business defaults</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div><label class="field-label">Default country</label><select class="field" id="set-default-country"></select></div>
+              <div><label class="field-label">Validation mode</label><select class="field" id="set-validation-mode">
+                <option value="strict">Strict — block on missing required fields</option>
+                <option value="warn" selected>Warn — show warnings, allow saving</option>
+                <option value="off">Off — no compliance checks</option>
+              </select></div>
+            </div>
+          </div>
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Legal footer</div>
+            <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.6rem;">Appears on invoices and quotes — registration details, share capital, etc.</p>
+            <textarea class="field" id="set-legal-footer" rows="3" placeholder="e.g. Share capital €10,000 — RCS Paris 123 456 789"></textarea>
+          </div>
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Compliance preferences</div>
+            <label style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.7rem;font-size:0.85rem;"><input type="checkbox" id="set-pref-autovalidate" checked style="width:1.05rem;height:1.05rem;" /> Automatically validate compliance before sending an invoice</label>
+            <label style="display:flex;gap:0.6rem;align-items:center;font-size:0.85rem;"><input type="checkbox" id="set-pref-blockcritical" style="width:1.05rem;height:1.05rem;" /> Block invoice creation on critical compliance errors</label>
+          </div>
+          <div class="card card-pad">
+            <div class="card-title">Electronic invoice settings <span class="badge badge-default">Future-ready</span></div>
+            <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.8rem;">These toggles prepare the architecture for country-mandated e-invoicing. No live electronic submission happens yet.</p>
+            <label style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.7rem;font-size:0.85rem;"><input type="checkbox" id="set-einvoice-enable" style="width:1.05rem;height:1.05rem;" /> Enable electronic invoice architecture</label>
+            <label style="display:flex;gap:0.6rem;align-items:center;font-size:0.85rem;"><input type="checkbox" id="set-ereporting-enable" style="width:1.05rem;height:1.05rem;" /> Enable e-reporting architecture</label>
+          </div>
+        </div>
+
+        <div class="ds-panel" id="settings-panel-compliance">
+          <div class="callout" style="margin-bottom:1.1rem;">
+            <span>🛡️</span>
+            <span>This center prepares IVOXA's architecture for country-specific e-invoicing and tax rules. It's future-ready scaffolding, not a certified legal/tax compliance solution — confirm requirements with a local advisor before relying on it for legal filings.</span>
+          </div>
+
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">🌍 Compliance dashboard</div>
+            <div class="table-wrap"><table class="data-table" id="cc-dashboard-table">
+              <thead><tr><th>Country</th><th>Status</th><th>Missing info</th><th>Warnings</th><th>Ready</th><th>Upcoming</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:16rem 1fr;gap:1.1rem;align-items:start;">
+            <div class="card card-pad">
+              <div class="card-title">Countries</div>
+              <div id="cc-country-list"></div>
+            </div>
+            <div id="cc-country-detail"></div>
+          </div>
+
+          <div class="card card-pad" style="margin-top:1.1rem;">
+            <div class="card-title">✨ AI Compliance Assistant</div>
+            <div id="cc-ai-tips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="tag-strip" id="tag-strip">
   <button data-goto="landing">Landing</button>
   <button data-goto="blog">Blog</button>
@@ -2360,6 +2409,7 @@
   <button data-goto="inventory">Inventory</button>
   <button data-goto="team">Team</button>
   <button data-goto="files">Files</button>
+  <button data-goto="settings">Settings</button>
   <button data-goto="invoices">Invoices</button>
   <button data-goto="ai">Assistant</button>
   <button class="replay-onboarding">✨ Onboarding</button>
@@ -2367,7 +2417,7 @@
 
 <script>
   (function () {
-    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "reports", "ai"];
+    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "settings", "reports", "ai"];
     appViews.forEach(function (id) {
       var sb = document.getElementById("sidebar-" + id);
       var tb = document.getElementById("topbar-" + id);
@@ -2487,21 +2537,7 @@
     };
     var CAL_EVENTS = [];
     function buildCalEvents() {
-      var today = new Date();
-      var d = today.getDate();
-      var daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-      function clamp(n) { return Math.max(1, Math.min(daysInMonth, n)); }
-      CAL_EVENTS = [
-        { id: "e1", day: d, type: "meeting", title: "Kickoff call with Atlas Studio", time: "10:00 AM" },
-        { id: "e2", day: clamp(d + 1), type: "expense", title: "Design software licenses renew", time: "" },
-        { id: "e3", day: clamp(d + 2), type: "task", title: "Send Q3 proposal to Atlas", time: "" },
-        { id: "e4", day: clamp(d + 3), type: "invoice_due", title: "INV-0005 due — Harborline Logistics", time: "" },
-        { id: "e5", day: clamp(d + 5), type: "payment", title: "Payment received — Kessler & Voss", time: "" },
-        { id: "e6", day: clamp(d + 7), type: "quote_expiry", title: "QUO-0011 expires — Nova Digital", time: "" },
-        { id: "e7", day: clamp(d + 9), type: "business_event", title: "Team offsite planning", time: "2:00 PM" },
-        { id: "e8", day: clamp(d + 12), type: "reminder", title: "Renew software subscriptions", time: "9:00 AM" },
-        { id: "e9", day: 15, type: "tax_deadline", title: "Quarterly VAT filing due", time: "" },
-      ];
+      CAL_EVENTS = [];
     }
     function calRingColor(type) { return "hsl(var(--" + CAL_TYPES[type].color + "))"; }
     function renderCalLegend() {
@@ -2632,21 +2668,30 @@
       });
       window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
       if (id === "dashboard") {
+        renderDashboardStats();
+        renderDashboardWidgets();
         runCounters(target);
         if (!window.__obShown) {
           window.__obShown = true;
           setTimeout(openOnboarding, 500);
         }
       }
-      if (id === "crm") runCounters(target);
+      if (id === "crm") {
+        var crmGrid = document.getElementById("crm-stat-grid");
+        if (crmGrid) crmGrid.querySelectorAll(".val")[1].setAttribute("data-count", String(CLIENTS.length));
+        runCounters(target);
+      }
       if (id === "calendar") renderCalendarInit();
       if (id === "inventory") renderInventoryInit();
       if (id === "tasks") renderTasksInit();
       if (id === "team") renderTeamInit();
       if (id === "files") renderFilesInit();
+      if (id === "settings") renderSettingsInit();
+      if (id === "invoice-new") renderInvoiceComplianceBanner();
       if (id === "clients") renderClientsInit();
       if (id === "expenses") renderExpensesInit();
       if (id === "invoices") renderInvoicesInit();
+      if (id === "quotes") renderQuotesInit();
       if (id === "reports") {
         renderReportsInit();
         requestAnimationFrame(function () {
@@ -2744,8 +2789,7 @@
       addRow("", 1, 0, "none");
     });
 
-    addRow("Brand identity package", 1, 1800, "vat20");
-    addRow("Monthly retainer — 20h", 2, 1200, "vat20");
+    addRow("", 1, 0, "none");
 
     // ---- count-up animation (hero revenue + dashboard stats) ----
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2801,24 +2845,98 @@
     }
 
     // ---- AI assistant: interactive send, keyword-matched canned answers, suggestion chips ----
-    var AI_QA = [
-      { k: ["overdue"], reply: "1 overdue invoice totaling $3,480.00:<br>• INV-0005 — Harborline Logistics — $3,480.00 (due Jun 28, 2026)" },
-      { k: ["unpaid customer", "unpaid customers", "hasn't paid", "unpaid"], reply: "Customers with unpaid balances:<br>• Harborline Logistics — $3,480.00 overdue<br>• Kessler &amp; Voss LLP — $2,150.00 (viewed, not yet paid)" },
-      { k: ["follow-up task", "follow up task", "create follow-up", "create task"], reply: "Created 2 follow-up tasks:<br>• Follow up with Harborline Logistics — overdue invoice<br>• Follow up with Kessler &amp; Voss LLP — viewed invoice, no payment yet" },
-      { k: ["monthly profit", "profit this month", "how much profit"], reply: "This month: $12,840.00 revenue − $4,120.00 expenses = $8,720.00 profit." },
-      { k: ["stock alert", "low stock", "stock alerts"], reply: "3 stock alerts:<br>• Logistics tracking module — 4 pcs left (min 10)<br>• A4 Printer Paper — 6 box left (min 20)<br>• Ergonomic Office Chair — out of stock" },
-      { k: ["inventory report", "generate inventory"], reply: "Inventory snapshot: 4 stocked products, 2 low stock, 1 out of stock. Full breakdown is in Inventory → Dashboard." },
-      { k: ["summarize", "business performance", "summary"], reply: "This month: $12,840.00 revenue, $8,720.00 profit, 24 invoices (86% paid), 9 quotes (72% accepted), 3 stock alerts, 5 tasks due." },
-      { k: ["next action", "suggest next", "what should i do"], reply: "Suggested next actions:<br>1. Follow up on the overdue Harborline invoice<br>2. Reorder the Logistics tracking module (4 left)<br>3. Send the Q3 proposal to Atlas Studio (due Jul 18)" },
-      { k: ["recommend", "improvement"], reply: "Recommendations:<br>• Automate reminders for invoices 7+ days overdue<br>• Set reorder points for your 2 low-stock items<br>• Convert QUO-0011 before it expires Aug 04" },
-      { k: ["cash flow"], reply: "Cash flow this month: $12,840.00 in, $4,120.00 out, net +$8,720.00. $3,480.00 is still outstanding from clients." },
-    ];
+    function aiMonthStats() {
+      var now = new Date();
+      var revenue = 0, expensesTotal = 0;
+      INVOICES.forEach(function (inv) {
+        inv.payments.forEach(function (p) {
+          var d = new Date(p.date);
+          if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) revenue += p.amount;
+        });
+      });
+      EXPENSES.forEach(function (e) {
+        var d = new Date(e.date);
+        if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) expensesTotal += e.amount;
+      });
+      return { revenue: revenue, expenses: expensesTotal, profit: revenue - expensesTotal };
+    }
     function aiFindReply(text) {
       var lower = text.toLowerCase();
-      for (var i = 0; i < AI_QA.length; i++) {
-        for (var j = 0; j < AI_QA[i].k.length; j++) {
-          if (lower.indexOf(AI_QA[i].k[j]) !== -1) return AI_QA[i].reply;
-        }
+      function has(words) { return words.some(function (w) { return lower.indexOf(w) !== -1; }); }
+      var outstandingBalance = INVOICES.reduce(function (s, inv) { return s + invoiceBalance(inv); }, 0);
+
+      if (has(["overdue"])) {
+        var overdue = INVOICES.filter(function (inv) { return inv.status === "Overdue"; });
+        if (!overdue.length) return "You have no overdue invoices right now.";
+        var overdueTotal = overdue.reduce(function (s, inv) { return s + invoiceBalance(inv); }, 0);
+        return overdue.length + " overdue invoice" + (overdue.length > 1 ? "s" : "") + " totaling " + currency(overdueTotal) + ":<br>" +
+          overdue.map(function (inv) { return "• " + inv.id + " — " + inv.client + " — " + currency(invoiceBalance(inv)); }).join("<br>");
+      }
+      if (has(["unpaid customer", "unpaid customers", "hasn't paid", "unpaid"])) {
+        var unpaid = INVOICES.filter(function (inv) { return invoiceBalance(inv) > 0; });
+        if (!unpaid.length) return "All your customers are paid up — no unpaid balances.";
+        return "Customers with unpaid balances:<br>" + unpaid.map(function (inv) {
+          return "• " + inv.client + " — " + currency(invoiceBalance(inv)) + (inv.status === "Overdue" ? " overdue" : " (" + inv.status.toLowerCase() + ")");
+        }).join("<br>");
+      }
+      if (has(["follow-up task", "follow up task", "create follow-up", "create task"])) {
+        var targets = INVOICES.filter(function (inv) { return invoiceBalance(inv) > 0; });
+        if (!targets.length) return "No unpaid invoices need a follow-up task right now.";
+        return "Suggested follow-up tasks:<br>" + targets.map(function (inv) {
+          return "• Follow up with " + inv.client + " — " + inv.status.toLowerCase() + " invoice";
+        }).join("<br>");
+      }
+      if (has(["monthly profit", "profit this month", "how much profit"])) {
+        var ms = aiMonthStats();
+        return "This month: " + currency(ms.revenue) + " revenue − " + currency(ms.expenses) + " expenses = " + currency(ms.profit) + " profit.";
+      }
+      if (has(["stock alert", "low stock", "stock alerts"])) {
+        var low = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; });
+        if (!low.length) return "No stock alerts — all products are above their minimum stock level.";
+        return low.length + " stock alert" + (low.length > 1 ? "s" : "") + ":<br>" + low.map(function (p) {
+          return "• " + p.name + " — " + (p.stock <= 0 ? "out of stock" : p.stock + " " + p.unit + " left (min " + p.minStock + ")");
+        }).join("<br>");
+      }
+      if (has(["inventory report", "generate inventory"])) {
+        var lowCount = PRODUCTS.filter(function (p) { return p.stock > 0 && p.stock <= p.minStock; }).length;
+        var outCount = PRODUCTS.filter(function (p) { return p.stock <= 0; }).length;
+        return "Inventory snapshot: " + PRODUCTS.length + " stocked products, " + lowCount + " low stock, " + outCount + " out of stock. Full breakdown is in Inventory → Dashboard.";
+      }
+      if (has(["summarize", "business performance", "summary"])) {
+        var ms2 = aiMonthStats();
+        var paidInvoices = INVOICES.filter(function (inv) { return inv.status === "Paid"; }).length;
+        var invoicesPaidPct = INVOICES.length ? Math.round((paidInvoices / INVOICES.length) * 100) : 0;
+        var acceptedQuotes = QUOTES.filter(function (q) { return q.status === "Accepted" || q.status === "Converted"; }).length;
+        var quotesAcceptedPct = QUOTES.length ? Math.round((acceptedQuotes / QUOTES.length) * 100) : 0;
+        var stockAlerts = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; }).length;
+        var tasksDue = TASKS.filter(function (t) { return t.status !== "done"; }).length;
+        return "This month: " + currency(ms2.revenue) + " revenue, " + currency(ms2.profit) + " profit, " + INVOICES.length + " invoices (" + invoicesPaidPct + "% paid), " + QUOTES.length + " quotes (" + quotesAcceptedPct + "% accepted), " + stockAlerts + " stock alerts, " + tasksDue + " tasks due.";
+      }
+      if (has(["next action", "suggest next", "what should i do"])) {
+        var actions = [];
+        var firstOverdue = INVOICES.filter(function (inv) { return inv.status === "Overdue"; })[0];
+        if (firstOverdue) actions.push("Follow up on the overdue " + firstOverdue.client + " invoice");
+        var firstLowStock = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; })[0];
+        if (firstLowStock) actions.push("Reorder " + firstLowStock.name + " (" + firstLowStock.stock + " left)");
+        var firstQuote = QUOTES.filter(function (q) { return q.status === "Sent"; })[0];
+        if (firstQuote) actions.push("Follow up on " + firstQuote.id + " for " + firstQuote.client);
+        if (!actions.length) return "No urgent actions right now — everything looks on track.";
+        return "Suggested next actions:<br>" + actions.map(function (a, i) { return (i + 1) + ". " + a; }).join("<br>");
+      }
+      if (has(["recommend", "improvement"])) {
+        var recs = [];
+        var overdueCount = INVOICES.filter(function (inv) { return inv.status === "Overdue"; }).length;
+        if (overdueCount) recs.push("Automate reminders for your " + overdueCount + " overdue invoice" + (overdueCount > 1 ? "s" : ""));
+        var lowStockCount = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; }).length;
+        if (lowStockCount) recs.push("Set reorder points for your " + lowStockCount + " low-stock item" + (lowStockCount > 1 ? "s" : ""));
+        var sentQuote = QUOTES.filter(function (q) { return q.status === "Sent"; })[0];
+        if (sentQuote) recs.push("Follow up on " + sentQuote.id + " before it expires");
+        if (!recs.length) return "No recommendations right now — add invoices, expenses and inventory to get tailored suggestions.";
+        return "Recommendations:<br>" + recs.map(function (r) { return "• " + r; }).join("<br>");
+      }
+      if (has(["cash flow"])) {
+        var ms3 = aiMonthStats();
+        return "Cash flow this month: " + currency(ms3.revenue) + " in, " + currency(ms3.expenses) + " out, net " + (ms3.profit >= 0 ? "+" : "") + currency(ms3.profit) + ". " + currency(outstandingBalance) + " is still outstanding from clients.";
       }
       return null;
     }
@@ -3486,25 +3604,9 @@
     if (invoicePrintBtn) invoicePrintBtn.addEventListener("click", function () { window.print(); });
 
     // ---- Inventory Management ----
-    var SUPPLIERS = [
-      { id: "s1", name: "Figma Inc.", contact: "Sales Team", email: "sales@figma.com", phone: "+1 415 555 0100" },
-      { id: "s2", name: "TechSource Distributors", contact: "Supplier Contact 1", email: "contact@techsource.pk", phone: "+92 300 1112233" },
-      { id: "s3", name: "Global Office Supplies", contact: "Supplier Contact 2", email: "contact@globaloffice.com", phone: "+92 321 4455667" },
-    ];
-    var PRODUCTS = [
-      { id: "p1", name: "Brand identity package", type: "service", category: "Design", sku: "BRD-001", barcode: "", stock: null, minStock: null, unit: "pkg", purchase: 0, selling: 1800, supplierId: null, image: null },
-      { id: "p2", name: "Monthly retainer — 20h", type: "service", category: "Consulting", sku: "RET-020", barcode: "", stock: null, minStock: null, unit: "hr", purchase: 0, selling: 2400, supplierId: null, image: null },
-      { id: "p3", name: "Logistics tracking module", type: "product", category: "Software", sku: "LTM-114", barcode: "8901234500014", stock: 4, minStock: 10, unit: "pcs", purchase: 320, selling: 540, supplierId: "s2", image: null },
-      { id: "p4", name: "Wireless Mouse", type: "product", category: "Accessories", sku: "WM-100", barcode: "8901234500021", stock: 42, minStock: 15, unit: "pcs", purchase: 8, selling: 18, supplierId: "s2", image: null },
-      { id: "p5", name: "A4 Printer Paper (Ream)", type: "product", category: "Office Supplies", sku: "PPR-500", barcode: "8901234500038", stock: 6, minStock: 20, unit: "box", purchase: 3.5, selling: 6.5, supplierId: "s3", image: null },
-      { id: "p6", name: "Ergonomic Office Chair", type: "product", category: "Furniture", sku: "CHR-220", barcode: "8901234500045", stock: 0, minStock: 5, unit: "pcs", purchase: 90, selling: 160, supplierId: "s3", image: null },
-    ];
-    var INV_HISTORY = [
-      { date: "Jul 14, 2026", text: "Stock added: 50 units — Wireless Mouse" },
-      { date: "Jul 12, 2026", text: "Stock sold: 8 units — Logistics tracking module" },
-      { date: "Jul 09, 2026", text: "Stock added: 100 units — A4 Printer Paper" },
-      { date: "Jul 03, 2026", text: "Stock sold: 5 units — Ergonomic Office Chair (now out of stock)" },
-    ];
+    var SUPPLIERS = [];
+    var PRODUCTS = [];
+    var INV_HISTORY = [];
     function supplierName(id) {
       var s = SUPPLIERS.filter(function (x) { return x.id === id; })[0];
       return s ? s.name : "—";
@@ -3543,9 +3645,10 @@
     function invRenderServices() {
       var tbody = document.querySelector("#inv-services-table tbody");
       if (!tbody) return;
-      tbody.innerHTML = PRODUCTS.filter(function (p) { return p.type === "service"; }).map(function (p) {
+      var rows = PRODUCTS.filter(function (p) { return p.type === "service"; });
+      tbody.innerHTML = rows.length ? rows.map(function (p) {
         return '<tr><td style="font-weight:700;">' + p.name + "</td><td>" + p.sku + "</td><td>" + p.category + "</td><td>" + p.unit + '</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(p.selling) + "</td></tr>";
-      }).join("");
+      }).join("") : '<tr><td colspan="5" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No services yet.</td></tr>';
     }
     function invRenderCategories() {
       var tbody = document.querySelector("#inv-categories-table tbody");
@@ -3556,17 +3659,18 @@
         cats[p.category].count++;
         cats[p.category].value += (p.stock || 0) * p.purchase;
       });
-      tbody.innerHTML = Object.keys(cats).map(function (c) {
+      var keys = Object.keys(cats);
+      tbody.innerHTML = keys.length ? keys.map(function (c) {
         return '<tr><td style="font-weight:700;">' + c + '</td><td style="text-align:right;">' + cats[c].count + '</td><td class="tnum" style="text-align:right;">' + currency(cats[c].value) + "</td></tr>";
-      }).join("");
+      }).join("") : '<tr><td colspan="3" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No categories yet.</td></tr>';
     }
     function invRenderSuppliers() {
       var tbody = document.querySelector("#inv-suppliers-table tbody");
       if (!tbody) return;
-      tbody.innerHTML = SUPPLIERS.map(function (s) {
+      tbody.innerHTML = SUPPLIERS.length ? SUPPLIERS.map(function (s) {
         var count = PRODUCTS.filter(function (p) { return p.supplierId === s.id; }).length;
         return '<tr><td style="font-weight:700;">' + s.name + "</td><td>" + s.contact + "</td><td>" + s.email + "</td><td>" + s.phone + '</td><td style="text-align:right;">' + count + "</td></tr>";
-      }).join("");
+      }).join("") : '<tr><td colspan="5" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No suppliers yet.</td></tr>';
     }
     function invRenderAlerts() {
       var wrap = document.getElementById("inv-alerts-list");
@@ -3600,9 +3704,9 @@
       }
       var dashHistory = document.getElementById("inv-dash-history");
       if (dashHistory) {
-        dashHistory.innerHTML = INV_HISTORY.map(function (h) {
+        dashHistory.innerHTML = INV_HISTORY.length ? INV_HISTORY.map(function (h) {
           return '<div class="activity-row"><div class="meta">' + h.date + '</div><div style="text-align:right;font-size:0.82rem;">' + h.text + "</div></div>";
-        }).join("");
+        }).join("") : '<p class="widget-empty">No inventory activity yet.</p>';
       }
     }
     function invPopulateSupplierSelect() {
@@ -3771,44 +3875,7 @@
     }
 
     // ---- CRM: Customer 360 / Client detail ----
-    var CLIENTS = [
-      {
-        id: "cl1", name: "Client Contact 1", company: "Nova Digital Agency", email: "contact1@novadigital.com", phone: "+92 300 1234567",
-        status: "Active", tags: ["VIP", "Retainer"], since: "2025-02-10",
-        contacts: [{ name: "Client Contact 1", role: "Marketing Director", email: "contact1@novadigital.com", phone: "+92 300 1234567" }],
-        timeline: [
-          { type: "invoice", text: "INV-0002 sent — $640.00", date: "2026-05-20" },
-          { type: "call", text: "Discussed Q3 retainer renewal", date: "2026-06-18" },
-          { type: "quote", text: "QUO-0011 sent — $4,200.00", date: "2026-07-05" },
-        ],
-      },
-      {
-        id: "cl2", name: "Client Contact 2", company: "Harborline Logistics", email: "contact2@harborline.co", phone: "+1 415 555 0142",
-        status: "At risk", tags: ["Overdue"], since: "2025-11-02",
-        contacts: [{ name: "Client Contact 2", role: "Operations Lead", email: "contact2@harborline.co", phone: "+1 415 555 0142" }],
-        timeline: [
-          { type: "invoice", text: "INV-0005 sent — $3,480.00", date: "2026-06-28" },
-        ],
-      },
-      {
-        id: "cl3", name: "Client Contact 3", company: "Kessler & Voss LLP", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958",
-        status: "Active", tags: ["Legal"], since: "2025-08-15",
-        contacts: [{ name: "Client Contact 3", role: "Partner", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958" }],
-        timeline: [
-          { type: "invoice", text: "INV-0003 viewed — $2,150.00", date: "2026-06-02" },
-          { type: "meeting", text: "Onboarding call", date: "2026-06-05" },
-        ],
-      },
-      {
-        id: "cl4", name: "Client Contact 4", company: "Atlas Studio", email: "contact4@atlasstudio.io", phone: "+92 321 9876543",
-        status: "Active", tags: ["VIP"], since: "2024-12-01",
-        contacts: [{ name: "Client Contact 4", role: "Founder", email: "contact4@atlasstudio.io", phone: "+92 321 9876543" }],
-        timeline: [
-          { type: "invoice", text: "INV-0006 paid — $1,240.00", date: "2026-07-02" },
-          { type: "note", text: "Interested in a new brand refresh package", date: "2026-07-08" },
-        ],
-      },
-    ];
+    var CLIENTS = [];
     function clientStatusBadgeClass(s) { return s === "Active" ? "badge-success" : s === "Lead" ? "badge-info" : s === "At risk" ? "badge-warning" : "badge-danger"; }
     function findClientByCompany(company) { return CLIENTS.filter(function (c) { return c.company === company; })[0]; }
     function renderClientsTable(filterText) {
@@ -3959,14 +4026,367 @@
     var cdLogActivityBtn = document.getElementById("cd-log-activity-btn");
     if (cdLogActivityBtn) cdLogActivityBtn.addEventListener("click", laOpen);
 
+    // ---- Global Compliance Center: plugin architecture ----
+    // Each country/region registers itself as an independent "compliance
+    // plugin" (field schema + required fields + a few validation rules).
+    // The core engine below (ccValidate/ccRenderDashboard/AI tips) only
+    // depends on this registry shape and never contains country-specific
+    // logic — new countries are added by registering a plugin, nothing
+    // else in the app has to change.
+    var CompliancePlugins = {};
+    var CompliancePluginOrder = [];
+    function registerCompliancePlugin(def) {
+      CompliancePlugins[def.code] = def;
+      CompliancePluginOrder.push(def.code);
+    }
+    var ComplianceData = {};
+    function ccGet(code, key, fallback) {
+      return (ComplianceData[code] && ComplianceData[code][key]) || fallback || "";
+    }
+    function ccSet(code, key, value) {
+      ComplianceData[code] = ComplianceData[code] || {};
+      ComplianceData[code][key] = value;
+    }
+
+    registerCompliancePlugin({
+      code: "GLOBAL", name: "Global", flag: "🌍", enabled: true, alwaysOn: true,
+      summary: "Shared EU/cross-border compliance services used by every country plugin.",
+      language: "Multi-language (per country)",
+      fields: [],
+      services: [
+        { key: "oss", label: "OSS — One-Stop Shop", desc: "Report cross-border B2C EU VAT through a single return." },
+        { key: "ioss", label: "IOSS — Import One-Stop Shop", desc: "Simplified VAT for low-value goods imported into the EU." },
+        { key: "reverseCharge", label: "Reverse charge", desc: "Shift VAT liability to the customer for eligible B2B transactions." },
+        { key: "intraCommunityVat", label: "Intra-community VAT", desc: "Zero-rated VAT handling for goods/services moving between EU states." },
+        { key: "euVatValidation", label: "EU VAT validation", desc: "Architecture for validating customer VAT numbers (VIES-style)." },
+        { key: "crossBorderInvoices", label: "Cross-border invoices", desc: "Multi-currency, multi-language invoice rules for cross-border sales." },
+      ],
+      architecture: [],
+      upcoming: "EU e-invoicing standardization (ViDA) — architecture will extend as rules finalize.",
+    });
+    registerCompliancePlugin({
+      code: "FR", name: "France", flag: "🇫🇷", enabled: true,
+      summary: "French invoice legal requirements, TVA and future electronic invoicing readiness.",
+      language: "French (fr-FR)",
+      fields: [
+        { key: "legalForm", label: "Legal form", type: "text", placeholder: "SAS, SARL, EI…" },
+        { key: "siren", label: "SIREN", type: "text", placeholder: "9-digit business identifier" },
+        { key: "siret", label: "SIRET", type: "text", placeholder: "14-digit establishment identifier" },
+        { key: "tva", label: "TVA / VAT number", type: "text", placeholder: "FR XX XXXXXXXXX" },
+        { key: "vatExempt", label: "VAT exemption (auto-entrepreneur / micro-entreprise)", type: "checkbox" },
+        { key: "invoiceNumberingRule", label: "Invoice numbering rule", type: "text", placeholder: "e.g. INV-{YYYY}-{SEQ}" },
+        { key: "paymentTerms", label: "Payment terms", type: "select", options: ["Net 30", "45 days end of month", "Net 60", "Net 15", "Due on receipt"] },
+        { key: "legalFooter", label: "Legal footer", type: "textarea", placeholder: "Share capital, RCS number, APE code…" },
+      ],
+      required: ["siren", "siret", "tva", "invoiceNumberingRule"],
+      architecture: [
+        { label: "Customer VAT validation architecture", note: "Future-ready" },
+        { label: "Electronic invoice architecture", note: "Future-ready" },
+        { label: "Future PDP integration architecture", note: "Coming soon" },
+        { label: "Future e-reporting architecture", note: "Coming soon" },
+      ],
+      upcoming: "French e-invoicing mandate — phased rollout; exact dates depend on the final government timeline.",
+    });
+    registerCompliancePlugin({
+      code: "IT", name: "Italy", flag: "🇮🇹", enabled: true,
+      summary: "Fattura Elettronica, SDI routing and Italian VAT readiness.",
+      language: "Italian (it-IT)",
+      fields: [
+        { key: "vatNumber", label: "Italian VAT (Partita IVA)", type: "text", placeholder: "IT XXXXXXXXXXX" },
+        { key: "codiceDestinatario", label: "Codice Destinatario", type: "text", placeholder: "7-character SDI recipient code" },
+        { key: "pec", label: "PEC email", type: "text", placeholder: "name@pec.it" },
+      ],
+      required: ["vatNumber", "codiceDestinatario"],
+      architecture: [
+        { label: "Fattura Elettronica architecture", note: "Future-ready" },
+        { label: "SDI integration architecture", note: "Future-ready" },
+        { label: "Future electronic submission", note: "Coming soon" },
+      ],
+      upcoming: "SDI rules are updated periodically — architecture will track official schema changes.",
+    });
+    registerCompliancePlugin({
+      code: "ES", name: "Spain", flag: "🇪🇸", enabled: true,
+      summary: "VeriFactu readiness and Spanish VAT.",
+      language: "Spanish (es-ES)",
+      fields: [{ key: "vatNumber", label: "Spanish VAT (NIF)", type: "text", placeholder: "ES XXXXXXXXX" }],
+      required: ["vatNumber"],
+      architecture: [
+        { label: "VeriFactu architecture", note: "Future-ready" },
+        { label: "Future electronic reporting", note: "Coming soon" },
+      ],
+      upcoming: "VeriFactu obligations are phasing in by business size — architecture will adapt to final scope.",
+    });
+    registerCompliancePlugin({
+      code: "DE", name: "Germany", flag: "🇩🇪", enabled: true,
+      summary: "German VAT and e-invoice compliance readiness.",
+      language: "German (de-DE)",
+      fields: [{ key: "vatNumber", label: "German VAT (USt-IdNr)", type: "text", placeholder: "DE XXXXXXXXX" }],
+      required: ["vatNumber"],
+      architecture: [
+        { label: "Invoice compliance checks", note: "Future-ready" },
+        { label: "Future e-invoice support", note: "Coming soon" },
+      ],
+      upcoming: "Germany's B2B e-invoicing mandate is phasing in — architecture will track final requirements.",
+    });
+    [
+      { code: "BE", name: "Belgium", flag: "🇧🇪", vatLabel: "Belgian VAT (BTW/TVA)", language: "Dutch / French (nl-BE / fr-BE)" },
+      { code: "NL", name: "Netherlands", flag: "🇳🇱", vatLabel: "Dutch VAT (BTW-nummer)", language: "Dutch (nl-NL)" },
+      { code: "PT", name: "Portugal", flag: "🇵🇹", vatLabel: "Portuguese VAT (NIF)", language: "Portuguese (pt-PT)" },
+      { code: "GB", name: "United Kingdom", flag: "🇬🇧", vatLabel: "UK VAT number", language: "English (en-GB)" },
+      { code: "PL", name: "Poland", flag: "🇵🇱", vatLabel: "Polish VAT (NIP)", language: "Polish (pl-PL)" },
+    ].forEach(function (c) {
+      registerCompliancePlugin({
+        code: c.code, name: c.name, flag: c.flag, enabled: false,
+        summary: "Minimal scaffold plugin — full module coming soon.",
+        language: c.language,
+        fields: [{ key: "vatNumber", label: c.vatLabel, type: "text", placeholder: "" }],
+        required: ["vatNumber"],
+        architecture: [{ label: "Full compliance module", note: "Coming soon" }],
+        upcoming: "Detailed rules coming soon.",
+      });
+    });
+    registerCompliancePlugin({
+      code: "FUTURE", name: "Future Countries", flag: "➕", enabled: true, isFutureSlot: true,
+      summary: "The plugin architecture is how every country above was added — the core invoicing engine never changes.",
+      fields: [], architecture: [], upcoming: "",
+    });
+
+    function ccValidate(code) {
+      var p = CompliancePlugins[code];
+      if (!p || p.isFutureSlot) return null;
+      if (!p.enabled && !p.alwaysOn) return { status: "Disabled", missing: [], warnings: [] };
+      var vatExempt = code === "FR" && ccGet(code, "vatExempt") === "on";
+      var required = (p.required || []).filter(function (key) { return !(vatExempt && key === "tva"); });
+      var missing = required.filter(function (key) { return !ccGet(code, key); }).map(function (key) {
+        var f = p.fields.filter(function (x) { return x.key === key; })[0];
+        return f ? f.label : key;
+      });
+      var warnings = [];
+      if (code === "FR") {
+        if (vatExempt) warnings.push('VAT exemption active — invoices should show "TVA non applicable, article 293 B du CGI".');
+        var rule = ccGet(code, "invoiceNumberingRule");
+        if (rule && rule.indexOf("{SEQ}") === -1) warnings.push("Invoice numbering rule should include a sequential placeholder like {SEQ} to stay compliant.");
+        var siren = ccGet(code, "siren").replace(/\s/g, "");
+        if (siren && !/^\d{9}$/.test(siren)) warnings.push("SIREN should be exactly 9 digits.");
+        var siret = ccGet(code, "siret").replace(/\s/g, "");
+        if (siret && !/^\d{14}$/.test(siret)) warnings.push("SIRET should be exactly 14 digits.");
+      }
+      if (code === "IT") {
+        var cd = ccGet(code, "codiceDestinatario");
+        if (cd && cd.length !== 7 && cd.toUpperCase() !== "0000000") warnings.push("Codice Destinatario is usually 7 characters — double-check the SDI code.");
+      }
+      var status = missing.length ? "Incomplete" : "Ready";
+      return { status: status, missing: missing, warnings: warnings };
+    }
+
+    function ccRenderDashboard() {
+      var tbody = document.querySelector("#cc-dashboard-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = CompliancePluginOrder.filter(function (code) { return !CompliancePlugins[code].isFutureSlot; }).map(function (code) {
+        var p = CompliancePlugins[code];
+        var v = ccValidate(code);
+        var statusBadge = v.status === "Ready" ? "badge-success" : v.status === "Incomplete" ? "badge-warning" : "badge-default";
+        return (
+          '<tr><td style="font-weight:700;">' + p.flag + " " + p.name + "</td>" +
+          '<td><span class="badge ' + statusBadge + '">' + v.status + "</span></td>" +
+          "<td>" + (v.missing.length ? v.missing.length + " field(s)" : "—") + "</td>" +
+          "<td>" + (v.warnings.length || "—") + "</td>" +
+          "<td>" + (v.status === "Ready" ? "✅" : v.status === "Disabled" ? "—" : "⚠️") + "</td>" +
+          '<td style="font-size:0.78rem;color:hsl(var(--muted-fg));">' + (p.upcoming || "—") + "</td></tr>"
+        );
+      }).join("");
+    }
+    var ccActiveCountry = "GLOBAL";
+    function ccRenderCountryList() {
+      var wrap = document.getElementById("cc-country-list");
+      if (!wrap) return;
+      wrap.innerHTML = CompliancePluginOrder.map(function (code) {
+        var p = CompliancePlugins[code];
+        var offBadge = !p.isFutureSlot && !p.alwaysOn && !p.enabled ? ' <span class="badge badge-default">Off</span>' : "";
+        return '<button class="ai-cap' + (code === ccActiveCountry ? " current" : "") + '" data-cc-country="' + code + '">' + p.flag + " " + p.name + offBadge + "</button>";
+      }).join("");
+    }
+    function ccRenderDetail() {
+      var wrap = document.getElementById("cc-country-detail");
+      if (!wrap) return;
+      var p = CompliancePlugins[ccActiveCountry];
+      if (!p) return;
+      var html = '<div class="card card-pad">';
+      html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.9rem;">';
+      html += '<div><div style="font-size:1.1rem;font-weight:800;">' + p.flag + " " + p.name + '</div><p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-top:0.2rem;">' + p.summary + "</p>" +
+        (p.language ? '<p style="font-size:0.78rem;color:hsl(var(--muted-fg));margin-top:0.3rem;">🌐 Document language: <strong style="color:hsl(var(--fg));">' + p.language + "</strong></p>" : "") + "</div>";
+      if (!p.alwaysOn && !p.isFutureSlot) {
+        html += '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;font-weight:600;white-space:nowrap;"><input type="checkbox" data-cc-toggle="' + p.code + '" ' + (p.enabled ? "checked" : "") + ' style="width:1.05rem;height:1.05rem;" /> Enabled</label>';
+      }
+      html += "</div>";
+      if (p.isFutureSlot) {
+        html += '<div class="empty-state"><div class="ic">➕</div><h3>Add a new country in minutes</h3><p>Every country above is a self-contained plugin: a field schema, a required-field list and a few validation rules. The core invoicing engine never changes — register a new plugin and it appears here, in the dashboard, and in the AI assistant automatically.</p></div>';
+      } else if (p.code === "GLOBAL") {
+        html += '<div class="ds-theme-grid" style="grid-template-columns:repeat(2,1fr);">' + p.services.map(function (s) {
+          var on = ccGet("GLOBAL", s.key, "on") !== "off";
+          return (
+            '<div class="card" style="padding:0.9rem;"><label style="display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.85rem;">' +
+            '<input type="checkbox" data-cc-service="' + s.key + '" ' + (on ? "checked" : "") + ' style="width:1.05rem;height:1.05rem;" />' + s.label + "</label>" +
+            '<p style="font-size:0.78rem;color:hsl(var(--muted-fg));margin-top:0.4rem;">' + s.desc + "</p></div>"
+          );
+        }).join("") + "</div>";
+      } else {
+        var vatExemptOn = ccGet(p.code, "vatExempt") === "on";
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">';
+        p.fields.forEach(function (f) {
+          if (f.type === "textarea" || f.type === "checkbox") return;
+          var val = ccGet(p.code, f.key);
+          if (f.type === "select") {
+            html += '<div><label class="field-label">' + f.label + '</label><select class="field" data-cc-field="' + f.key + '">' + f.options.map(function (o) {
+              return "<option" + (o === val ? " selected" : "") + ">" + o + "</option>";
+            }).join("") + "</select></div>";
+          } else {
+            html += '<div><label class="field-label">' + f.label + (f.key === "tva" && vatExemptOn ? " (not required — VAT exempt)" : "") + '</label><input class="field" data-cc-field="' + f.key + '" value="' + val + '" placeholder="' + (f.placeholder || "") + '" /></div>';
+          }
+        });
+        html += "</div>";
+        var checkboxField = p.fields.filter(function (f) { return f.type === "checkbox"; })[0];
+        if (checkboxField) {
+          html += '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;font-weight:600;margin-bottom:1rem;"><input type="checkbox" data-cc-field="' + checkboxField.key + '" ' + (vatExemptOn ? "checked" : "") + ' style="width:1.05rem;height:1.05rem;" />' + checkboxField.label + "</label>";
+          if (vatExemptOn) html += '<div class="callout" style="margin-bottom:1rem;"><span>💡</span><span>Add this mention to invoices: <strong>"TVA non applicable, article 293 B du CGI"</strong></span></div>';
+        }
+        var textareaField = p.fields.filter(function (f) { return f.type === "textarea"; })[0];
+        if (textareaField) {
+          html += '<div style="margin-bottom:1rem;"><label class="field-label">' + textareaField.label + '</label><textarea class="field" rows="3" data-cc-field="' + textareaField.key + '" placeholder="' + (textareaField.placeholder || "") + '">' + ccGet(p.code, textareaField.key) + "</textarea></div>";
+        }
+        if (p.architecture.length) {
+          html += '<div class="card-title" style="margin-bottom:0.5rem;">Future-ready architecture</div>';
+          html += p.architecture.map(function (a) {
+            return '<div class="widget-row"><span>' + a.label + '</span><span class="badge badge-default">' + a.note + "</span></div>";
+          }).join("");
+        }
+        html += '<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid hsl(var(--border));">';
+        html += '<button class="btn btn-outline btn-sm" data-cc-validate="' + p.code + '">🛡️ Run validation</button>';
+        html += '<div id="cc-validate-result" style="margin-top:0.8rem;"></div>';
+        html += "</div>";
+      }
+      html += "</div>";
+      wrap.innerHTML = html;
+    }
+    function ccShowValidateResult(code) {
+      var v = ccValidate(code);
+      var box = document.getElementById("cc-validate-result");
+      if (!box || !v) return;
+      if (v.status === "Ready" && !v.warnings.length) {
+        box.innerHTML = '<div class="empty-state" style="padding:1.5rem;"><div class="ic">✅</div><h3>All required fields are complete</h3><p>No missing information or warnings for ' + CompliancePlugins[code].name + ".</p></div>";
+        return;
+      }
+      var html = "";
+      if (v.missing.length) html += '<div class="callout" style="border-color:hsl(var(--danger)/0.4);background:hsl(var(--danger)/0.08);margin-bottom:0.6rem;"><span>⚠️</span><span>Missing required fields: ' + v.missing.join(", ") + "</span></div>";
+      v.warnings.forEach(function (w) { html += '<div class="callout" style="margin-bottom:0.6rem;"><span>💡</span><span>' + w + "</span></div>"; });
+      box.innerHTML = html;
+    }
+    function ccRenderAITips() {
+      var wrap = document.getElementById("cc-ai-tips");
+      if (!wrap) return;
+      var tips = [];
+      CompliancePluginOrder.forEach(function (code) {
+        var p = CompliancePlugins[code];
+        if (p.isFutureSlot || code === "GLOBAL") return;
+        var v = ccValidate(code);
+        if (v.status === "Incomplete") tips.push("⚠️ " + p.flag + " " + p.name + ": missing " + v.missing.join(", ") + ". Add these in Compliance Center → " + p.name + " to reach Ready status.");
+        v.warnings.forEach(function (w) { tips.push("💡 " + p.flag + " " + p.name + ": " + w); });
+      });
+      if (!tips.length) tips.push("✅ All enabled countries are fully configured. Nothing needs attention right now.");
+      tips.push("📌 Coming soon: automatic regulation-change notifications as country mandates finalize.");
+      wrap.innerHTML = tips.map(function (t) { return '<div class="widget-row"><span>' + t + "</span></div>"; }).join("");
+    }
+    document.body.addEventListener("click", function (e) {
+      var countryBtn = e.target.closest("[data-cc-country]");
+      if (countryBtn) { ccActiveCountry = countryBtn.getAttribute("data-cc-country"); ccRenderCountryList(); ccRenderDetail(); return; }
+      var validateBtn = e.target.closest("[data-cc-validate]");
+      if (validateBtn) ccShowValidateResult(validateBtn.getAttribute("data-cc-validate"));
+    });
+    document.body.addEventListener("change", function (e) {
+      var toggle = e.target.closest("[data-cc-toggle]");
+      if (toggle) {
+        var code = toggle.getAttribute("data-cc-toggle");
+        CompliancePlugins[code].enabled = toggle.checked;
+        ccRenderCountryList(); ccRenderDashboard(); ccRenderDetail(); ccRenderAITips(); renderDashComplianceSummary();
+        showToast((toggle.checked ? "Enabled " : "Disabled ") + CompliancePlugins[code].name + " compliance module");
+        return;
+      }
+      var field = e.target.closest("[data-cc-field]");
+      if (field) {
+        var fieldVal = field.type === "checkbox" ? (field.checked ? "on" : "off") : field.value;
+        ccSet(ccActiveCountry, field.getAttribute("data-cc-field"), fieldVal);
+        if (field.type === "checkbox") ccRenderDetail();
+        ccRenderDashboard(); ccRenderAITips(); renderDashComplianceSummary();
+        return;
+      }
+      var service = e.target.closest("[data-cc-service]");
+      if (service) ccSet("GLOBAL", service.getAttribute("data-cc-service"), service.checked ? "on" : "off");
+    });
+    var settingsTabsEl = document.getElementById("settings-tabs");
+    if (settingsTabsEl) settingsTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-settings-tab]");
+      if (!btn) return;
+      var tab = btn.getAttribute("data-settings-tab");
+      settingsTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+      document.querySelectorAll("#view-settings .ds-panel").forEach(function (p) { p.classList.toggle("on", p.id === "settings-panel-" + tab); });
+    });
+    function populateDefaultCountrySelect() {
+      var sel = document.getElementById("set-default-country");
+      if (!sel) return;
+      sel.innerHTML = CompliancePluginOrder.filter(function (c) { return c !== "GLOBAL" && c !== "FUTURE"; }).map(function (c) {
+        var p = CompliancePlugins[c];
+        return '<option value="' + c + '">' + p.flag + " " + p.name + "</option>";
+      }).join("");
+      sel.value = "FR";
+    }
+    var settingsInitDone = false;
+    function renderSettingsInit() {
+      if (settingsInitDone) return;
+      settingsInitDone = true;
+      populateDefaultCountrySelect();
+      ccRenderDashboard();
+      ccRenderCountryList();
+      ccRenderDetail();
+      ccRenderAITips();
+    }
+
+    // ---- Compliance validation engine wired into the New Invoice flow ----
+    function renderInvoiceComplianceBanner() {
+      var sel = document.getElementById("inv-compliance-country");
+      var box = document.getElementById("inv-compliance-banner");
+      if (!sel || !box || !sel.value) return;
+      var code = sel.value;
+      var p = CompliancePlugins[code];
+      var v = ccValidate(code);
+      if (!v || v.status === "Disabled") {
+        box.innerHTML = '<div class="callout"><span>ℹ️</span><span>' + p.name + ' compliance module is currently disabled — enable it in <a href="#" class="link-strong" data-goto="settings">Settings → Compliance Center</a> to see checks here.</span></div>';
+        return;
+      }
+      if (v.status === "Ready" && !v.warnings.length) {
+        box.innerHTML = '<div class="callout" style="border-color:hsl(var(--success)/0.4);background:hsl(var(--success)/0.08);"><span>✅</span><span>' + p.name + ' compliance looks good — all required fields are set.</span></div>';
+        return;
+      }
+      var parts = [];
+      if (v.missing.length) parts.push("Missing: " + v.missing.join(", "));
+      v.warnings.forEach(function (w) { parts.push(w); });
+      box.innerHTML = '<div class="callout" style="border-color:hsl(var(--warning)/0.4);background:hsl(var(--warning)/0.08);"><span>⚠️</span><span>' + parts.join(" · ") + ' — review in <a href="#" class="link-strong" data-goto="settings">Settings → Compliance Center</a>.</span></div>';
+    }
+    function populateInvoiceComplianceCountrySelect() {
+      var sel = document.getElementById("inv-compliance-country");
+      if (!sel) return;
+      sel.innerHTML = CompliancePluginOrder.filter(function (c) { return c !== "GLOBAL" && c !== "FUTURE"; }).map(function (c) {
+        var p = CompliancePlugins[c];
+        return '<option value="' + c + '">' + p.flag + " " + p.name + "</option>";
+      }).join("");
+      sel.value = "FR";
+      renderInvoiceComplianceBanner();
+    }
+    populateInvoiceComplianceCountrySelect();
+    var invComplianceCountryEl = document.getElementById("inv-compliance-country");
+    if (invComplianceCountryEl) invComplianceCountryEl.addEventListener("change", renderInvoiceComplianceBanner);
+
     // ---- Payment Tracking (Invoices) ----
-    var INVOICES = [
-      { id: "INV-0006", client: "Atlas Studio", issue: "2026-07-02", due: "2026-07-16", status: "Paid", total: 1240.00, payments: [{ date: "2026-07-03", amount: 1240.00, method: "Card" }] },
-      { id: "INV-0005", client: "Nova Digital Agency", issue: "2026-06-28", due: "2026-07-12", status: "Overdue", total: 3480.00, payments: [] },
-      { id: "INV-0004", client: "Harborline Logistics", issue: "2026-06-15", due: "2026-06-29", status: "Partially paid", total: 860.00, payments: [{ date: "2026-06-20", amount: 400.00, method: "Bank transfer" }] },
-      { id: "INV-0003", client: "Kessler & Voss LLP", issue: "2026-06-02", due: "2026-06-16", status: "Viewed", total: 2150.00, payments: [] },
-      { id: "INV-0002", client: "Atlas Studio", issue: "2026-05-20", due: "2026-06-03", status: "Draft", total: 640.00, payments: [] },
-    ];
+    var INVOICES = [];
     function invoiceBalance(inv) {
       var paid = inv.payments.reduce(function (s, p) { return s + p.amount; }, 0);
       return Math.max(0, inv.total - paid);
@@ -4084,16 +4504,80 @@
       }
     });
 
+    // ---- Quotes (devis) ----
+    var QUOTES = [];
+    var quoteSeq = 0;
+    function fmtDate(d) {
+      return new Date(d + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" });
+    }
+    function quoteStatusBadgeClass(s) {
+      return s === "Accepted" ? "badge-success" : s === "Converted" ? "badge-primary" : s === "Sent" ? "badge-info" : s === "Rejected" ? "badge-danger" : "badge-default";
+    }
+    function renderQuotesTable() {
+      var tbody = document.querySelector("#quotes-table tbody");
+      if (!tbody) return;
+      var sorted = QUOTES.slice().sort(function (a, b) { return new Date(b.issue) - new Date(a.issue); });
+      tbody.innerHTML = sorted.length ? sorted.map(function (q) {
+        return (
+          '<tr><td class="link-strong">' + q.id + "</td><td>" + q.client + "</td><td>" + fmtDate(q.issue) + "</td><td>" + fmtDate(q.validUntil) + "</td>" +
+          '<td><span class="badge ' + quoteStatusBadgeClass(q.status) + '">' + q.status + "</span></td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(q.total) + "</td></tr>"
+        );
+      }).join("") : '<tr><td colspan="6" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No quotes yet.</td></tr>';
+    }
+    var quotesInitDone = false;
+    function renderQuotesInit() {
+      if (quotesInitDone) return;
+      quotesInitDone = true;
+      renderQuotesTable();
+    }
+    function populateQuoteClientSelect() {
+      var sel = document.getElementById("aq-client");
+      if (!sel) return;
+      var companies = CLIENTS.map(function (c) { return c.company; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; });
+      sel.innerHTML = companies.map(function (c) { return "<option>" + c + "</option>"; }).join("");
+    }
+    function aqOpen() {
+      populateQuoteClientSelect();
+      var today = new Date();
+      var inMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      document.getElementById("aq-issue").value = today.toISOString().slice(0, 10);
+      document.getElementById("aq-valid").value = inMonth.toISOString().slice(0, 10);
+      document.getElementById("aq-total").value = "0";
+      document.getElementById("aq-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function aqClose() {
+      document.getElementById("aq-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var aqCloseBtn = document.getElementById("aq-close");
+    if (aqCloseBtn) aqCloseBtn.addEventListener("click", aqClose);
+    var aqBackdropEl = document.getElementById("aq-backdrop");
+    if (aqBackdropEl) aqBackdropEl.addEventListener("click", aqClose);
+    var aqSubmitBtn = document.getElementById("aq-submit");
+    if (aqSubmitBtn) aqSubmitBtn.addEventListener("click", function () {
+      quoteSeq++;
+      var newId = "QUO-" + String(quoteSeq).padStart(4, "0");
+      QUOTES.push({
+        id: newId,
+        client: document.getElementById("aq-client").value,
+        issue: document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10),
+        validUntil: document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10),
+        status: "Draft",
+        total: parseFloat(document.getElementById("aq-total").value) || 0,
+      });
+      renderQuotesTable();
+      aqClose();
+      showToast(newId + " created");
+      playSound("success");
+    });
+    var quoteAddBtnEl = document.getElementById("quote-add-btn");
+    if (quoteAddBtnEl) quoteAddBtnEl.addEventListener("click", aqOpen);
+
     // ---- Expense Management ----
     var EXPENSE_CATEGORIES = ["Travel", "Fuel", "Office", "Equipment", "Marketing", "Software", "Salary", "Utilities", "Maintenance", "Tax", "Other"];
-    var EXPENSES = [
-      { id: "e1", title: "Design software licenses", category: "Software", date: "2026-07-01", vendor: "Figma Inc.", amount: 45.00, approval: "Approved", recurring: true, receipt: null },
-      { id: "e2", title: "Client onboarding lunch", category: "Travel", date: "2026-06-27", vendor: "", amount: 62.50, approval: "Approved", recurring: false, receipt: null },
-      { id: "e3", title: "Office internet bill", category: "Utilities", date: "2026-07-05", vendor: "PTCL", amount: 38.00, approval: "Pending", recurring: true, receipt: null },
-      { id: "e4", title: "New laptop charger", category: "Equipment", date: "2026-06-20", vendor: "TechSource Distributors", amount: 22.00, approval: "Approved", recurring: false, receipt: null },
-      { id: "e5", title: "Facebook ads — July", category: "Marketing", date: "2026-07-10", vendor: "Meta", amount: 150.00, approval: "Pending", recurring: true, receipt: null },
-      { id: "e6", title: "Fuel — site visit", category: "Fuel", date: "2026-06-30", vendor: "—", amount: 18.00, approval: "Approved", recurring: false, receipt: null },
-    ];
+    var EXPENSES = [];
     function expApprovalBadgeClass(s) { return s === "Approved" ? "badge-success" : s === "Rejected" ? "badge-danger" : "badge-warning"; }
     function renderExpensesTable() {
       var tbody = document.querySelector("#expenses-table tbody");
@@ -4245,35 +4729,176 @@
     if (expenseAddBtnEl) expenseAddBtnEl.addEventListener("click", aeOpen);
 
     // ---- AI Business Insights (shared: Dashboard widget + Reports panel) ----
-    var AI_INSIGHTS = [
-      { ic: "📈", text: "Revenue is increasing — up 18% compared to last month." },
-      { ic: "🏆", text: "Top customer this month: Atlas Studio, with $1,240.00 in paid invoices." },
-      { ic: "⏰", text: "1 invoice is overdue, totaling $3,480.00 — Harborline Logistics." },
-      { ic: "💧", text: "Cash flow warning: outstanding balance ($3,480.00) exceeds this month's expenses." },
-      { ic: "📝", text: "Suggested follow-up: reach out to Nova Digital Agency about QUO-0011 before it expires Aug 04." },
-      { ic: "🚀", text: "Business growth prediction: on current trend, revenue could reach roughly $15,200 next month." },
-      { ic: "✂️", text: "Expense optimization: Marketing spend is up 40% this month — review ad campaigns for ROI." },
-      { ic: "🗒️", text: "Monthly summary: $12,840.00 revenue, $8,720.00 profit, 24 invoices, 9 quotes, 3 stock alerts." },
-    ];
+    function computeAIInsights() {
+      var insights = [];
+      var ms = aiMonthStats();
+      var overdueInvoices = INVOICES.filter(function (inv) { return inv.status === "Overdue"; });
+      if (overdueInvoices.length) {
+        var overdueTotal = overdueInvoices.reduce(function (s, inv) { return s + invoiceBalance(inv); }, 0);
+        insights.push({ ic: "⏰", text: overdueInvoices.length + " invoice" + (overdueInvoices.length > 1 ? "s" : "") + " overdue, totaling " + currency(overdueTotal) + " — " + overdueInvoices[0].client + (overdueInvoices.length > 1 ? " and others" : "") + "." });
+      }
+      var outstanding = INVOICES.reduce(function (s, inv) { return s + invoiceBalance(inv); }, 0);
+      if (outstanding > 0 && outstanding > ms.expenses) {
+        insights.push({ ic: "💧", text: "Cash flow watch: outstanding balance (" + currency(outstanding) + ") exceeds this month's expenses (" + currency(ms.expenses) + ")." });
+      }
+      var topCustomer = CLIENTS.slice().map(function (c) { return { c: c, ltv: clientLifetimeValue(c) }; }).sort(function (a, b) { return b.ltv - a.ltv; })[0];
+      if (topCustomer && topCustomer.ltv > 0) {
+        insights.push({ ic: "🏆", text: "Top customer: " + topCustomer.c.company + ", with " + currency(topCustomer.ltv) + " in lifetime value." });
+      }
+      var soonQuote = QUOTES.filter(function (q) { return q.status === "Sent"; })[0];
+      if (soonQuote) {
+        insights.push({ ic: "📝", text: "Suggested follow-up: reach out to " + soonQuote.client + " about " + soonQuote.id + " (valid until " + fmtDate(soonQuote.valid) + ")." });
+      }
+      var lowStock = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; });
+      if (lowStock.length) {
+        insights.push({ ic: "📦", text: lowStock.length + " product" + (lowStock.length > 1 ? "s" : "") + " low on stock — check Inventory for reorder suggestions." });
+      }
+      if (ms.revenue > 0 || INVOICES.length || QUOTES.length) {
+        insights.push({ ic: "🗒️", text: "This month: " + currency(ms.revenue) + " revenue, " + currency(ms.profit) + " profit, " + INVOICES.length + " invoices, " + QUOTES.length + " quotes." });
+      }
+      return insights;
+    }
     function renderAIInsights(containerId, limit) {
       var wrap = document.getElementById(containerId);
       if (!wrap) return;
-      var items = limit ? AI_INSIGHTS.slice(0, limit) : AI_INSIGHTS;
-      wrap.innerHTML = items.map(function (i) { return '<div class="widget-row"><span>' + i.ic + " " + i.text + "</span></div>"; }).join("");
+      var items = computeAIInsights();
+      if (limit) items = items.slice(0, limit);
+      wrap.innerHTML = items.length ? items.map(function (i) { return '<div class="widget-row"><span>' + i.ic + " " + i.text + "</span></div>"; }).join("") : '<p class="widget-empty">Add invoices, expenses and clients to see AI insights here.</p>';
     }
     renderAIInsights("dash-ai-insights-list", 3);
 
+    function renderDashboardStats() {
+      var grid = document.getElementById("dash-stat-grid");
+      if (!grid) return;
+      var vals = grid.querySelectorAll(".val");
+      var revenue = 0, outstanding = 0, expensesTotal = 0;
+      INVOICES.forEach(function (inv) {
+        var paid = inv.payments.reduce(function (s, p) { return s + p.amount; }, 0);
+        revenue += paid;
+        outstanding += Math.max(0, inv.total - paid);
+      });
+      EXPENSES.forEach(function (e) { expensesTotal += e.amount; });
+      var profit = revenue - expensesTotal;
+      var stats = [revenue, profit, expensesTotal, profit, outstanding, INVOICES.length, QUOTES.length, CLIENTS.length];
+      vals.forEach(function (el, i) { el.setAttribute("data-count", String(Math.round(stats[i]))); });
+    }
+    function renderDashboardWidgets() {
+      var chartWrap = document.getElementById("dash-revenue-chart");
+      if (chartWrap) {
+        var months = [];
+        var now = new Date();
+        for (var i = 5; i >= 0; i--) months.push(new Date(now.getFullYear(), now.getMonth() - i, 1));
+        var totals = months.map(function (m) {
+          var sum = 0;
+          INVOICES.forEach(function (inv) {
+            inv.payments.forEach(function (p) {
+              var d = new Date(p.date);
+              if (d.getFullYear() === m.getFullYear() && d.getMonth() === m.getMonth()) sum += p.amount;
+            });
+          });
+          return sum;
+        });
+        var hasData = totals.some(function (t) { return t > 0; });
+        if (!hasData) {
+          chartWrap.innerHTML = '<p class="widget-empty" style="padding:3rem 0;text-align:center;">No revenue data yet.</p>';
+        } else {
+          var max = Math.max.apply(null, totals);
+          var pts = totals.map(function (t, idx2) {
+            var x = Math.round((idx2 / (totals.length - 1)) * 600);
+            var y = Math.round(170 - (t / max) * 150);
+            return [x, y];
+          });
+          var line = pts.map(function (p) { return p[0] + "," + p[1]; }).join(" L");
+          var area = "M" + line + " L600,220 L0,220 Z";
+          var last = pts[pts.length - 1];
+          chartWrap.innerHTML =
+            '<svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">' +
+            '<defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="hsl(234 75% 58%)" stop-opacity="0.35" /><stop offset="100%" stop-color="hsl(234 75% 58%)" stop-opacity="0" /></linearGradient></defs>' +
+            '<g stroke="hsl(220 18% 87%)" stroke-width="1"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="70" x2="600" y2="70"/><line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="170" x2="600" y2="170"/></g>' +
+            '<path d="' + area + '" fill="url(#rg)" />' +
+            '<path d="M' + line + '" fill="none" stroke="hsl(234 75% 58%)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />' +
+            '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="4" fill="hsl(234 75% 58%)" />' +
+            "</svg>" +
+            '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:hsl(var(--muted-fg));padding:0 0.2rem;">' +
+            months.map(function (m) { return "<span>" + m.toLocaleString("en", { month: "short" }) + "</span>"; }).join("") +
+            "</div>";
+        }
+      }
+      var activityWrap = document.getElementById("dash-recent-activity");
+      if (activityWrap) {
+        var recent = INVOICES.slice().sort(function (a, b) { return new Date(b.issue) - new Date(a.issue); }).slice(0, 4);
+        activityWrap.innerHTML = recent.length ? recent.map(function (inv) {
+          return (
+            '<div class="activity-row"><div><div class="num">' + inv.id + '</div><div class="meta">' +
+            new Date(inv.issue + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) +
+            '</div></div><div style="text-align:right;"><div class="tnum" style="font-weight:700;">' + currency(inv.total) +
+            '</div><span class="badge ' + invoiceStatusBadgeClass(inv.status) + '">' + inv.status + "</span></div></div>"
+          );
+        }).join("") : '<p class="widget-empty">No recent activity yet.</p>';
+      }
+      var tasksWrap = document.getElementById("dash-tasks-widget");
+      if (tasksWrap) {
+        var dueTasks = TASKS.filter(function (t) { return t.status !== "done"; }).sort(function (a, b) { return new Date(a.due || "9999-12-31") - new Date(b.due || "9999-12-31"); }).slice(0, 3);
+        tasksWrap.innerHTML = dueTasks.length ? dueTasks.map(function (t) {
+          return '<div class="widget-row"><span>' + t.title + '</span><span class="badge ' + (isOverdue(t) ? "badge-danger" : "badge-default") + '">' + (isOverdue(t) ? "Overdue" : (t.due ? taskDueLabel(t) : "No due date")) + "</span></div>";
+        }).join("") : '<p class="widget-empty">No tasks due.</p>';
+      }
+      var calWrap = document.getElementById("dash-calendar-widget");
+      if (calWrap) {
+        var todayDate = new Date().getDate();
+        var upcoming = CAL_EVENTS.filter(function (ev) { return ev.day >= todayDate; }).sort(function (a, b) { return a.day - b.day; }).slice(0, 2);
+        calWrap.innerHTML = upcoming.length ? upcoming.map(function (ev) {
+          return '<div class="widget-row"><span>' + ev.title + '</span><span style="color:hsl(var(--muted-fg));font-size:0.75rem;">Day ' + ev.day + "</span></div>";
+        }).join("") : '<p class="widget-empty">No upcoming events.</p>';
+      }
+      var invWrap = document.getElementById("dash-inventory-widget");
+      if (invWrap) {
+        var lowStock = PRODUCTS.filter(function (p) { return p.stock <= p.minStock; });
+        invWrap.innerHTML = lowStock.length ? lowStock.slice(0, 3).map(function (p) {
+          return '<div class="widget-row"><span>' + p.name + '</span><span style="color:hsl(var(--danger));font-size:0.75rem;font-weight:600;">⚠ ' + (p.stock <= 0 ? "Out of stock" : p.stock + " " + p.unit + " left") + "</span></div>";
+        }).join("") : '<div class="widget-empty">All stock levels look healthy.</div>';
+      }
+      var notifWrap = document.getElementById("dash-notifications-widget");
+      if (notifWrap) {
+        var recentNotifs = NOTIFICATIONS.slice(0, 3);
+        notifWrap.innerHTML = recentNotifs.length ? recentNotifs.map(function (n) {
+          return '<div class="widget-row"><span>' + n.icon + " " + n.text + "</span></div>";
+        }).join("") : '<div class="widget-empty">You\'re all caught up — no notifications yet.</div>';
+      }
+      renderAIInsights("dash-ai-insights-list", 3);
+    }
+    function renderDashComplianceSummary() {
+      var wrap = document.getElementById("dash-compliance-summary");
+      if (!wrap) return;
+      var codes = CompliancePluginOrder.filter(function (c) { return !CompliancePlugins[c].isFutureSlot && c !== "GLOBAL"; });
+      var readyCount = 0, enabledCount = 0, attentionCodes = [];
+      codes.forEach(function (c) {
+        var v = ccValidate(c);
+        if (v.status === "Disabled") return;
+        enabledCount++;
+        if (v.status === "Ready" && !v.warnings.length) readyCount++;
+        else attentionCodes.push(CompliancePlugins[c].flag + " " + CompliancePlugins[c].name);
+      });
+      var html = '<div class="widget-row"><span>' + readyCount + " of " + enabledCount + " enabled countries fully compliant</span></div>";
+      if (attentionCodes.length) {
+        html += '<div class="widget-row"><span style="color:hsl(var(--warning));">⚠️ Needs attention: ' + attentionCodes.join(", ") + "</span></div>";
+      } else if (enabledCount) {
+        html += '<div class="widget-empty" style="margin-top:0.3rem;">All enabled countries are ready.</div>';
+      }
+      wrap.innerHTML = html;
+    }
+    renderDashComplianceSummary();
+
     // ---- Reports & Analytics ----
-    var YEARLY_TREND = [{ y: "2023", v: 64000 }, { y: "2024", v: 89000 }, { y: "2025", v: 121000 }, { y: "2026", v: 96000 }];
-    var BEST_SELLERS = [
-      { name: "Monthly retainer — 20h", unitsSold: 14, revenue: 16800 },
-      { name: "Logistics tracking module", unitsSold: 22, revenue: 11880 },
-      { name: "Brand identity package", unitsSold: 6, revenue: 10800 },
-      { name: "Wireless Mouse", unitsSold: 58, revenue: 1044 },
-    ];
+    var YEARLY_TREND = [];
+    var BEST_SELLERS = [];
     function renderYearlyTrend() {
       var wrap = document.getElementById("rpt-year-bars");
       if (!wrap) return;
+      if (!YEARLY_TREND.length) {
+        wrap.innerHTML = '<p class="widget-empty">No yearly data yet.</p>';
+        return;
+      }
       var max = Math.max.apply(null, YEARLY_TREND.map(function (y) { return y.v; }));
       wrap.innerHTML = YEARLY_TREND.map(function (y) {
         var h = Math.round((y.v / max) * 100);
@@ -4289,22 +4914,94 @@
       var tbody = document.querySelector("#rpt-top-customers-table tbody");
       if (!tbody) return;
       var ranked = CLIENTS.slice().map(function (c) { return { c: c, ltv: clientLifetimeValue(c) }; }).sort(function (a, b) { return b.ltv - a.ltv; }).slice(0, 5);
-      tbody.innerHTML = ranked.map(function (r, i) {
+      tbody.innerHTML = ranked.length ? ranked.map(function (r, i) {
         return '<tr><td style="font-weight:700;">' + (i + 1) + ". " + r.c.company + '</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(r.ltv) + "</td></tr>";
-      }).join("");
+      }).join("") : '<tr><td colspan="2" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No customer data yet.</td></tr>';
     }
     function renderBestSellers() {
       var tbody = document.querySelector("#rpt-best-products-table tbody");
       if (!tbody) return;
       var ranked = BEST_SELLERS.slice().sort(function (a, b) { return b.revenue - a.revenue; });
-      tbody.innerHTML = ranked.map(function (p, i) {
+      tbody.innerHTML = ranked.length ? ranked.map(function (p, i) {
         return '<tr><td style="font-weight:700;">' + (i + 1) + ". " + p.name + '</td><td style="text-align:right;">' + p.unitsSold + ' sold</td><td class="tnum" style="text-align:right;font-weight:700;">' + currency(p.revenue) + "</td></tr>";
-      }).join("");
+      }).join("") : '<tr><td colspan="3" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No sales data yet.</td></tr>';
     }
-    var reportsInitDone = false;
+    function renderReportsStats() {
+      var grid = document.getElementById("rpt-stat-grid");
+      if (!grid) return;
+      var vals = grid.querySelectorAll(".val");
+      var revenue = 0, outstanding = 0, expensesTotal = 0;
+      INVOICES.forEach(function (inv) {
+        var paid = inv.payments.reduce(function (s, p) { return s + p.amount; }, 0);
+        revenue += paid;
+        outstanding += Math.max(0, inv.total - paid);
+      });
+      EXPENSES.forEach(function (e) { expensesTotal += e.amount; });
+      var net = revenue - expensesTotal;
+      var stats = [revenue, outstanding, expensesTotal, net];
+      vals.forEach(function (el, i) { el.textContent = currency(stats[i]); });
+    }
+    function renderReportsMonthChart() {
+      var wrap = document.getElementById("rpt-month-chart");
+      if (!wrap) return;
+      var months = [];
+      var now = new Date();
+      for (var i = 5; i >= 0; i--) months.push(new Date(now.getFullYear(), now.getMonth() - i, 1));
+      var totals = months.map(function (m) {
+        var sum = 0;
+        INVOICES.forEach(function (inv) {
+          inv.payments.forEach(function (p) {
+            var d = new Date(p.date);
+            if (d.getFullYear() === m.getFullYear() && d.getMonth() === m.getMonth()) sum += p.amount;
+          });
+        });
+        return sum;
+      });
+      var hasData = totals.some(function (t) { return t > 0; });
+      if (!hasData) {
+        wrap.innerHTML = '<p class="widget-empty" style="padding:3rem 0;text-align:center;">No revenue data yet.</p>';
+        return;
+      }
+      var max = Math.max.apply(null, totals);
+      var pts = totals.map(function (t, i) {
+        var x = Math.round((i / (totals.length - 1)) * 600);
+        var y = Math.round(170 - (t / max) * 150);
+        return [x, y];
+      });
+      var line = pts.map(function (p) { return p[0] + "," + p[1]; }).join(" L");
+      var area = "M" + line + " L600,220 L0,220 Z";
+      var last = pts[pts.length - 1];
+      wrap.innerHTML =
+        '<svg class="chart-svg" viewBox="0 0 600 220" preserveAspectRatio="none">' +
+        '<defs><linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="hsl(234 75% 58%)" stop-opacity="0.35" /><stop offset="100%" stop-color="hsl(234 75% 58%)" stop-opacity="0" /></linearGradient></defs>' +
+        '<g stroke="hsl(220 18% 87%)" stroke-width="1"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="70" x2="600" y2="70"/><line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="170" x2="600" y2="170"/></g>' +
+        '<path d="' + area + '" fill="url(#rg2)" />' +
+        '<path d="M' + line + '" fill="none" stroke="hsl(234 75% 58%)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />' +
+        '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="4" fill="hsl(234 75% 58%)" />' +
+        "</svg>" +
+        '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:hsl(var(--muted-fg));padding:0 0.2rem;">' +
+        months.map(function (m) { return "<span>" + m.toLocaleString("en", { month: "short" }) + "</span>"; }).join("") +
+        "</div>";
+    }
+    function renderReportsConversionRings() {
+      var wrap = document.getElementById("rpt-conversion-rings");
+      if (!wrap) return;
+      var quotesAccepted = QUOTES.filter(function (q) { return q.status === "Accepted" || q.status === "Converted"; }).length;
+      var quotesPct = QUOTES.length ? Math.round((quotesAccepted / QUOTES.length) * 100) : 0;
+      var invoicesPaid = INVOICES.filter(function (inv) { return inv.status === "Paid"; }).length;
+      var invoicesPct = INVOICES.length ? Math.round((invoicesPaid / INVOICES.length) * 100) : 0;
+      var rings = wrap.querySelectorAll(".ring");
+      if (rings[0]) rings[0].setAttribute("data-pct", String(quotesPct));
+      if (rings[1]) rings[1].setAttribute("data-pct", String(invoicesPct));
+      var quotesLbl = document.getElementById("rpt-ring-quotes-lbl");
+      if (quotesLbl) quotesLbl.innerHTML = quotesPct + '% <span style="font-weight:500;color:hsl(var(--muted-fg));">Quotes accepted</span>';
+      var invoicesLbl = document.getElementById("rpt-ring-invoices-lbl");
+      if (invoicesLbl) invoicesLbl.innerHTML = invoicesPct + '% <span style="font-weight:500;color:hsl(var(--muted-fg));">Invoices paid</span>';
+    }
     function renderReportsInit() {
-      if (reportsInitDone) return;
-      reportsInitDone = true;
+      renderReportsStats();
+      renderReportsMonthChart();
+      renderReportsConversionRings();
       renderYearlyTrend();
       renderTopCustomers();
       renderBestSellers();
@@ -4312,7 +5009,14 @@
     }
     var rptExportCsvBtn = document.getElementById("rpt-export-csv-btn");
     if (rptExportCsvBtn) rptExportCsvBtn.addEventListener("click", function () {
-      var rows = [["Metric", "Value"], ["Revenue", "$12,840.00"], ["Outstanding", "$3,480.00"], ["Expenses", "$1,860.00"], ["Net", "$10,980.00"], [], ["Top customers", ""]];
+      var rptRevenue = 0, rptOutstanding = 0, rptExpenses = 0;
+      INVOICES.forEach(function (inv) {
+        var paid = inv.payments.reduce(function (s, p) { return s + p.amount; }, 0);
+        rptRevenue += paid;
+        rptOutstanding += Math.max(0, inv.total - paid);
+      });
+      EXPENSES.forEach(function (e) { rptExpenses += e.amount; });
+      var rows = [["Metric", "Value"], ["Revenue", currency(rptRevenue)], ["Outstanding", currency(rptOutstanding)], ["Expenses", currency(rptExpenses)], ["Net", currency(rptRevenue - rptExpenses)], [], ["Top customers", ""]];
       CLIENTS.slice().map(function (c) { return { c: c, ltv: clientLifetimeValue(c) }; }).sort(function (a, b) { return b.ltv - a.ltv; }).forEach(function (r) {
         rows.push([r.c.company, currency(r.ltv)]);
       });
@@ -4333,15 +5037,7 @@
     if (rptPrintBtn) rptPrintBtn.addEventListener("click", function () { window.print(); });
 
     // ---- Task Management ----
-    var TASKS = [
-      { id: "t1", title: "Follow up with Nova Digital", status: "todo", priority: "high", due: "2026-07-15", labels: ["Sales"], recurring: false, attachments: 0 },
-      { id: "t2", title: "Send Q3 proposal to Atlas", status: "todo", priority: "medium", due: "2026-07-18", labels: ["Sales"], recurring: false, attachments: 1 },
-      { id: "t3", title: "Renew software subscriptions", status: "todo", priority: "low", due: null, labels: ["Admin"], recurring: true, attachments: 0 },
-      { id: "t4", title: "Draft Harborline contract", status: "inprogress", priority: "medium", due: "2026-07-20", labels: ["Legal"], recurring: false, attachments: 2 },
-      { id: "t5", title: "Update brand kit assets", status: "inprogress", priority: "low", due: null, labels: ["Design"], recurring: false, attachments: 0 },
-      { id: "t6", title: "Reconcile June expenses", status: "done", priority: "low", due: null, labels: ["Finance"], recurring: true, attachments: 0 },
-      { id: "t7", title: "Onboard Kessler & Voss", status: "done", priority: "medium", due: null, labels: ["Sales"], recurring: false, attachments: 0 },
-    ];
+    var TASKS = [];
     var taskFilter = { q: "", priority: "all", label: "all" };
     function isOverdue(t) {
       if (!t.due || t.status === "done") return false;
@@ -4500,15 +5196,9 @@
     // ---- Team Management + Roles & Permissions ----
     var ROLE_LIST = ["Owner", "Admin", "Manager", "Accountant", "Sales", "Employee", "Viewer"];
     var TEAM_MEMBERS = [
-      { id: "m1", name: "Team Member 1", email: "member1@ivoxa.com", role: "Owner", status: "Active" },
-      { id: "m2", name: "Team Member 2", email: "member2@ivoxa.com", role: "Admin", status: "Active" },
-      { id: "m3", name: "Team Member 3", email: "member3@ivoxa.com", role: "Accountant", status: "Active" },
-      { id: "m4", name: "Team Member 4", email: "member4@ivoxa.com", role: "Sales", status: "Active" },
-      { id: "m5", name: "Team Member 5", email: "member5@ivoxa.com", role: "Employee", status: "Suspended" },
+      { id: "m1", name: "You", email: "you@yourcompany.com", role: "Owner", status: "Active" },
     ];
-    var PENDING_INVITES = [
-      { email: "invitee@atlasstudio.io", role: "Viewer", sent: "Jul 12, 2026", status: "Pending" },
-    ];
+    var PENDING_INVITES = [];
     var MODULE_LIST = ["Dashboard", "Invoices", "Quotes", "Clients", "CRM", "Inventory", "Expenses", "Reports", "Settings", "Company Profiles"];
     var PERMISSIONS = {};
     MODULE_LIST.forEach(function (mod) {
@@ -4630,13 +5320,7 @@
     // ---- File Manager ----
     var FILE_FOLDERS = ["All", "Invoices", "Quotes", "Contracts", "Receipts", "Documents"];
     var FILE_ACTIVE_FOLDER = "All";
-    var FILES = [
-      { id: "f1", name: "INV-0006.pdf", folder: "Invoices", size: "182 KB", type: "pdf", url: null },
-      { id: "f2", name: "QUO-0011.pdf", folder: "Quotes", size: "164 KB", type: "pdf", url: null },
-      { id: "f3", name: "Harborline-MSA-signed.pdf", folder: "Contracts", size: "540 KB", type: "pdf", url: null },
-      { id: "f4", name: "figma-receipt-jul.pdf", folder: "Receipts", size: "88 KB", type: "pdf", url: null },
-      { id: "f5", name: "brand-guidelines.docx", folder: "Documents", size: "1.2 MB", type: "doc", url: null },
-    ];
+    var FILES = [];
     var FILE_ICONS = { pdf: "📄", doc: "📝", img: "🖼️", xls: "📊", other: "📁" };
     function fileIconFor(f) {
       if (f.type === "img" && f.url) return '<img src="' + f.url + '" alt="" />';
@@ -4722,26 +5406,17 @@
     }
 
     // ---- Notification Center 2.0 ----
-    var NOTIFICATIONS = [
-      { id: "n1", icon: "✅", type: "Invoice paid", text: "INV-0006 — $1,240.00", read: false },
-      { id: "n2", icon: "⚠️", type: "Low stock", text: "Logistics tracking module — 4 pcs left", read: false },
-      { id: "n3", icon: "⏰", type: "Invoice overdue", text: "INV-0005 — Harborline Logistics — $3,480.00", read: false },
-      { id: "n4", icon: "✅", type: "Task reminder", text: "Follow up with Nova Digital is due", read: false },
-      { id: "n5", icon: "🤝", type: "Meeting reminder", text: "Kickoff call with Atlas Studio at 10:00 AM", read: true },
-      { id: "n6", icon: "✨", type: "AI suggestion", text: "3 clients haven't paid in 30+ days — send reminders?", read: true },
-      { id: "n7", icon: "🔒", type: "Security alert", text: "New sign-in from a Windows device in Lahore", read: true },
-      { id: "n8", icon: "👤", type: "Team activity", text: "Team Member 2 updated the Harborline quote", read: true },
-    ];
+    var NOTIFICATIONS = [];
     function renderAllNotifPanels() {
       var unread = NOTIFICATIONS.filter(function (n) { return !n.read; }).length;
       document.querySelectorAll("[data-notif-list]").forEach(function (list) {
-        list.innerHTML = NOTIFICATIONS.map(function (n) {
+        list.innerHTML = NOTIFICATIONS.length ? NOTIFICATIONS.map(function (n) {
           return (
             '<div class="notif-item' + (n.read ? " read" : "") + '" data-notif-id="' + n.id + '">' +
             '<span class="unread-dot"></span><span>' + n.icon + "</span>" +
             '<div><div class="nt">' + n.type + '</div><div class="nm">' + n.text + "</div></div></div>"
           );
-        }).join("");
+        }).join("") : '<div style="padding:1rem 0.6rem;font-size:0.82rem;color:hsl(var(--muted-fg));">You\'re all caught up — no notifications yet.</div>';
       });
       document.querySelectorAll(".notif-dot").forEach(function (dot) { dot.style.display = unread ? "" : "none"; });
     }
@@ -4767,6 +5442,7 @@
       { id: "inventory", label: "Inventory alerts" },
       { id: "notifications", label: "Notifications" },
       { id: "ai-insights", label: "AI Insights" },
+      { id: "compliance", label: "Compliance" },
     ];
     var dashWidgetVisibility = {};
     DASH_WIDGET_DEFS.forEach(function (w) { dashWidgetVisibility[w.id] = true; });
@@ -4813,14 +5489,14 @@
         if (!el) return;
         el.querySelectorAll("tbody tr").forEach(function (tr) {
           var cells = tr.querySelectorAll("td");
-          if (!cells.length) return;
+          if (cells.length < 2) return;
           var label = cells[labelCol] ? cells[labelCol].textContent.trim() : "";
           var sub = subCol != null && cells[subCol] ? cells[subCol].textContent.trim() : "";
           if (label) idx.push({ group: group, icon: icon, label: label, sub: sub, goto: gotoId });
         });
       }
       INVOICES.forEach(function (inv) { idx.push({ group: "Invoices", icon: "📄", label: inv.id, sub: inv.client, goto: "invoices" }); });
-      addFromTable("quotes-table", "Quotes", "🧾", "quotes", 0, 1);
+      QUOTES.forEach(function (q) { idx.push({ group: "Quotes", icon: "🧾", label: q.id, sub: q.client, goto: "quotes" }); });
       CLIENTS.forEach(function (c) { idx.push({ group: "Clients", icon: "👥", label: c.name, sub: c.company, goto: "client-detail", openClient: c.id }); });
       addFromTable("companies-table", "Companies", "🏢", "companies", 0, 1);
       EXPENSES.forEach(function (e) { idx.push({ group: "Expenses", icon: "💳", label: e.title, sub: e.category, goto: "expenses" }); });
@@ -4828,6 +5504,10 @@
       TASKS.forEach(function (t) { idx.push({ group: "Tasks", icon: "✅", label: t.title, sub: t.priority, goto: "tasks" }); });
       FILES.forEach(function (f) { idx.push({ group: "Files", icon: "🗂️", label: f.name, sub: f.folder, goto: "files" }); });
       TEAM_MEMBERS.forEach(function (m) { idx.push({ group: "Team", icon: "🧑", label: m.name, sub: m.role, goto: "team" }); });
+      CompliancePluginOrder.filter(function (c) { return !CompliancePlugins[c].isFutureSlot; }).forEach(function (c) {
+        var p = CompliancePlugins[c];
+        idx.push({ group: "Compliance", icon: p.flag, label: p.name + " compliance", sub: p.enabled || p.alwaysOn ? "Enabled" : "Disabled", goto: "settings" });
+      });
       var pages = [
         { group: "Pages", icon: "▦", label: "Dashboard", goto: "dashboard" },
         { group: "Pages", icon: "💼", label: "CRM", goto: "crm" },
@@ -4840,7 +5520,8 @@
         { group: "Pages", icon: "✨", label: "AI Assistant", goto: "ai" },
         { group: "Pages", icon: "🧑‍🤝‍🧑", label: "Team & Roles", goto: "team" },
         { group: "Pages", icon: "🗂️", label: "Files", goto: "files" },
-        { group: "Pages", icon: "⚙️", label: "Settings (via Team)", goto: "team" },
+        { group: "Pages", icon: "⚙️", label: "Settings", goto: "settings" },
+        { group: "Pages", icon: "🛡️", label: "Compliance Center", goto: "settings" },
       ];
       return idx.concat(pages);
     }
