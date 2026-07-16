@@ -350,6 +350,11 @@
   .auth-status.error { color: hsl(var(--danger)); }
   .auth-status.success { color: hsl(var(--success)); }
   .auth-card button:disabled { cursor: wait; opacity: 0.65; }
+  .recovery-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin: 1.2rem 0; }
+  .recovery-panel { display: none; }
+  .recovery-panel.active { display: block; }
+  .security-note { margin: 0.9rem 0; padding: 0.75rem; border-radius: var(--radius-md); background: hsl(var(--muted)); color: hsl(var(--muted-fg)); font-size: 0.76rem; line-height: 1.45; }
+  #recaptcha-container { min-height: 78px; margin: 0.75rem 0; overflow: hidden; }
 
   /* ---- app shell ---- */
   .app-shell { display: flex; min-height: calc(100vh - 32px); }
@@ -1108,11 +1113,50 @@
         <div class="divider">OR</div>
         <form id="login-form">
           <div class="field-group"><label class="field-label" for="login-email">Email</label><input class="field" id="login-email" type="email" autocomplete="email" required /></div>
-          <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;" for="login-password">Password <a href="#" id="forgot-password" style="color:hsl(var(--primary));font-weight:600;">Forgot password?</a></label><input class="field" id="login-password" type="password" autocomplete="current-password" required /></div>
+          <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;" for="login-password">Password <a href="#" data-goto="recover" style="color:hsl(var(--primary));font-weight:600;">Forgot password?</a></label><input class="field" id="login-password" type="password" autocomplete="current-password" required /></div>
           <button class="btn btn-primary" id="login-submit" type="submit" style="width:100%;">Sign in</button>
           <p id="login-status" class="auth-status" role="status" aria-live="polite"></p>
         </form>
         <p class="foot-link">Don't have an account? <a href="#" data-goto="register">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACCOUNT RECOVERY ============ -->
+<section class="view" id="view-recover">
+  <div class="auth-wrap">
+    <header style="padding:1.5rem;"><a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a></header>
+    <div class="auth-center">
+      <div class="card auth-card">
+        <h2>Recover your account</h2><p class="sub">Choose a secure recovery method.</p>
+        <div class="recovery-choice" role="tablist" aria-label="Recovery method">
+          <button class="btn btn-primary" type="button" data-recovery-tab="email" role="tab" aria-selected="true">Email link</button>
+          <button class="btn btn-outline" type="button" data-recovery-tab="phone" role="tab" aria-selected="false">Phone OTP</button>
+        </div>
+
+        <div class="recovery-panel active" id="recovery-email-panel" role="tabpanel">
+          <form id="recovery-email-form">
+            <div class="field-group"><label class="field-label" for="recovery-email">Account email</label><input class="field" id="recovery-email" type="email" autocomplete="email" required /></div>
+            <button class="btn btn-primary" id="recovery-email-submit" type="submit" style="width:100%;">Send reset link</button>
+            <p id="recovery-email-status" class="auth-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="recovery-panel" id="recovery-phone-panel" role="tabpanel">
+          <form id="phone-otp-form">
+            <div class="field-group"><label class="field-label" for="recovery-phone">Phone number</label><input class="field" id="recovery-phone" type="tel" autocomplete="tel" placeholder="+33 6 12 34 56 78" required /></div>
+            <div id="recaptcha-container" aria-label="Human verification"></div>
+            <button class="btn btn-primary" id="send-otp" type="submit" style="width:100%;">Send verification code</button>
+          </form>
+          <form id="verify-otp-form" hidden style="margin-top:1rem;">
+            <div class="field-group"><label class="field-label" for="recovery-otp">6-digit verification code</label><input class="field" id="recovery-otp" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required /></div>
+            <button class="btn btn-primary" id="verify-otp" type="submit" style="width:100%;">Verify and sign in</button>
+          </form>
+          <p class="security-note">Protected by reCAPTCHA. Phone OTP signs you in securely. For an existing email account, the phone number must already be linked to that same account.</p>
+          <p id="recovery-phone-status" class="auth-status" role="status" aria-live="polite"></p>
+        </div>
+        <p class="foot-link"><a href="#" data-goto="login">← Back to sign in</a></p>
       </div>
     </div>
   </div>
@@ -4907,7 +4951,7 @@
 </script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile, GoogleAuthProvider, OAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAYpiXuZ_Bn0Fu3BmQtZP7YxcYUZoHZJLI",
@@ -4941,7 +4985,13 @@
       "auth/popup-closed-by-user": "The sign-in window was closed before completion.",
       "auth/popup-blocked": "Your browser blocked the sign-in window. Allow popups and try again.",
       "auth/account-exists-with-different-credential": "This email already uses a different sign-in method.",
-      "auth/operation-not-allowed": "This sign-in method still needs provider configuration."
+      "auth/operation-not-allowed": "This sign-in method still needs provider configuration.",
+      "auth/invalid-phone-number": "Enter a valid phone number with country code, for example +33.",
+      "auth/missing-phone-number": "Enter your phone number first.",
+      "auth/invalid-verification-code": "The verification code is incorrect or expired.",
+      "auth/code-expired": "The verification code has expired. Request a new code.",
+      "auth/quota-exceeded": "SMS limit reached. Please try again later.",
+      "auth/captcha-check-failed": "Human verification failed. Please try again."
     };
     return messages[error && error.code] || "Something went wrong. Please try again.";
   }
@@ -4985,12 +5035,86 @@
     finally { button.disabled = false; button.textContent = "Sign in"; }
   });
 
-  document.getElementById("forgot-password").addEventListener("click", async event => {
+  document.querySelectorAll("[data-recovery-tab]").forEach(button => button.addEventListener("click", () => {
+    const method = button.getAttribute("data-recovery-tab");
+    document.querySelectorAll("[data-recovery-tab]").forEach(tab => {
+      const selected = tab === button;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.classList.toggle("btn-primary", selected);
+      tab.classList.toggle("btn-outline", !selected);
+    });
+    document.querySelectorAll(".recovery-panel").forEach(panel => panel.classList.toggle("active", panel.id === "recovery-" + method + "-panel"));
+  }));
+
+  document.getElementById("recovery-email-form").addEventListener("submit", async event => {
     event.preventDefault();
-    const email = document.getElementById("login-email").value.trim();
-    if (!email) { showAuthStatus("login-status", "Enter your email first, then select Forgot password."); document.getElementById("login-email").focus(); return; }
-    try { await sendPasswordResetEmail(auth, email); showAuthStatus("login-status", "Password reset email sent. Check your inbox.", "success"); }
-    catch (error) { showAuthStatus("login-status", friendlyAuthError(error)); }
+    const email = document.getElementById("recovery-email").value.trim();
+    const button = document.getElementById("recovery-email-submit");
+    button.disabled = true;
+    button.textContent = "Sending…";
+    showAuthStatus("recovery-email-status", "", "");
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showAuthStatus("recovery-email-status", "If an account exists for this email, a secure reset link has been sent.", "success");
+    } catch (error) {
+      showAuthStatus("recovery-email-status", friendlyAuthError(error));
+    } finally {
+      button.disabled = false;
+      button.textContent = "Send reset link";
+    }
+  });
+
+  let phoneConfirmation = null;
+  let recaptchaVerifier = null;
+  function resetRecaptcha() {
+    if (recaptchaVerifier) recaptchaVerifier.clear();
+    recaptchaVerifier = null;
+    document.getElementById("recaptcha-container").innerHTML = "";
+  }
+  document.getElementById("phone-otp-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const phone = document.getElementById("recovery-phone").value.replace(/\s+/g, "");
+    const button = document.getElementById("send-otp");
+    button.disabled = true;
+    button.textContent = "Sending…";
+    showAuthStatus("recovery-phone-status", "", "");
+    try {
+      if (!recaptchaVerifier) {
+        recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+          size: "normal",
+          "expired-callback": () => showAuthStatus("recovery-phone-status", "Human verification expired. Please verify again.")
+        });
+        await recaptchaVerifier.render();
+      }
+      phoneConfirmation = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+      document.getElementById("verify-otp-form").hidden = false;
+      showAuthStatus("recovery-phone-status", "Verification code sent by SMS.", "success");
+      document.getElementById("recovery-otp").focus();
+    } catch (error) {
+      resetRecaptcha();
+      showAuthStatus("recovery-phone-status", friendlyAuthError(error));
+    } finally {
+      button.disabled = false;
+      button.textContent = "Send verification code";
+    }
+  });
+  document.getElementById("verify-otp-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const code = document.getElementById("recovery-otp").value.trim();
+    const button = document.getElementById("verify-otp");
+    if (!phoneConfirmation) { showAuthStatus("recovery-phone-status", "Request a verification code first."); return; }
+    button.disabled = true;
+    button.textContent = "Verifying…";
+    try {
+      await phoneConfirmation.confirm(code);
+      showAuthStatus("recovery-phone-status", "Phone verified. You are signed in.", "success");
+      window.ivoxaShowView("dashboard");
+    } catch (error) {
+      showAuthStatus("recovery-phone-status", friendlyAuthError(error));
+    } finally {
+      button.disabled = false;
+      button.textContent = "Verify and sign in";
+    }
   });
 
   async function socialSignIn(provider, statusId, buttons) {
