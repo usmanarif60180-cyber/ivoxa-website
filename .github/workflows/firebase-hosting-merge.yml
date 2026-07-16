@@ -1,0 +1,31 @@
+name: Deploy to Firebase Hosting on merge
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-hosting-live
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ivoxa-819d5
+          workload_identity_provider: projects/645227493068/locations/global/workloadIdentityPools/github-actions-ivoxa/providers/github-ivoxa
+          service_account: github-action-1302054458@ivoxa-819d5.iam.gserviceaccount.com
+
+      - name: Deploy to Firebase Hosting
+        run: npx --yes firebase-tools@latest deploy --only hosting:ivoxa --project ivoxa-819d5 --non-interactive
