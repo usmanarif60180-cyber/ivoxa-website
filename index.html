@@ -1119,7 +1119,7 @@
         <h2>Create your workspace</h2><p class="sub">Start free — no credit card required.</p>
         <button class="btn btn-outline" style="width:100%;margin-top:1.25rem;">🔵 Continue with Google</button>
         <div class="divider">OR</div>
-        <div class="field-group"><label class="field-label">Full name</label><input class="field" value="Ayesha Usman" /></div>
+        <div class="field-group"><label class="field-label">Full name</label><input class="field" placeholder="Your full name" /></div>
         <div class="field-group"><label class="field-label">Email</label><input class="field" type="email" /></div>
         <div class="field-group"><label class="field-label">Password</label><input class="field" type="password" /></div>
         <button class="btn btn-primary" style="width:100%;" data-goto="dashboard">Create account</button>
@@ -1418,7 +1418,7 @@
       '<div data-notif-list></div>' +
       "</div></div>" +
       '<button class="btn btn-ghost btn-icon theme-toggle" aria-label="Toggle theme">◐</button>' +
-      '<div class="avatar">AU</div></div>'
+      '<div class="avatar">ME</div></div>'
     );
   }
   document.write(''); // no-op to keep this a plain script block
@@ -1509,7 +1509,7 @@
             <div class="card-title">🔔 Notifications</div>
             <div class="widget-row"><span>✅ Invoice paid — INV-0006</span></div>
             <div class="widget-row"><span>⚠️ Low stock — Logistics tracking module</span></div>
-            <div class="widget-row"><span>👤 New team activity — Ayesha</span></div>
+            <div class="widget-row"><span>👤 New team activity — Team Member 1</span></div>
           </div>
           <div class="card card-pad" data-widget-id="ai-insights">
             <div class="card-title">✨ AI Insights</div>
@@ -1729,10 +1729,10 @@
     <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add client</h3><button class="ob-skip" id="ac-close">Cancel</button></div>
     <div class="cw-body">
       <div class="ob-fields">
-        <div><label class="field-label">Name</label><input class="field" id="ac-name" placeholder="Jane Doe" /></div>
+        <div><label class="field-label">Name</label><input class="field" id="ac-name" placeholder="Contact name" /></div>
         <div><label class="field-label">Company</label><input class="field" id="ac-company" placeholder="Acme Inc." /></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-          <div><label class="field-label">Email</label><input class="field" type="email" id="ac-email" placeholder="jane@acme.com" /></div>
+          <div><label class="field-label">Email</label><input class="field" type="email" id="ac-email" placeholder="name@company.com" /></div>
           <div><label class="field-label">Phone</label><input class="field" id="ac-phone" placeholder="+1 415 555 0100" /></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
@@ -2099,13 +2099,13 @@
         <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary">+ Add lead</button></div>
         <div class="kanban">
           <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>3</span></div>
-            <div class="card kcard"><div class="kt">Farah Iqbal</div><div class="ks">Crestline Retail</div><span class="badge badge-primary">$1,600</span></div>
-            <div class="card kcard"><div class="kt">Tom Reyes</div><div class="ks">Reyes &amp; Co</div><span class="badge badge-primary">$2,600</span></div>
-            <div class="card kcard"><div class="kt">Priya Nair</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$900</span></div>
+            <div class="card kcard"><div class="kt">Lead 1</div><div class="ks">Crestline Retail</div><span class="badge badge-primary">$1,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 2</div><div class="ks">Reyes &amp; Co</div><span class="badge badge-primary">$2,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 3</div><div class="ks">Website inquiry</div><span class="badge badge-primary">$900</span></div>
           </div>
           <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>2</span></div>
-            <div class="card kcard"><div class="kt">Omar Siddiqui</div><div class="ks">Referral</div><span class="badge badge-primary">$1,500</span></div>
-            <div class="card kcard"><div class="kt">Lena Brooks</div><div class="ks">Brooks Studio</div><span class="badge badge-primary">$1,600</span></div>
+            <div class="card kcard"><div class="kt">Lead 4</div><div class="ks">Referral</div><span class="badge badge-primary">$1,500</span></div>
+            <div class="card kcard"><div class="kt">Lead 5</div><div class="ks">Brooks Studio</div><span class="badge badge-primary">$1,600</span></div>
           </div>
           <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>2</span></div>
             <div class="card kcard"><div class="kt">Harborline Logistics</div><div class="ks">Referral</div><span class="badge badge-primary">$3,100</span></div>
@@ -3429,8 +3429,8 @@
     // ---- Inventory Management ----
     var SUPPLIERS = [
       { id: "s1", name: "Figma Inc.", contact: "Sales Team", email: "sales@figma.com", phone: "+1 415 555 0100" },
-      { id: "s2", name: "TechSource Distributors", contact: "Bilal Ahmed", email: "bilal@techsource.pk", phone: "+92 300 1112233" },
-      { id: "s3", name: "Global Office Supplies", contact: "Sara Khan", email: "sara@globaloffice.com", phone: "+92 321 4455667" },
+      { id: "s2", name: "TechSource Distributors", contact: "Supplier Contact 1", email: "contact@techsource.pk", phone: "+92 300 1112233" },
+      { id: "s3", name: "Global Office Supplies", contact: "Supplier Contact 2", email: "contact@globaloffice.com", phone: "+92 321 4455667" },
     ];
     var PRODUCTS = [
       { id: "p1", name: "Brand identity package", type: "service", category: "Design", sku: "BRD-001", barcode: "", stock: null, minStock: null, unit: "pkg", purchase: 0, selling: 1800, supplierId: null, image: null },
@@ -3714,9 +3714,9 @@
     // ---- CRM: Customer 360 / Client detail ----
     var CLIENTS = [
       {
-        id: "cl1", name: "Ayesha Farooq", company: "Nova Digital Agency", email: "ayesha@novadigital.com", phone: "+92 300 1234567",
+        id: "cl1", name: "Client Contact 1", company: "Nova Digital Agency", email: "contact1@novadigital.com", phone: "+92 300 1234567",
         status: "Active", tags: ["VIP", "Retainer"], since: "2025-02-10",
-        contacts: [{ name: "Ayesha Farooq", role: "Marketing Director", email: "ayesha@novadigital.com", phone: "+92 300 1234567" }],
+        contacts: [{ name: "Client Contact 1", role: "Marketing Director", email: "contact1@novadigital.com", phone: "+92 300 1234567" }],
         timeline: [
           { type: "invoice", text: "INV-0002 sent — $640.00", date: "2026-05-20" },
           { type: "call", text: "Discussed Q3 retainer renewal", date: "2026-06-18" },
@@ -3724,26 +3724,26 @@
         ],
       },
       {
-        id: "cl2", name: "Marcus Hail", company: "Harborline Logistics", email: "marcus@harborline.co", phone: "+1 415 555 0142",
+        id: "cl2", name: "Client Contact 2", company: "Harborline Logistics", email: "contact2@harborline.co", phone: "+1 415 555 0142",
         status: "At risk", tags: ["Overdue"], since: "2025-11-02",
-        contacts: [{ name: "Marcus Hail", role: "Operations Lead", email: "marcus@harborline.co", phone: "+1 415 555 0142" }],
+        contacts: [{ name: "Client Contact 2", role: "Operations Lead", email: "contact2@harborline.co", phone: "+1 415 555 0142" }],
         timeline: [
           { type: "invoice", text: "INV-0005 sent — $3,480.00", date: "2026-06-28" },
         ],
       },
       {
-        id: "cl3", name: "Elena Voss", company: "Kessler & Voss LLP", email: "elena@kesslervoss.com", phone: "+44 20 7946 0958",
+        id: "cl3", name: "Client Contact 3", company: "Kessler & Voss LLP", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958",
         status: "Active", tags: ["Legal"], since: "2025-08-15",
-        contacts: [{ name: "Elena Voss", role: "Partner", email: "elena@kesslervoss.com", phone: "+44 20 7946 0958" }],
+        contacts: [{ name: "Client Contact 3", role: "Partner", email: "contact3@kesslervoss.com", phone: "+44 20 7946 0958" }],
         timeline: [
           { type: "invoice", text: "INV-0003 viewed — $2,150.00", date: "2026-06-02" },
           { type: "meeting", text: "Onboarding call", date: "2026-06-05" },
         ],
       },
       {
-        id: "cl4", name: "Daniyal Raza", company: "Atlas Studio", email: "daniyal@atlasstudio.io", phone: "+92 321 9876543",
+        id: "cl4", name: "Client Contact 4", company: "Atlas Studio", email: "contact4@atlasstudio.io", phone: "+92 321 9876543",
         status: "Active", tags: ["VIP"], since: "2024-12-01",
-        contacts: [{ name: "Daniyal Raza", role: "Founder", email: "daniyal@atlasstudio.io", phone: "+92 321 9876543" }],
+        contacts: [{ name: "Client Contact 4", role: "Founder", email: "contact4@atlasstudio.io", phone: "+92 321 9876543" }],
         timeline: [
           { type: "invoice", text: "INV-0006 paid — $1,240.00", date: "2026-07-02" },
           { type: "note", text: "Interested in a new brand refresh package", date: "2026-07-08" },
@@ -4441,14 +4441,14 @@
     // ---- Team Management + Roles & Permissions ----
     var ROLE_LIST = ["Owner", "Admin", "Manager", "Accountant", "Sales", "Employee", "Viewer"];
     var TEAM_MEMBERS = [
-      { id: "m1", name: "Ayesha Usman", email: "ayeshausman251125@gmail.com", role: "Owner", status: "Active" },
-      { id: "m2", name: "Bilal Chaudhry", email: "bilal@ivoxa.com", role: "Admin", status: "Active" },
-      { id: "m3", name: "Sara Khan", email: "sara@ivoxa.com", role: "Accountant", status: "Active" },
-      { id: "m4", name: "Omar Siddiqui", email: "omar@ivoxa.com", role: "Sales", status: "Active" },
-      { id: "m5", name: "Fatima Noor", email: "fatima@ivoxa.com", role: "Employee", status: "Suspended" },
+      { id: "m1", name: "Team Member 1", email: "member1@ivoxa.com", role: "Owner", status: "Active" },
+      { id: "m2", name: "Team Member 2", email: "member2@ivoxa.com", role: "Admin", status: "Active" },
+      { id: "m3", name: "Team Member 3", email: "member3@ivoxa.com", role: "Accountant", status: "Active" },
+      { id: "m4", name: "Team Member 4", email: "member4@ivoxa.com", role: "Sales", status: "Active" },
+      { id: "m5", name: "Team Member 5", email: "member5@ivoxa.com", role: "Employee", status: "Suspended" },
     ];
     var PENDING_INVITES = [
-      { email: "daniyal@atlasstudio.io", role: "Viewer", sent: "Jul 12, 2026", status: "Pending" },
+      { email: "invitee@atlasstudio.io", role: "Viewer", sent: "Jul 12, 2026", status: "Pending" },
     ];
     var MODULE_LIST = ["Dashboard", "Invoices", "Quotes", "Clients", "CRM", "Inventory", "Expenses", "Reports", "Settings", "Company Profiles"];
     var PERMISSIONS = {};
@@ -4671,7 +4671,7 @@
       { id: "n5", icon: "🤝", type: "Meeting reminder", text: "Kickoff call with Atlas Studio at 10:00 AM", read: true },
       { id: "n6", icon: "✨", type: "AI suggestion", text: "3 clients haven't paid in 30+ days — send reminders?", read: true },
       { id: "n7", icon: "🔒", type: "Security alert", text: "New sign-in from a Windows device in Lahore", read: true },
-      { id: "n8", icon: "👤", type: "Team activity", text: "Bilal Chaudhry updated the Harborline quote", read: true },
+      { id: "n8", icon: "👤", type: "Team activity", text: "Team Member 2 updated the Harborline quote", read: true },
     ];
     function renderAllNotifPanels() {
       var unread = NOTIFICATIONS.filter(function (n) { return !n.read; }).length;
