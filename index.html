@@ -382,6 +382,8 @@
     font-size: 0.75rem; font-weight: 800; overflow: hidden;
   }
   .m-auth-icon { display: inline-flex; text-decoration: none; flex-shrink: 0; }
+  .lang-select { font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.5rem; border-radius: 8px; border: 1px solid hsl(var(--border)); background: hsl(var(--surface)); color: hsl(var(--fg)); cursor: pointer; }
+  .m-lang-select { margin-left: 0.4rem; }
   #print-area { display: none; }
   .print-doc-head { display: flex; align-items: center; gap: 0.8rem; border-bottom: 2px solid #111; padding-bottom: 1rem; margin-bottom: 1rem; }
   .print-doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #111; }
@@ -885,12 +887,13 @@
     <div class="container m-header-inner">
       <a href="#" class="logo"><span class="logo-mark">IX</span>IVOXA</a>
       <nav class="m-nav">
-        <a href="#" data-goto="landing" class="current">Features</a>
-        <a href="#" data-goto="pricing">Pricing</a>
-        <a href="#" data-goto="landing">About</a>
+        <a href="#" data-goto="landing" class="current" data-i18n="mkt_features">Features</a>
+        <a href="#" data-goto="pricing" data-i18n="mkt_pricing">Pricing</a>
+        <a href="#" data-goto="landing" data-i18n="mkt_about">About</a>
         <a href="#" data-goto="landing">Contact</a>
       </nav>
       <div class="m-actions">
+        <select class="lang-select m-lang-select" id="landing-lang-select" aria-label="Language"></select>
         <button class="btn btn-ghost btn-sm" id="theme-toggle-1" aria-label="Toggle theme">◐</button>
         <span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
         <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span>
@@ -1069,12 +1072,13 @@
     <div class="container m-header-inner">
       <a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a>
       <nav class="m-nav">
-        <a href="#" data-goto="landing">Features</a>
-        <a href="#" data-goto="pricing" class="current">Pricing</a>
-        <a href="#" data-goto="landing">About</a>
+        <a href="#" data-goto="landing" data-i18n="mkt_features">Features</a>
+        <a href="#" data-goto="pricing" class="current" data-i18n="mkt_pricing">Pricing</a>
+        <a href="#" data-goto="landing" data-i18n="mkt_about">About</a>
         <a href="#" data-goto="landing">Contact</a>
       </nav>
       <div class="m-actions">
+        <select class="lang-select m-lang-select" id="pricing-lang-select" aria-label="Language"></select>
         <button class="btn btn-ghost btn-sm" id="theme-toggle-2" aria-label="Toggle theme">◐</button>
         <span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
         <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span>
@@ -1123,17 +1127,17 @@
     <header style="padding:1.5rem;"><a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a></header>
     <div class="auth-center">
       <div class="card auth-card">
-        <h2>Welcome back</h2><p class="sub">Sign in to your IVOXA workspace.</p>
-        <button class="btn btn-outline" id="login-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; Continue with Google</button>
-        <button class="btn btn-outline" id="login-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; Continue with Apple</button>
+        <h2 data-i18n="auth_welcome_back">Welcome back</h2><p class="sub" data-i18n="auth_signin_sub">Sign in to your IVOXA workspace.</p>
+        <button class="btn btn-outline" id="login-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; <span data-i18n="auth_continue_google">Continue with Google</span></button>
+        <button class="btn btn-outline" id="login-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; <span data-i18n="auth_continue_apple">Continue with Apple</span></button>
         <div class="divider">OR</div>
         <form id="login-form">
-          <div class="field-group"><label class="field-label" for="login-email">Email</label><input class="field" id="login-email" type="email" autocomplete="email" required /></div>
-          <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;" for="login-password">Password <a href="#" data-goto="recover" style="color:hsl(var(--primary));font-weight:600;">Forgot password?</a></label><input class="field" id="login-password" type="password" autocomplete="current-password" required /></div>
-          <button class="btn btn-primary" id="login-submit" type="submit" style="width:100%;">Sign in</button>
+          <div class="field-group"><label class="field-label" data-i18n="fld_email" for="login-email">Email</label><input class="field" id="login-email" type="email" autocomplete="email" required /></div>
+          <div class="field-group"><label class="field-label" style="display:flex;justify-content:space-between;" for="login-password"><span data-i18n="fld_password">Password</span> <a href="#" data-goto="recover" style="color:hsl(var(--primary));font-weight:600;" data-i18n="auth_forgot_password">Forgot password?</a></label><input class="field" id="login-password" type="password" autocomplete="current-password" required /></div>
+          <button class="btn btn-primary" id="login-submit" type="submit" style="width:100%;" data-i18n="btn_sign_in">Sign in</button>
           <p id="login-status" class="auth-status" role="status" aria-live="polite"></p>
         </form>
-        <p class="foot-link">Don't have an account? <a href="#" data-goto="register">Create one</a></p>
+        <p class="foot-link"><span data-i18n="auth_no_account">Don't have an account?</span> <a href="#" data-goto="register" data-i18n="auth_create_one">Create one</a></p>
       </div>
     </div>
   </div>
@@ -1184,19 +1188,19 @@
     <header style="padding:1.5rem;"><a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a></header>
     <div class="auth-center">
       <div class="card auth-card">
-        <h2>Create your workspace</h2><p class="sub">Start free — no credit card required.</p>
-        <button class="btn btn-outline" id="register-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; Continue with Google</button>
-        <button class="btn btn-outline" id="register-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; Continue with Apple</button>
+        <h2 data-i18n="auth_create_workspace">Create your workspace</h2><p class="sub" data-i18n="auth_register_sub">Start free — no credit card required.</p>
+        <button class="btn btn-outline" id="register-google" type="button" style="width:100%;margin-top:1.25rem;">G&nbsp;&nbsp; <span data-i18n="auth_continue_google">Continue with Google</span></button>
+        <button class="btn btn-outline" id="register-apple" type="button" style="width:100%;margin-top:0.6rem;">●&nbsp;&nbsp; <span data-i18n="auth_continue_apple">Continue with Apple</span></button>
         <div class="divider">OR</div>
         <form id="register-form">
-          <div class="field-group"><label class="field-label" for="register-name">Full name</label><input class="field" id="register-name" autocomplete="name" placeholder="Your full name" required /></div>
-          <div class="field-group"><label class="field-label" for="register-email">Email</label><input class="field" id="register-email" type="email" autocomplete="email" required /></div>
-          <div class="field-group"><label class="field-label" for="register-password">Password</label><input class="field" id="register-password" type="password" autocomplete="new-password" minlength="6" required /></div>
+          <div class="field-group"><label class="field-label" data-i18n="fld_name" for="register-name">Full name</label><input class="field" id="register-name" autocomplete="name" placeholder="Your full name" required /></div>
+          <div class="field-group"><label class="field-label" data-i18n="fld_email" for="register-email">Email</label><input class="field" id="register-email" type="email" autocomplete="email" required /></div>
+          <div class="field-group"><label class="field-label" data-i18n="fld_password" for="register-password">Password</label><input class="field" id="register-password" type="password" autocomplete="new-password" minlength="6" required /></div>
           <div class="field-group"><label class="field-label" for="register-confirm">Confirm password</label><input class="field" id="register-confirm" type="password" autocomplete="new-password" minlength="6" required /></div>
-          <button class="btn btn-primary" id="register-submit" type="submit" style="width:100%;">Create account</button>
+          <button class="btn btn-primary" id="register-submit" type="submit" style="width:100%;" data-i18n="btn_create_account">Create account</button>
           <p id="register-status" class="auth-status" role="status" aria-live="polite"></p>
         </form>
-        <p class="foot-link">Already have an account? <a href="#" data-goto="login">Sign in</a></p>
+        <p class="foot-link"><span data-i18n="auth_have_account">Already have an account?</span> <a href="#" data-goto="login" data-i18n="btn_sign_in">Sign in</a></p>
       </div>
     </div>
   </div>
@@ -1444,31 +1448,40 @@
 <!-- ============ APP SHELL VIEWS ============ -->
 <script>
   var APP_NAV = [
-    { id: "dashboard", label: "Dashboard", ic: "▦" },
-    { id: "crm", label: "CRM", ic: "💼" },
-    { id: "leads", label: "Leads", ic: "🎯" },
-    { id: "clients", label: "Clients", ic: "👥" },
-    { id: "companies", label: "Companies", ic: "🏢" },
-    { id: "invoices", label: "Invoices", ic: "📄" },
-    { id: "quotes", label: "Quotes", ic: "🧾" },
-    { id: "design-studio", label: "Design Studio", ic: "🎨" },
-    { id: "inventory", label: "Inventory", ic: "📦" },
-    { id: "expenses", label: "Expenses", ic: "💳" },
-    { id: "tasks", label: "Tasks", ic: "✅" },
-    { id: "calendar", label: "Calendar", ic: "📅" },
-    { id: "team", label: "Team", ic: "🧑‍🤝‍🧑" },
-    { id: "files", label: "Files", ic: "🗂️" },
-    { id: "reports", label: "Reports", ic: "📊" },
-    { id: "ai", label: "AI Assistant", ic: "✨" },
+    { id: "dashboard", i18nKey: "nav_dashboard", ic: "▦" },
+    { id: "crm", i18nKey: "nav_crm", ic: "💼" },
+    { id: "leads", i18nKey: "nav_leads", ic: "🎯" },
+    { id: "clients", i18nKey: "nav_clients", ic: "👥" },
+    { id: "companies", i18nKey: "nav_companies", ic: "🏢" },
+    { id: "invoices", i18nKey: "nav_invoices", ic: "📄" },
+    { id: "quotes", i18nKey: "nav_quotes", ic: "🧾" },
+    { id: "design-studio", i18nKey: "nav_design_studio", ic: "🎨" },
+    { id: "inventory", i18nKey: "nav_inventory", ic: "📦" },
+    { id: "expenses", i18nKey: "nav_expenses", ic: "💳" },
+    { id: "tasks", i18nKey: "nav_tasks", ic: "✅" },
+    { id: "calendar", i18nKey: "nav_calendar", ic: "📅" },
+    { id: "team", i18nKey: "nav_team", ic: "🧑‍🤝‍🧑" },
+    { id: "files", i18nKey: "nav_files", ic: "🗂️" },
+    { id: "reports", i18nKey: "nav_reports", ic: "📊" },
+    { id: "ai", i18nKey: "nav_ai", ic: "✨" },
   ];
   function renderSidebar(active) {
     var nav = APP_NAV.map(function (item) {
-      return '<a href="#" data-goto="' + item.id + '" class="' + (item.id === active ? "current" : "") + '"><span>' + item.ic + "</span>" + item.label + "</a>";
+      return '<a href="#" data-goto="' + item.id + '" class="' + (item.id === active ? "current" : "") + '"><span>' + item.ic + "</span>" + t(item.i18nKey) + "</a>";
     }).join("");
     return (
       '<aside class="app-sidebar"><div class="logo"><span class="logo-mark">IX</span>IVOXA</div>' +
       '<nav class="app-nav">' + nav + "</nav>" +
-      '<div class="app-nav-footer"><a href="#" data-goto="settings" class="' + (active === "settings" ? "current" : "") + '">⚙ Settings</a></div></aside>'
+      '<div class="app-nav-footer"><a href="#" data-goto="settings" class="' + (active === "settings" ? "current" : "") + '">⚙ ' + t("nav_settings") + "</a></div></aside>"
+    );
+  }
+  function langSelectHtml(extraClass) {
+    return (
+      '<select class="lang-select ' + (extraClass || "") + '" aria-label="' + t("topbar_language") + '">' +
+      LANG_LIST.map(function (l) {
+        return '<option value="' + l.code + '"' + (l.code === currentLang ? " selected" : "") + ">" + l.flag + " " + l.name + "</option>";
+      }).join("") +
+      "</select>"
     );
   }
   function renderTopbar() {
@@ -1478,22 +1491,441 @@
       '<button class="ws-trigger" data-ws-trigger aria-haspopup="menu"><span class="ws-avatar" data-ws-avatar></span><span data-ws-name>Loading…</span><span style="opacity:0.5;">⌄</span></button>' +
       '<div class="ws-menu card glass-panel" data-ws-menu><div class="ws-menu-inner" data-ws-menu-inner></div></div>' +
       "</div>" +
-      '<button class="search-trigger" style="margin-left:0.5rem;" aria-label="Open global search">🔍 Search… <kbd>⌘K</kbd></button>' +
-      '<button class="btn btn-outline btn-sm replay-onboarding" style="gap:0.4rem;">↺ Replay onboarding</button>' +
-      '<span style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;color:hsl(var(--muted-fg));margin-left:0.5rem;" title="Interface sounds — off by default">🔈 <button class="sound-switch" aria-label="Toggle interface sounds"><span class="knob"></span></button></span>' +
+      '<button class="search-trigger" style="margin-left:0.5rem;" aria-label="Open global search">🔍 ' + t("topbar_search") + " <kbd>⌘K</kbd></button>" +
+      langSelectHtml("app-lang-select") +
+      '<button class="btn btn-outline btn-sm replay-onboarding" style="gap:0.4rem;">↺ ' + t("topbar_replay_onboarding") + "</button>" +
+      '<span style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;font-weight:600;color:hsl(var(--muted-fg));margin-left:0.5rem;" title="' + t("topbar_sound_title") + '">🔈 <button class="sound-switch" aria-label="Toggle interface sounds"><span class="knob"></span></button></span>' +
       '<div style="position:relative;">' +
       '<button class="btn btn-ghost btn-icon notif-btn" data-notif-trigger aria-label="Notifications">🔔<span class="notif-dot"></span></button>' +
       '<div class="notif-panel card glass-panel" data-notif-panel>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.6rem;">' +
-      '<span style="font-size:0.8rem;font-weight:700;">Notifications</span>' +
-      '<button class="btn btn-ghost btn-sm" style="height:auto;padding:0.1rem 0.4rem;font-size:0.7rem;" data-notif-mark-all>Mark all read</button>' +
+      '<span style="font-size:0.8rem;font-weight:700;">' + t("topbar_notifications") + "</span>" +
+      '<button class="btn btn-ghost btn-sm" style="height:auto;padding:0.1rem 0.4rem;font-size:0.7rem;" data-notif-mark-all>' + t("topbar_mark_all_read") + "</button>" +
       "</div>" +
       '<div data-notif-list></div>' +
       "</div></div>" +
       '<button class="btn btn-ghost btn-icon theme-toggle" aria-label="Toggle theme">◐</button>' +
-      '<button class="btn btn-ghost btn-sm" data-auth-logout>Sign out</button>' +
+      '<button class="btn btn-ghost btn-sm" data-auth-logout>' + t("topbar_signout") + "</button>" +
       '<div class="avatar" data-auth-avatar>U</div></div>'
     );
+  }
+  var LANG_LIST = [
+    { code: "en", flag: "🇬🇧", name: "English" },
+    { code: "fr", flag: "🇫🇷", name: "Français" },
+    { code: "it", flag: "🇮🇹", name: "Italiano" },
+    { code: "es", flag: "🇪🇸", name: "Español" },
+    { code: "de", flag: "🇩🇪", name: "Deutsch" },
+    { code: "nl", flag: "🇳🇱", name: "Nederlands" },
+    { code: "pt", flag: "🇵🇹", name: "Português" },
+    { code: "pl", flag: "🇵🇱", name: "Polski" },
+  ];
+  var I18N = {
+    en: {
+      nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Clients", nav_companies: "Companies",
+      nav_invoices: "Invoices", nav_quotes: "Quotes", nav_design_studio: "Design Studio", nav_inventory: "Inventory",
+      nav_expenses: "Expenses", nav_tasks: "Tasks", nav_calendar: "Calendar", nav_team: "Team", nav_files: "Files",
+      nav_reports: "Reports", nav_ai: "AI Assistant", nav_settings: "Settings",
+      topbar_search: "Search…", topbar_replay_onboarding: "Replay onboarding", topbar_notifications: "Notifications",
+      topbar_mark_all_read: "Mark all read", topbar_sound_title: "Interface sounds — off by default",
+      topbar_signout: "Sign out", topbar_language: "Language",
+      btn_save: "Save", btn_save_draft: "Save as draft", btn_save_changes: "Save changes",
+      btn_save_pending: "Save & mark pending", btn_save_send: "Save & send", btn_cancel: "Cancel", btn_edit: "Edit",
+      btn_delete: "Delete", btn_export_csv: "Export CSV", btn_download_pdf: "Download PDF",
+      btn_add_client: "Add client", btn_add_lead: "Add lead", btn_add_company: "Add company", btn_add_task: "Add task",
+      btn_add_expense: "Add expense", btn_add_event: "Add event", btn_add_line_item: "Add line item",
+      btn_new_invoice: "New invoice", btn_new_quote: "New quote", btn_change_design: "Change design",
+      btn_add_logo: "Add logo", btn_add_signature: "Add stamp/signature", btn_print_pdf: "Print / Save PDF",
+      btn_create_quote: "Create quote", btn_create_account: "Create account", btn_sign_in: "Sign in",
+      btn_get_started: "Get started free", btn_send_reminder: "Send reminder",
+      fld_client: "Client", fld_company: "Company", fld_name: "Name", fld_email: "Email", fld_phone: "Phone", fld_password: "Password",
+      fld_status: "Status", fld_address: "Address", fld_billing_address: "Billing address",
+      fld_client_address: "Client address", fld_site_address: "Chantier / jobsite address", fld_issue_date: "Issue date",
+      fld_due_date: "Due date", fld_valid_until: "Valid until", fld_currency: "Currency", fld_total: "Total",
+      fld_description: "Description", fld_qty: "Qty", fld_unit_price: "Unit price", fld_amount: "Amount", fld_tax: "Tax",
+      fld_siret: "SIRET number", fld_tags: "Tags", fld_industry: "Industry", fld_size: "Size", fld_website: "Website",
+      page_dashboard_title: "Dashboard", page_dashboard_sub: "A snapshot of your business, in real time.",
+      page_crm_title: "CRM", page_crm_sub: "Your sales pipeline and customer relationships at a glance.",
+      page_leads_title: "Leads", page_leads_sub: "Track prospects through your sales pipeline.",
+      page_companies_title: "Companies", page_companies_sub: "Organizations behind your customers and leads.",
+      page_invoices_title: "Invoices", page_invoices_sub: "Create, send and track every invoice in one place.",
+      page_invoice_new_title: "New invoice", page_invoice_new_sub: "Fill in the details below to create an invoice.",
+      page_quotes_title: "Quotes", page_quotes_sub: "Send polished quotations and convert accepted ones into invoices.",
+      page_quote_new_title: "New quote", page_quote_new_sub: "Fill in the details below to create a quote.",
+      edit_invoice_title: "Edit invoice", edit_invoice_sub: "Update the details below and save your changes.",
+      edit_quote_title: "Edit quote", edit_quote_sub: "Update the details below and save your changes.",
+      page_design_studio_title: "Design Studio",
+      page_design_studio_sub: "Customize the look of every invoice and quote — templates, themes, layout and more.",
+      page_clients_title: "Clients", page_clients_sub: "Manage every customer relationship in one place.",
+      page_inventory_title: "Inventory", page_expenses_title: "Expenses",
+      page_tasks_title: "Tasks", page_tasks_sub: "Follow-ups and to-dos across your business.",
+      page_calendar_title: "Business Calendar", page_team_title: "Team",
+      page_team_sub: "Manage members, invitations and role-based permissions.",
+      page_files_title: "Files", page_reports_title: "Reports", page_reports_sub: "Understand where your business stands.",
+      page_ai_title: "AI Business Assistant", page_settings_title: "Settings",
+      page_settings_sub: "Workspace preferences and the Global Compliance Center.",
+      auth_welcome_back: "Welcome back", auth_signin_sub: "Sign in to your IVOXA workspace.",
+      auth_create_workspace: "Create your workspace", auth_register_sub: "Start free — no credit card required.",
+      auth_no_account: "Don't have an account?", auth_create_one: "Create one",
+      auth_have_account: "Already have an account?", auth_forgot_password: "Forgot password?",
+      auth_continue_google: "Continue with Google", auth_continue_apple: "Continue with Apple",
+      mkt_features: "Features", mkt_pricing: "Pricing", mkt_blog: "Blog", mkt_tools: "Free Tools", mkt_about: "About",
+    },
+    fr: {
+      nav_dashboard: "Tableau de bord", nav_crm: "CRM", nav_leads: "Prospects", nav_clients: "Clients", nav_companies: "Entreprises",
+      nav_invoices: "Factures", nav_quotes: "Devis", nav_design_studio: "Studio de design", nav_inventory: "Inventaire",
+      nav_expenses: "Dépenses", nav_tasks: "Tâches", nav_calendar: "Calendrier", nav_team: "Équipe", nav_files: "Fichiers",
+      nav_reports: "Rapports", nav_ai: "Assistant IA", nav_settings: "Paramètres",
+      topbar_search: "Rechercher…", topbar_replay_onboarding: "Revoir la présentation", topbar_notifications: "Notifications",
+      topbar_mark_all_read: "Tout marquer comme lu", topbar_sound_title: "Sons de l'interface — désactivés par défaut",
+      topbar_signout: "Déconnexion", topbar_language: "Langue",
+      btn_save: "Enregistrer", btn_save_draft: "Enregistrer comme brouillon", btn_save_changes: "Enregistrer les modifications",
+      btn_save_pending: "Enregistrer et marquer en attente", btn_save_send: "Enregistrer et envoyer", btn_cancel: "Annuler",
+      btn_edit: "Modifier", btn_delete: "Supprimer", btn_export_csv: "Exporter en CSV", btn_download_pdf: "Télécharger le PDF",
+      btn_add_client: "Ajouter un client", btn_add_lead: "Ajouter un prospect", btn_add_company: "Ajouter une entreprise",
+      btn_add_task: "Ajouter une tâche", btn_add_expense: "Ajouter une dépense", btn_add_event: "Ajouter un événement",
+      btn_add_line_item: "Ajouter une ligne", btn_new_invoice: "Nouvelle facture", btn_new_quote: "Nouveau devis",
+      btn_change_design: "Changer le design", btn_add_logo: "Ajouter un logo", btn_add_signature: "Ajouter un cachet/signature",
+      btn_print_pdf: "Imprimer / Enregistrer en PDF", btn_create_quote: "Créer le devis", btn_create_account: "Créer le compte",
+      btn_sign_in: "Se connecter", btn_get_started: "Commencer gratuitement", btn_send_reminder: "Envoyer un rappel",
+      fld_client: "Client", fld_company: "Entreprise", fld_name: "Nom", fld_email: "E-mail", fld_phone: "Téléphone", fld_password: "Mot de passe",
+      fld_status: "Statut", fld_address: "Adresse", fld_billing_address: "Adresse de facturation",
+      fld_client_address: "Adresse du client", fld_site_address: "Adresse du chantier", fld_issue_date: "Date d'émission",
+      fld_due_date: "Date d'échéance", fld_valid_until: "Valable jusqu'au", fld_currency: "Devise", fld_total: "Total",
+      fld_description: "Description", fld_qty: "Qté", fld_unit_price: "Prix unitaire", fld_amount: "Montant", fld_tax: "Taxe",
+      fld_siret: "Numéro SIRET", fld_tags: "Étiquettes", fld_industry: "Secteur", fld_size: "Taille", fld_website: "Site web",
+      page_dashboard_title: "Tableau de bord", page_dashboard_sub: "Un aperçu de votre entreprise, en temps réel.",
+      page_crm_title: "CRM", page_crm_sub: "Votre pipeline commercial et vos relations clients en un coup d'œil.",
+      page_leads_title: "Prospects", page_leads_sub: "Suivez vos prospects tout au long de votre pipeline commercial.",
+      page_companies_title: "Entreprises", page_companies_sub: "Les organisations derrière vos clients et prospects.",
+      page_invoices_title: "Factures", page_invoices_sub: "Créez, envoyez et suivez chaque facture au même endroit.",
+      page_invoice_new_title: "Nouvelle facture", page_invoice_new_sub: "Remplissez les détails ci-dessous pour créer une facture.",
+      page_quotes_title: "Devis", page_quotes_sub: "Envoyez des devis soignés et convertissez ceux acceptés en factures.",
+      page_quote_new_title: "Nouveau devis", page_quote_new_sub: "Remplissez les détails ci-dessous pour créer un devis.",
+      edit_invoice_title: "Modifier la facture", edit_invoice_sub: "Mettez à jour les détails ci-dessous et enregistrez vos modifications.",
+      edit_quote_title: "Modifier le devis", edit_quote_sub: "Mettez à jour les détails ci-dessous et enregistrez vos modifications.",
+      page_design_studio_title: "Studio de design",
+      page_design_studio_sub: "Personnalisez l'apparence de chaque facture et devis — modèles, thèmes, mise en page et plus.",
+      page_clients_title: "Clients", page_clients_sub: "Gérez chaque relation client au même endroit.",
+      page_inventory_title: "Inventaire", page_expenses_title: "Dépenses",
+      page_tasks_title: "Tâches", page_tasks_sub: "Suivis et tâches à faire pour votre entreprise.",
+      page_calendar_title: "Calendrier professionnel", page_team_title: "Équipe",
+      page_team_sub: "Gérez les membres, invitations et permissions par rôle.",
+      page_files_title: "Fichiers", page_reports_title: "Rapports", page_reports_sub: "Comprenez où en est votre entreprise.",
+      page_ai_title: "Assistant IA d'entreprise", page_settings_title: "Paramètres",
+      page_settings_sub: "Préférences de l'espace de travail et centre de conformité global.",
+      auth_welcome_back: "Content de vous revoir", auth_signin_sub: "Connectez-vous à votre espace IVOXA.",
+      auth_create_workspace: "Créez votre espace de travail", auth_register_sub: "Commencez gratuitement — aucune carte bancaire requise.",
+      auth_no_account: "Vous n'avez pas de compte ?", auth_create_one: "Créez-en un",
+      auth_have_account: "Vous avez déjà un compte ?", auth_forgot_password: "Mot de passe oublié ?",
+      auth_continue_google: "Continuer avec Google", auth_continue_apple: "Continuer avec Apple",
+      mkt_features: "Fonctionnalités", mkt_pricing: "Tarifs", mkt_blog: "Blog", mkt_tools: "Outils gratuits", mkt_about: "À propos",
+    },
+    it: {
+      nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Contatti", nav_clients: "Clienti", nav_companies: "Aziende",
+      nav_invoices: "Fatture", nav_quotes: "Preventivi", nav_design_studio: "Studio di design", nav_inventory: "Magazzino",
+      nav_expenses: "Spese", nav_tasks: "Attività", nav_calendar: "Calendario", nav_team: "Team", nav_files: "File",
+      nav_reports: "Report", nav_ai: "Assistente IA", nav_settings: "Impostazioni",
+      topbar_search: "Cerca…", topbar_replay_onboarding: "Rivedi l'introduzione", topbar_notifications: "Notifiche",
+      topbar_mark_all_read: "Segna tutto come letto", topbar_sound_title: "Suoni dell'interfaccia — disattivati per impostazione predefinita",
+      topbar_signout: "Esci", topbar_language: "Lingua",
+      btn_save: "Salva", btn_save_draft: "Salva come bozza", btn_save_changes: "Salva modifiche",
+      btn_save_pending: "Salva e segna in attesa", btn_save_send: "Salva e invia", btn_cancel: "Annulla",
+      btn_edit: "Modifica", btn_delete: "Elimina", btn_export_csv: "Esporta CSV", btn_download_pdf: "Scarica PDF",
+      btn_add_client: "Aggiungi cliente", btn_add_lead: "Aggiungi contatto", btn_add_company: "Aggiungi azienda",
+      btn_add_task: "Aggiungi attività", btn_add_expense: "Aggiungi spesa", btn_add_event: "Aggiungi evento",
+      btn_add_line_item: "Aggiungi riga", btn_new_invoice: "Nuova fattura", btn_new_quote: "Nuovo preventivo",
+      btn_change_design: "Cambia design", btn_add_logo: "Aggiungi logo", btn_add_signature: "Aggiungi timbro/firma",
+      btn_print_pdf: "Stampa / Salva PDF", btn_create_quote: "Crea preventivo", btn_create_account: "Crea account",
+      btn_sign_in: "Accedi", btn_get_started: "Inizia gratis", btn_send_reminder: "Invia promemoria",
+      fld_client: "Cliente", fld_company: "Azienda", fld_name: "Nome", fld_email: "E-mail", fld_phone: "Telefono", fld_password: "Password",
+      fld_status: "Stato", fld_address: "Indirizzo", fld_billing_address: "Indirizzo di fatturazione",
+      fld_client_address: "Indirizzo del cliente", fld_site_address: "Indirizzo del cantiere", fld_issue_date: "Data di emissione",
+      fld_due_date: "Data di scadenza", fld_valid_until: "Valido fino al", fld_currency: "Valuta", fld_total: "Totale",
+      fld_description: "Descrizione", fld_qty: "Qtà", fld_unit_price: "Prezzo unitario", fld_amount: "Importo", fld_tax: "Imposta",
+      fld_siret: "Numero SIRET", fld_tags: "Etichette", fld_industry: "Settore", fld_size: "Dimensione", fld_website: "Sito web",
+      page_dashboard_title: "Dashboard", page_dashboard_sub: "Una panoramica della tua attività, in tempo reale.",
+      page_crm_title: "CRM", page_crm_sub: "La tua pipeline di vendita e le relazioni con i clienti a colpo d'occhio.",
+      page_leads_title: "Contatti", page_leads_sub: "Monitora i potenziali clienti lungo la tua pipeline di vendita.",
+      page_companies_title: "Aziende", page_companies_sub: "Le organizzazioni dietro i tuoi clienti e contatti.",
+      page_invoices_title: "Fatture", page_invoices_sub: "Crea, invia e monitora ogni fattura in un unico posto.",
+      page_invoice_new_title: "Nuova fattura", page_invoice_new_sub: "Compila i dettagli qui sotto per creare una fattura.",
+      page_quotes_title: "Preventivi", page_quotes_sub: "Invia preventivi curati e converti quelli accettati in fatture.",
+      page_quote_new_title: "Nuovo preventivo", page_quote_new_sub: "Compila i dettagli qui sotto per creare un preventivo.",
+      edit_invoice_title: "Modifica fattura", edit_invoice_sub: "Aggiorna i dettagli qui sotto e salva le modifiche.",
+      edit_quote_title: "Modifica preventivo", edit_quote_sub: "Aggiorna i dettagli qui sotto e salva le modifiche.",
+      page_design_studio_title: "Studio di design",
+      page_design_studio_sub: "Personalizza l'aspetto di ogni fattura e preventivo — modelli, temi, layout e altro.",
+      page_clients_title: "Clienti", page_clients_sub: "Gestisci ogni relazione con i clienti in un unico posto.",
+      page_inventory_title: "Magazzino", page_expenses_title: "Spese",
+      page_tasks_title: "Attività", page_tasks_sub: "Follow-up e attività da svolgere per la tua azienda.",
+      page_calendar_title: "Calendario aziendale", page_team_title: "Team",
+      page_team_sub: "Gestisci membri, inviti e permessi per ruolo.",
+      page_files_title: "File", page_reports_title: "Report", page_reports_sub: "Scopri a che punto è la tua attività.",
+      page_ai_title: "Assistente aziendale IA", page_settings_title: "Impostazioni",
+      page_settings_sub: "Preferenze dello spazio di lavoro e Centro di conformità globale.",
+      auth_welcome_back: "Bentornato", auth_signin_sub: "Accedi al tuo spazio di lavoro IVOXA.",
+      auth_create_workspace: "Crea il tuo spazio di lavoro", auth_register_sub: "Inizia gratis — nessuna carta di credito richiesta.",
+      auth_no_account: "Non hai un account?", auth_create_one: "Creane uno",
+      auth_have_account: "Hai già un account?", auth_forgot_password: "Password dimenticata?",
+      auth_continue_google: "Continua con Google", auth_continue_apple: "Continua con Apple",
+      mkt_features: "Funzionalità", mkt_pricing: "Prezzi", mkt_blog: "Blog", mkt_tools: "Strumenti gratuiti", mkt_about: "Chi siamo",
+    },
+    es: {
+      nav_dashboard: "Panel", nav_crm: "CRM", nav_leads: "Prospectos", nav_clients: "Clientes", nav_companies: "Empresas",
+      nav_invoices: "Facturas", nav_quotes: "Presupuestos", nav_design_studio: "Estudio de diseño", nav_inventory: "Inventario",
+      nav_expenses: "Gastos", nav_tasks: "Tareas", nav_calendar: "Calendario", nav_team: "Equipo", nav_files: "Archivos",
+      nav_reports: "Informes", nav_ai: "Asistente IA", nav_settings: "Configuración",
+      topbar_search: "Buscar…", topbar_replay_onboarding: "Repetir la introducción", topbar_notifications: "Notificaciones",
+      topbar_mark_all_read: "Marcar todo como leído", topbar_sound_title: "Sonidos de la interfaz — desactivados de forma predeterminada",
+      topbar_signout: "Cerrar sesión", topbar_language: "Idioma",
+      btn_save: "Guardar", btn_save_draft: "Guardar como borrador", btn_save_changes: "Guardar cambios",
+      btn_save_pending: "Guardar y marcar pendiente", btn_save_send: "Guardar y enviar", btn_cancel: "Cancelar",
+      btn_edit: "Editar", btn_delete: "Eliminar", btn_export_csv: "Exportar CSV", btn_download_pdf: "Descargar PDF",
+      btn_add_client: "Añadir cliente", btn_add_lead: "Añadir prospecto", btn_add_company: "Añadir empresa",
+      btn_add_task: "Añadir tarea", btn_add_expense: "Añadir gasto", btn_add_event: "Añadir evento",
+      btn_add_line_item: "Añadir línea", btn_new_invoice: "Nueva factura", btn_new_quote: "Nuevo presupuesto",
+      btn_change_design: "Cambiar diseño", btn_add_logo: "Añadir logotipo", btn_add_signature: "Añadir sello/firma",
+      btn_print_pdf: "Imprimir / Guardar PDF", btn_create_quote: "Crear presupuesto", btn_create_account: "Crear cuenta",
+      btn_sign_in: "Iniciar sesión", btn_get_started: "Empezar gratis", btn_send_reminder: "Enviar recordatorio",
+      fld_client: "Cliente", fld_company: "Empresa", fld_name: "Nombre", fld_email: "Correo electrónico", fld_phone: "Teléfono", fld_password: "Contraseña",
+      fld_status: "Estado", fld_address: "Dirección", fld_billing_address: "Dirección de facturación",
+      fld_client_address: "Dirección del cliente", fld_site_address: "Dirección de la obra", fld_issue_date: "Fecha de emisión",
+      fld_due_date: "Fecha de vencimiento", fld_valid_until: "Válido hasta", fld_currency: "Moneda", fld_total: "Total",
+      fld_description: "Descripción", fld_qty: "Cant.", fld_unit_price: "Precio unitario", fld_amount: "Importe", fld_tax: "Impuesto",
+      fld_siret: "Número SIRET", fld_tags: "Etiquetas", fld_industry: "Sector", fld_size: "Tamaño", fld_website: "Sitio web",
+      page_dashboard_title: "Panel", page_dashboard_sub: "Un resumen de tu negocio, en tiempo real.",
+      page_crm_title: "CRM", page_crm_sub: "Tu proceso de ventas y relaciones con clientes de un vistazo.",
+      page_leads_title: "Prospectos", page_leads_sub: "Sigue a tus prospectos a lo largo de tu proceso de ventas.",
+      page_companies_title: "Empresas", page_companies_sub: "Las organizaciones detrás de tus clientes y prospectos.",
+      page_invoices_title: "Facturas", page_invoices_sub: "Crea, envía y da seguimiento a cada factura en un solo lugar.",
+      page_invoice_new_title: "Nueva factura", page_invoice_new_sub: "Completa los datos a continuación para crear una factura.",
+      page_quotes_title: "Presupuestos", page_quotes_sub: "Envía presupuestos pulidos y convierte los aceptados en facturas.",
+      page_quote_new_title: "Nuevo presupuesto", page_quote_new_sub: "Completa los datos a continuación para crear un presupuesto.",
+      edit_invoice_title: "Editar factura", edit_invoice_sub: "Actualiza los datos a continuación y guarda tus cambios.",
+      edit_quote_title: "Editar presupuesto", edit_quote_sub: "Actualiza los datos a continuación y guarda tus cambios.",
+      page_design_studio_title: "Estudio de diseño",
+      page_design_studio_sub: "Personaliza el aspecto de cada factura y presupuesto — plantillas, temas, diseño y más.",
+      page_clients_title: "Clientes", page_clients_sub: "Gestiona cada relación con tus clientes en un solo lugar.",
+      page_inventory_title: "Inventario", page_expenses_title: "Gastos",
+      page_tasks_title: "Tareas", page_tasks_sub: "Seguimientos y pendientes de tu negocio.",
+      page_calendar_title: "Calendario empresarial", page_team_title: "Equipo",
+      page_team_sub: "Gestiona miembros, invitaciones y permisos por rol.",
+      page_files_title: "Archivos", page_reports_title: "Informes", page_reports_sub: "Comprende cómo está tu negocio.",
+      page_ai_title: "Asistente empresarial de IA", page_settings_title: "Configuración",
+      page_settings_sub: "Preferencias del espacio de trabajo y el Centro de cumplimiento global.",
+      auth_welcome_back: "Bienvenido de nuevo", auth_signin_sub: "Inicia sesión en tu espacio de trabajo IVOXA.",
+      auth_create_workspace: "Crea tu espacio de trabajo", auth_register_sub: "Empieza gratis — no se requiere tarjeta de crédito.",
+      auth_no_account: "¿No tienes una cuenta?", auth_create_one: "Crea una",
+      auth_have_account: "¿Ya tienes una cuenta?", auth_forgot_password: "¿Olvidaste tu contraseña?",
+      auth_continue_google: "Continuar con Google", auth_continue_apple: "Continuar con Apple",
+      mkt_features: "Funciones", mkt_pricing: "Precios", mkt_blog: "Blog", mkt_tools: "Herramientas gratuitas", mkt_about: "Acerca de",
+    },
+    de: {
+      nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Kunden", nav_companies: "Unternehmen",
+      nav_invoices: "Rechnungen", nav_quotes: "Angebote", nav_design_studio: "Design-Studio", nav_inventory: "Inventar",
+      nav_expenses: "Ausgaben", nav_tasks: "Aufgaben", nav_calendar: "Kalender", nav_team: "Team", nav_files: "Dateien",
+      nav_reports: "Berichte", nav_ai: "KI-Assistent", nav_settings: "Einstellungen",
+      topbar_search: "Suchen…", topbar_replay_onboarding: "Einführung wiederholen", topbar_notifications: "Benachrichtigungen",
+      topbar_mark_all_read: "Alle als gelesen markieren", topbar_sound_title: "Oberflächentöne — standardmäßig deaktiviert",
+      topbar_signout: "Abmelden", topbar_language: "Sprache",
+      btn_save: "Speichern", btn_save_draft: "Als Entwurf speichern", btn_save_changes: "Änderungen speichern",
+      btn_save_pending: "Speichern und als ausstehend markieren", btn_save_send: "Speichern und senden", btn_cancel: "Abbrechen",
+      btn_edit: "Bearbeiten", btn_delete: "Löschen", btn_export_csv: "CSV exportieren", btn_download_pdf: "PDF herunterladen",
+      btn_add_client: "Kunde hinzufügen", btn_add_lead: "Lead hinzufügen", btn_add_company: "Unternehmen hinzufügen",
+      btn_add_task: "Aufgabe hinzufügen", btn_add_expense: "Ausgabe hinzufügen", btn_add_event: "Termin hinzufügen",
+      btn_add_line_item: "Position hinzufügen", btn_new_invoice: "Neue Rechnung", btn_new_quote: "Neues Angebot",
+      btn_change_design: "Design ändern", btn_add_logo: "Logo hinzufügen", btn_add_signature: "Stempel/Unterschrift hinzufügen",
+      btn_print_pdf: "Drucken / Als PDF speichern", btn_create_quote: "Angebot erstellen", btn_create_account: "Konto erstellen",
+      btn_sign_in: "Anmelden", btn_get_started: "Kostenlos starten", btn_send_reminder: "Erinnerung senden",
+      fld_client: "Kunde", fld_company: "Unternehmen", fld_name: "Name", fld_email: "E-Mail", fld_phone: "Telefon", fld_password: "Passwort",
+      fld_status: "Status", fld_address: "Adresse", fld_billing_address: "Rechnungsadresse",
+      fld_client_address: "Kundenadresse", fld_site_address: "Baustellenadresse", fld_issue_date: "Rechnungsdatum",
+      fld_due_date: "Fälligkeitsdatum", fld_valid_until: "Gültig bis", fld_currency: "Währung", fld_total: "Gesamt",
+      fld_description: "Beschreibung", fld_qty: "Menge", fld_unit_price: "Einzelpreis", fld_amount: "Betrag", fld_tax: "Steuer",
+      fld_siret: "SIRET-Nummer", fld_tags: "Tags", fld_industry: "Branche", fld_size: "Größe", fld_website: "Webseite",
+      page_dashboard_title: "Dashboard", page_dashboard_sub: "Ein Überblick über Ihr Unternehmen in Echtzeit.",
+      page_crm_title: "CRM", page_crm_sub: "Ihre Vertriebspipeline und Kundenbeziehungen auf einen Blick.",
+      page_leads_title: "Leads", page_leads_sub: "Verfolgen Sie Interessenten durch Ihre Vertriebspipeline.",
+      page_companies_title: "Unternehmen", page_companies_sub: "Die Organisationen hinter Ihren Kunden und Leads.",
+      page_invoices_title: "Rechnungen", page_invoices_sub: "Erstellen, versenden und verfolgen Sie jede Rechnung an einem Ort.",
+      page_invoice_new_title: "Neue Rechnung", page_invoice_new_sub: "Füllen Sie die Angaben unten aus, um eine Rechnung zu erstellen.",
+      page_quotes_title: "Angebote", page_quotes_sub: "Versenden Sie ansprechende Angebote und wandeln Sie angenommene in Rechnungen um.",
+      page_quote_new_title: "Neues Angebot", page_quote_new_sub: "Füllen Sie die Angaben unten aus, um ein Angebot zu erstellen.",
+      edit_invoice_title: "Rechnung bearbeiten", edit_invoice_sub: "Aktualisieren Sie die Angaben unten und speichern Sie Ihre Änderungen.",
+      edit_quote_title: "Angebot bearbeiten", edit_quote_sub: "Aktualisieren Sie die Angaben unten und speichern Sie Ihre Änderungen.",
+      page_design_studio_title: "Design-Studio",
+      page_design_studio_sub: "Passen Sie das Aussehen jeder Rechnung und jedes Angebots an — Vorlagen, Themes, Layout und mehr.",
+      page_clients_title: "Kunden", page_clients_sub: "Verwalten Sie jede Kundenbeziehung an einem Ort.",
+      page_inventory_title: "Inventar", page_expenses_title: "Ausgaben",
+      page_tasks_title: "Aufgaben", page_tasks_sub: "Nachverfolgungen und To-dos für Ihr Unternehmen.",
+      page_calendar_title: "Geschäftskalender", page_team_title: "Team",
+      page_team_sub: "Verwalten Sie Mitglieder, Einladungen und rollenbasierte Berechtigungen.",
+      page_files_title: "Dateien", page_reports_title: "Berichte", page_reports_sub: "Verstehen Sie, wo Ihr Unternehmen steht.",
+      page_ai_title: "KI-Geschäftsassistent", page_settings_title: "Einstellungen",
+      page_settings_sub: "Arbeitsbereichseinstellungen und das globale Compliance-Center.",
+      auth_welcome_back: "Willkommen zurück", auth_signin_sub: "Melden Sie sich bei Ihrem IVOXA-Arbeitsbereich an.",
+      auth_create_workspace: "Erstellen Sie Ihren Arbeitsbereich", auth_register_sub: "Kostenlos starten — keine Kreditkarte erforderlich.",
+      auth_no_account: "Noch kein Konto?", auth_create_one: "Jetzt erstellen",
+      auth_have_account: "Haben Sie bereits ein Konto?", auth_forgot_password: "Passwort vergessen?",
+      auth_continue_google: "Mit Google fortfahren", auth_continue_apple: "Mit Apple fortfahren",
+      mkt_features: "Funktionen", mkt_pricing: "Preise", mkt_blog: "Blog", mkt_tools: "Kostenlose Tools", mkt_about: "Über uns",
+    },
+    nl: {
+      nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Klanten", nav_companies: "Bedrijven",
+      nav_invoices: "Facturen", nav_quotes: "Offertes", nav_design_studio: "Design Studio", nav_inventory: "Voorraad",
+      nav_expenses: "Uitgaven", nav_tasks: "Taken", nav_calendar: "Kalender", nav_team: "Team", nav_files: "Bestanden",
+      nav_reports: "Rapporten", nav_ai: "AI-assistent", nav_settings: "Instellingen",
+      topbar_search: "Zoeken…", topbar_replay_onboarding: "Introductie opnieuw bekijken", topbar_notifications: "Meldingen",
+      topbar_mark_all_read: "Alles als gelezen markeren", topbar_sound_title: "Interfacegeluiden — standaard uitgeschakeld",
+      topbar_signout: "Afmelden", topbar_language: "Taal",
+      btn_save: "Opslaan", btn_save_draft: "Opslaan als concept", btn_save_changes: "Wijzigingen opslaan",
+      btn_save_pending: "Opslaan en als in behandeling markeren", btn_save_send: "Opslaan en verzenden", btn_cancel: "Annuleren",
+      btn_edit: "Bewerken", btn_delete: "Verwijderen", btn_export_csv: "CSV exporteren", btn_download_pdf: "PDF downloaden",
+      btn_add_client: "Klant toevoegen", btn_add_lead: "Lead toevoegen", btn_add_company: "Bedrijf toevoegen",
+      btn_add_task: "Taak toevoegen", btn_add_expense: "Uitgave toevoegen", btn_add_event: "Gebeurtenis toevoegen",
+      btn_add_line_item: "Regel toevoegen", btn_new_invoice: "Nieuwe factuur", btn_new_quote: "Nieuwe offerte",
+      btn_change_design: "Ontwerp wijzigen", btn_add_logo: "Logo toevoegen", btn_add_signature: "Stempel/handtekening toevoegen",
+      btn_print_pdf: "Afdrukken / Als PDF opslaan", btn_create_quote: "Offerte maken", btn_create_account: "Account aanmaken",
+      btn_sign_in: "Inloggen", btn_get_started: "Gratis beginnen", btn_send_reminder: "Herinnering sturen",
+      fld_client: "Klant", fld_company: "Bedrijf", fld_name: "Naam", fld_email: "E-mail", fld_phone: "Telefoon", fld_password: "Wachtwoord",
+      fld_status: "Status", fld_address: "Adres", fld_billing_address: "Factuuradres",
+      fld_client_address: "Adres klant", fld_site_address: "Werfadres", fld_issue_date: "Factuurdatum",
+      fld_due_date: "Vervaldatum", fld_valid_until: "Geldig tot", fld_currency: "Valuta", fld_total: "Totaal",
+      fld_description: "Omschrijving", fld_qty: "Aantal", fld_unit_price: "Eenheidsprijs", fld_amount: "Bedrag", fld_tax: "Belasting",
+      fld_siret: "SIRET-nummer", fld_tags: "Labels", fld_industry: "Branche", fld_size: "Grootte", fld_website: "Website",
+      page_dashboard_title: "Dashboard", page_dashboard_sub: "Een overzicht van uw bedrijf, in realtime.",
+      page_crm_title: "CRM", page_crm_sub: "Uw salespipeline en klantrelaties in één oogopslag.",
+      page_leads_title: "Leads", page_leads_sub: "Volg prospects doorheen uw salespipeline.",
+      page_companies_title: "Bedrijven", page_companies_sub: "De organisaties achter uw klanten en leads.",
+      page_invoices_title: "Facturen", page_invoices_sub: "Maak, verstuur en volg elke factuur op één plek.",
+      page_invoice_new_title: "Nieuwe factuur", page_invoice_new_sub: "Vul hieronder de gegevens in om een factuur te maken.",
+      page_quotes_title: "Offertes", page_quotes_sub: "Verstuur verzorgde offertes en zet geaccepteerde offertes om in facturen.",
+      page_quote_new_title: "Nieuwe offerte", page_quote_new_sub: "Vul hieronder de gegevens in om een offerte te maken.",
+      edit_invoice_title: "Factuur bewerken", edit_invoice_sub: "Werk de gegevens hieronder bij en sla je wijzigingen op.",
+      edit_quote_title: "Offerte bewerken", edit_quote_sub: "Werk de gegevens hieronder bij en sla je wijzigingen op.",
+      page_design_studio_title: "Design Studio",
+      page_design_studio_sub: "Pas het uiterlijk van elke factuur en offerte aan — sjablonen, thema's, indeling en meer.",
+      page_clients_title: "Klanten", page_clients_sub: "Beheer elke klantrelatie op één plek.",
+      page_inventory_title: "Voorraad", page_expenses_title: "Uitgaven",
+      page_tasks_title: "Taken", page_tasks_sub: "Opvolgingen en to-do's voor uw bedrijf.",
+      page_calendar_title: "Bedrijfskalender", page_team_title: "Team",
+      page_team_sub: "Beheer leden, uitnodigingen en rolgebaseerde rechten.",
+      page_files_title: "Bestanden", page_reports_title: "Rapporten", page_reports_sub: "Begrijp hoe uw bedrijf ervoor staat.",
+      page_ai_title: "AI-bedrijfsassistent", page_settings_title: "Instellingen",
+      page_settings_sub: "Werkruimtevoorkeuren en het wereldwijde compliancecentrum.",
+      auth_welcome_back: "Welkom terug", auth_signin_sub: "Log in bij uw IVOXA-werkruimte.",
+      auth_create_workspace: "Maak uw werkruimte aan", auth_register_sub: "Begin gratis — geen creditcard nodig.",
+      auth_no_account: "Nog geen account?", auth_create_one: "Maak er een aan",
+      auth_have_account: "Heeft u al een account?", auth_forgot_password: "Wachtwoord vergeten?",
+      auth_continue_google: "Doorgaan met Google", auth_continue_apple: "Doorgaan met Apple",
+      mkt_features: "Functies", mkt_pricing: "Prijzen", mkt_blog: "Blog", mkt_tools: "Gratis tools", mkt_about: "Over ons",
+    },
+    pt: {
+      nav_dashboard: "Painel", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Clientes", nav_companies: "Empresas",
+      nav_invoices: "Faturas", nav_quotes: "Orçamentos", nav_design_studio: "Estúdio de design", nav_inventory: "Inventário",
+      nav_expenses: "Despesas", nav_tasks: "Tarefas", nav_calendar: "Calendário", nav_team: "Equipa", nav_files: "Ficheiros",
+      nav_reports: "Relatórios", nav_ai: "Assistente de IA", nav_settings: "Definições",
+      topbar_search: "Pesquisar…", topbar_replay_onboarding: "Rever a introdução", topbar_notifications: "Notificações",
+      topbar_mark_all_read: "Marcar tudo como lido", topbar_sound_title: "Sons da interface — desativados por predefinição",
+      topbar_signout: "Terminar sessão", topbar_language: "Idioma",
+      btn_save: "Guardar", btn_save_draft: "Guardar como rascunho", btn_save_changes: "Guardar alterações",
+      btn_save_pending: "Guardar e marcar como pendente", btn_save_send: "Guardar e enviar", btn_cancel: "Cancelar",
+      btn_edit: "Editar", btn_delete: "Eliminar", btn_export_csv: "Exportar CSV", btn_download_pdf: "Transferir PDF",
+      btn_add_client: "Adicionar cliente", btn_add_lead: "Adicionar lead", btn_add_company: "Adicionar empresa",
+      btn_add_task: "Adicionar tarefa", btn_add_expense: "Adicionar despesa", btn_add_event: "Adicionar evento",
+      btn_add_line_item: "Adicionar linha", btn_new_invoice: "Nova fatura", btn_new_quote: "Novo orçamento",
+      btn_change_design: "Alterar design", btn_add_logo: "Adicionar logótipo", btn_add_signature: "Adicionar carimbo/assinatura",
+      btn_print_pdf: "Imprimir / Guardar PDF", btn_create_quote: "Criar orçamento", btn_create_account: "Criar conta",
+      btn_sign_in: "Iniciar sessão", btn_get_started: "Começar gratuitamente", btn_send_reminder: "Enviar lembrete",
+      fld_client: "Cliente", fld_company: "Empresa", fld_name: "Nome", fld_email: "E-mail", fld_phone: "Telefone", fld_password: "Palavra-passe",
+      fld_status: "Estado", fld_address: "Morada", fld_billing_address: "Morada de faturação",
+      fld_client_address: "Morada do cliente", fld_site_address: "Morada da obra", fld_issue_date: "Data de emissão",
+      fld_due_date: "Data de vencimento", fld_valid_until: "Válido até", fld_currency: "Moeda", fld_total: "Total",
+      fld_description: "Descrição", fld_qty: "Qtd.", fld_unit_price: "Preço unitário", fld_amount: "Montante", fld_tax: "Imposto",
+      fld_siret: "Número SIRET", fld_tags: "Etiquetas", fld_industry: "Setor", fld_size: "Dimensão", fld_website: "Sítio web",
+      page_dashboard_title: "Painel", page_dashboard_sub: "Uma visão geral do seu negócio, em tempo real.",
+      page_crm_title: "CRM", page_crm_sub: "O seu funil de vendas e relações com clientes num relance.",
+      page_leads_title: "Leads", page_leads_sub: "Acompanhe potenciais clientes ao longo do seu funil de vendas.",
+      page_companies_title: "Empresas", page_companies_sub: "As organizações por trás dos seus clientes e leads.",
+      page_invoices_title: "Faturas", page_invoices_sub: "Crie, envie e acompanhe cada fatura num só lugar.",
+      page_invoice_new_title: "Nova fatura", page_invoice_new_sub: "Preencha os dados abaixo para criar uma fatura.",
+      page_quotes_title: "Orçamentos", page_quotes_sub: "Envie orçamentos cuidados e converta os aceites em faturas.",
+      page_quote_new_title: "Novo orçamento", page_quote_new_sub: "Preencha os dados abaixo para criar um orçamento.",
+      edit_invoice_title: "Editar fatura", edit_invoice_sub: "Atualize os dados abaixo e guarde as suas alterações.",
+      edit_quote_title: "Editar orçamento", edit_quote_sub: "Atualize os dados abaixo e guarde as suas alterações.",
+      page_design_studio_title: "Estúdio de design",
+      page_design_studio_sub: "Personalize o aspeto de cada fatura e orçamento — modelos, temas, esquema e muito mais.",
+      page_clients_title: "Clientes", page_clients_sub: "Faça a gestão de cada relação com clientes num só lugar.",
+      page_inventory_title: "Inventário", page_expenses_title: "Despesas",
+      page_tasks_title: "Tarefas", page_tasks_sub: "Acompanhamentos e tarefas do seu negócio.",
+      page_calendar_title: "Calendário empresarial", page_team_title: "Equipa",
+      page_team_sub: "Faça a gestão de membros, convites e permissões por função.",
+      page_files_title: "Ficheiros", page_reports_title: "Relatórios", page_reports_sub: "Compreenda a situação do seu negócio.",
+      page_ai_title: "Assistente empresarial de IA", page_settings_title: "Definições",
+      page_settings_sub: "Preferências do espaço de trabalho e o Centro de Conformidade Global.",
+      auth_welcome_back: "Bem-vindo de volta", auth_signin_sub: "Inicie sessão no seu espaço de trabalho IVOXA.",
+      auth_create_workspace: "Crie o seu espaço de trabalho", auth_register_sub: "Comece gratuitamente — sem necessidade de cartão de crédito.",
+      auth_no_account: "Não tem uma conta?", auth_create_one: "Crie uma",
+      auth_have_account: "Já tem uma conta?", auth_forgot_password: "Esqueceu-se da palavra-passe?",
+      auth_continue_google: "Continuar com o Google", auth_continue_apple: "Continuar com a Apple",
+      mkt_features: "Funcionalidades", mkt_pricing: "Preços", mkt_blog: "Blog", mkt_tools: "Ferramentas gratuitas", mkt_about: "Sobre",
+    },
+    pl: {
+      nav_dashboard: "Panel główny", nav_crm: "CRM", nav_leads: "Leady", nav_clients: "Klienci", nav_companies: "Firmy",
+      nav_invoices: "Faktury", nav_quotes: "Oferty", nav_design_studio: "Studio projektowe", nav_inventory: "Magazyn",
+      nav_expenses: "Wydatki", nav_tasks: "Zadania", nav_calendar: "Kalendarz", nav_team: "Zespół", nav_files: "Pliki",
+      nav_reports: "Raporty", nav_ai: "Asystent AI", nav_settings: "Ustawienia",
+      topbar_search: "Szukaj…", topbar_replay_onboarding: "Powtórz wprowadzenie", topbar_notifications: "Powiadomienia",
+      topbar_mark_all_read: "Oznacz wszystkie jako przeczytane", topbar_sound_title: "Dźwięki interfejsu — domyślnie wyłączone",
+      topbar_signout: "Wyloguj się", topbar_language: "Język",
+      btn_save: "Zapisz", btn_save_draft: "Zapisz jako wersję roboczą", btn_save_changes: "Zapisz zmiany",
+      btn_save_pending: "Zapisz i oznacz jako oczekującą", btn_save_send: "Zapisz i wyślij", btn_cancel: "Anuluj",
+      btn_edit: "Edytuj", btn_delete: "Usuń", btn_export_csv: "Eksportuj CSV", btn_download_pdf: "Pobierz PDF",
+      btn_add_client: "Dodaj klienta", btn_add_lead: "Dodaj leada", btn_add_company: "Dodaj firmę",
+      btn_add_task: "Dodaj zadanie", btn_add_expense: "Dodaj wydatek", btn_add_event: "Dodaj wydarzenie",
+      btn_add_line_item: "Dodaj pozycję", btn_new_invoice: "Nowa faktura", btn_new_quote: "Nowa oferta",
+      btn_change_design: "Zmień projekt", btn_add_logo: "Dodaj logo", btn_add_signature: "Dodaj pieczątkę/podpis",
+      btn_print_pdf: "Drukuj / Zapisz jako PDF", btn_create_quote: "Utwórz ofertę", btn_create_account: "Utwórz konto",
+      btn_sign_in: "Zaloguj się", btn_get_started: "Zacznij za darmo", btn_send_reminder: "Wyślij przypomnienie",
+      fld_client: "Klient", fld_company: "Firma", fld_name: "Imię i nazwisko", fld_email: "E-mail", fld_phone: "Telefon", fld_password: "Hasło",
+      fld_status: "Status", fld_address: "Adres", fld_billing_address: "Adres rozliczeniowy",
+      fld_client_address: "Adres klienta", fld_site_address: "Adres budowy", fld_issue_date: "Data wystawienia",
+      fld_due_date: "Termin płatności", fld_valid_until: "Ważne do", fld_currency: "Waluta", fld_total: "Suma",
+      fld_description: "Opis", fld_qty: "Ilość", fld_unit_price: "Cena jednostkowa", fld_amount: "Kwota", fld_tax: "Podatek",
+      fld_siret: "Numer SIRET", fld_tags: "Tagi", fld_industry: "Branża", fld_size: "Wielkość", fld_website: "Strona internetowa",
+      page_dashboard_title: "Panel główny", page_dashboard_sub: "Podgląd Twojej firmy w czasie rzeczywistym.",
+      page_crm_title: "CRM", page_crm_sub: "Twój lejek sprzedaży i relacje z klientami w jednym miejscu.",
+      page_leads_title: "Leady", page_leads_sub: "Śledź potencjalnych klientów w lejku sprzedaży.",
+      page_companies_title: "Firmy", page_companies_sub: "Organizacje stojące za Twoimi klientami i leadami.",
+      page_invoices_title: "Faktury", page_invoices_sub: "Twórz, wysyłaj i śledź każdą fakturę w jednym miejscu.",
+      page_invoice_new_title: "Nowa faktura", page_invoice_new_sub: "Uzupełnij poniższe dane, aby utworzyć fakturę.",
+      page_quotes_title: "Oferty", page_quotes_sub: "Wysyłaj eleganckie oferty i zamieniaj zaakceptowane na faktury.",
+      page_quote_new_title: "Nowa oferta", page_quote_new_sub: "Uzupełnij poniższe dane, aby utworzyć ofertę.",
+      edit_invoice_title: "Edytuj fakturę", edit_invoice_sub: "Zaktualizuj poniższe dane i zapisz zmiany.",
+      edit_quote_title: "Edytuj ofertę", edit_quote_sub: "Zaktualizuj poniższe dane i zapisz zmiany.",
+      page_design_studio_title: "Studio projektowe",
+      page_design_studio_sub: "Dostosuj wygląd każdej faktury i oferty — szablony, motywy, układ i więcej.",
+      page_clients_title: "Klienci", page_clients_sub: "Zarządzaj każdą relacją z klientem w jednym miejscu.",
+      page_inventory_title: "Magazyn", page_expenses_title: "Wydatki",
+      page_tasks_title: "Zadania", page_tasks_sub: "Działania następcze i zadania do wykonania w Twojej firmie.",
+      page_calendar_title: "Kalendarz biznesowy", page_team_title: "Zespół",
+      page_team_sub: "Zarządzaj członkami, zaproszeniami i uprawnieniami według ról.",
+      page_files_title: "Pliki", page_reports_title: "Raporty", page_reports_sub: "Zrozum, na czym stoi Twoja firma.",
+      page_ai_title: "Asystent biznesowy AI", page_settings_title: "Ustawienia",
+      page_settings_sub: "Preferencje przestrzeni roboczej i globalne centrum zgodności.",
+      auth_welcome_back: "Witaj ponownie", auth_signin_sub: "Zaloguj się do swojego obszaru roboczego IVOXA.",
+      auth_create_workspace: "Utwórz swój obszar roboczy", auth_register_sub: "Zacznij za darmo — bez karty kredytowej.",
+      auth_no_account: "Nie masz konta?", auth_create_one: "Utwórz je",
+      auth_have_account: "Masz już konto?", auth_forgot_password: "Nie pamiętasz hasła?",
+      auth_continue_google: "Kontynuuj z Google", auth_continue_apple: "Kontynuuj z Apple",
+      mkt_features: "Funkcje", mkt_pricing: "Cennik", mkt_blog: "Blog", mkt_tools: "Darmowe narzędzia", mkt_about: "O nas",
+    },
+  };
+  var currentLang = (function () {
+    try { return localStorage.getItem("ivoxa_lang") || "en"; } catch (e) { return "en"; }
+  })();
+  function t(key) {
+    return (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
   }
   document.write(''); // no-op to keep this a plain script block
 </script>
@@ -1504,7 +1936,7 @@
     <div class="app-main">
       <div id="topbar-dashboard"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Dashboard</h1><p><span data-ws-dashboard-name></span>A snapshot of your business, in real time.</p></div>
+        <div class="page-head"><div><h1 data-i18n="page_dashboard_title">Dashboard</h1><p><span data-ws-dashboard-name></span><span data-i18n="page_dashboard_sub">A snapshot of your business, in real time.</span></p></div>
           <div style="display:flex;align-items:center;gap:0.6rem;">
             <span class="hv-live" style="border:1px solid hsl(var(--border));border-radius:999px;padding:0.35rem 0.7rem;background:hsl(var(--surface));"><span class="dot"></span>Live</span>
             <div style="position:relative;">
@@ -1589,7 +2021,7 @@
     <div class="app-main">
       <div id="topbar-invoices"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Invoices</h1><p>Create, send and track every invoice in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="invoices" data-export-name="invoices.csv">⬇ Export CSV</button><a href="#" class="btn btn-primary" data-goto="invoice-new">+ New invoice</a></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_invoices_title">Invoices</h1><p data-i18n="page_invoices_sub">Create, send and track every invoice in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="invoices" data-export-name="invoices.csv">⬇ <span data-i18n="btn_export_csv">Export CSV</span></button><a href="#" class="btn btn-primary" data-goto="invoice-new">+ <span data-i18n="btn_new_invoice">New invoice</span></a></div></div>
         <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.1rem;" id="inv-pay-stat-grid"></div>
         <div class="toolbar">
           <div class="search-wrap"><span class="ic">🔍</span><input class="field" id="invoices-search" placeholder="Search by number or client…" /></div>
@@ -1612,7 +2044,7 @@
     <div class="app-main">
       <div id="topbar-invoice-new"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>New invoice</h1><p>Fill in the details below to create an invoice.</p></div><button class="btn btn-outline btn-sm" id="invoice-print-btn">🖨 Print / Save PDF</button></div>
+        <div class="page-head"><div><h1 data-i18n="page_invoice_new_title">New invoice</h1><p data-i18n="page_invoice_new_sub">Fill in the details below to create an invoice.</p></div><button class="btn btn-outline btn-sm" id="invoice-print-btn">🖨 <span data-i18n="btn_print_pdf">Print / Save PDF</span></button></div>
 
         <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
           <div>
@@ -1674,7 +2106,7 @@
     <div class="app-main">
       <div id="topbar-quote-new"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1 id="quote-new-title">New quote</h1><p id="quote-new-sub">Fill in the details below to create a quote.</p></div><button class="btn btn-outline btn-sm" id="quote-print-btn">🖨 Print / Save PDF</button></div>
+        <div class="page-head"><div><h1 id="quote-new-title" data-i18n="page_quote_new_title">New quote</h1><p id="quote-new-sub" data-i18n="page_quote_new_sub">Fill in the details below to create a quote.</p></div><button class="btn btn-outline btn-sm" id="quote-print-btn">🖨 <span data-i18n="btn_print_pdf">Print / Save PDF</span></button></div>
 
         <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
           <div>
@@ -1734,7 +2166,7 @@
     <div class="app-main">
       <div id="topbar-design-studio"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Design Studio</h1><p>Customize the look of every invoice and quote — templates, themes, layout and more.</p></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_design_studio_title">Design Studio</h1><p data-i18n="page_design_studio_sub">Customize the look of every invoice and quote — templates, themes, layout and more.</p></div></div>
 
         <div class="ds-layout">
           <div>
@@ -1807,7 +2239,7 @@
     <div class="app-main">
       <div id="topbar-clients"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Clients</h1><p>Manage every customer relationship in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="clients" data-export-name="clients.csv">⬇ Export CSV</button><button class="btn btn-primary" id="client-add-btn">+ Add client</button></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_clients_title">Clients</h1><p data-i18n="page_clients_sub">Manage every customer relationship in one place.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="clients" data-export-name="clients.csv">⬇ <span data-i18n="btn_export_csv">Export CSV</span></button><button class="btn btn-primary" id="client-add-btn">+ <span data-i18n="btn_add_client">Add client</span></button></div></div>
         <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" id="clients-search" placeholder="Search clients…" /></div></div>
         <div class="table-wrap">
           <table class="data-table" id="clients-table">
@@ -2005,7 +2437,7 @@
     <div class="app-main">
       <div id="topbar-quotes"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><a href="#" class="btn btn-primary" data-goto="quote-new">+ New quote</a></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_quotes_title">Quotes</h1><p data-i18n="page_quotes_sub">Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ <span data-i18n="btn_export_csv">Export CSV</span></button><a href="#" class="btn btn-primary" data-goto="quote-new">+ <span data-i18n="btn_new_quote">New quote</span></a></div></div>
         <div class="table-wrap">
           <table class="data-table" id="quotes-table">
             <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th><th></th></tr></thead>
@@ -2024,7 +2456,7 @@
       <div id="topbar-inventory"></div>
       <div class="app-content">
         <div class="page-head">
-          <div><h1>Inventory</h1><p>Products, services, stock levels and suppliers — all in one place.</p></div>
+          <div><h1 data-i18n="page_inventory_title">Inventory</h1><p>Products, services, stock levels and suppliers — all in one place.</p></div>
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" id="inv-import-btn">⬆ Import CSV</button>
             <input type="file" accept=".csv,text/csv" id="inv-import-input" style="display:none;" />
@@ -2105,7 +2537,7 @@
       <div id="topbar-expenses"></div>
       <div class="app-content">
         <div class="page-head">
-          <div><h1>Expenses</h1><p>Track business spending, approvals and recurring costs.</p></div>
+          <div><h1 data-i18n="page_expenses_title">Expenses</h1><p>Track business spending, approvals and recurring costs.</p></div>
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" data-export-csv="expenses" data-export-name="expenses.csv">⬇ CSV</button>
             <button class="btn btn-outline btn-sm" data-export-excel="expenses" data-export-name-xls="expenses.xls">⬇ Excel</button>
@@ -2153,7 +2585,7 @@
       <div id="topbar-reports"></div>
       <div class="app-content">
         <div class="page-head">
-          <div><h1>Reports</h1><p>Understand where your business stands.</p></div>
+          <div><h1 data-i18n="page_reports_title">Reports</h1><p data-i18n="page_reports_sub">Understand where your business stands.</p></div>
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" id="rpt-export-csv-btn">⬇ CSV</button>
             <button class="btn btn-outline btn-sm" id="rpt-export-excel-btn">⬇ Excel</button>
@@ -2224,7 +2656,7 @@
     <div class="app-main">
       <div id="topbar-ai"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>AI Business Assistant</h1><p>Ask about invoices, cash flow, inventory, tasks and performance — in plain language.</p></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_ai_title">AI Business Assistant</h1><p>Ask about invoices, cash flow, inventory, tasks and performance — in plain language.</p></div></div>
         <div class="ai-layout">
           <div class="card card-pad">
             <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:hsl(var(--muted-fg));margin-bottom:0.5rem;">Capabilities</div>
@@ -2255,7 +2687,7 @@
     <div class="app-main">
       <div id="topbar-crm"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>CRM</h1><p>Your sales pipeline and customer relationships at a glance.</p></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_crm_title">CRM</h1><p data-i18n="page_crm_sub">Your sales pipeline and customer relationships at a glance.</p></div></div>
         <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);" id="crm-stat-grid">
           <div class="card stat-card"><div><div class="lbl">New leads</div><div class="val tnum" data-count="0">0</div></div><div class="ic">💼</div></div>
           <div class="card stat-card"><div><div class="lbl">Active clients</div><div class="val tnum" data-count="0">0</div></div><div class="ic">👤</div></div>
@@ -2284,7 +2716,7 @@
     <div class="app-main">
       <div id="topbar-leads"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary" id="lead-add-btn">+ Add lead</button></div>
+        <div class="page-head"><div><h1 data-i18n="page_leads_title">Leads</h1><p data-i18n="page_leads_sub">Track prospects through your sales pipeline.</p></div><button class="btn btn-primary" id="lead-add-btn">+ <span data-i18n="btn_add_lead">Add lead</span></button></div>
         <div class="kanban" id="leads-kanban"></div>
       </div>
     </div>
@@ -2297,7 +2729,7 @@
     <div class="app-main">
       <div id="topbar-companies"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary" id="company-add-btn">+ Add company</button></div>
+        <div class="page-head"><div><h1 data-i18n="page_companies_title">Companies</h1><p data-i18n="page_companies_sub">Organizations behind your customers and leads.</p></div><button class="btn btn-primary" id="company-add-btn">+ <span data-i18n="btn_add_company">Add company</span></button></div>
         <div class="table-wrap">
           <table class="data-table" id="companies-table">
             <thead><tr><th>Name</th><th>Industry</th><th>Size</th><th>Website</th></tr></thead>
@@ -2317,7 +2749,7 @@
     <div class="app-main">
       <div id="topbar-tasks"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Tasks</h1><p>Follow-ups and to-dos across your business.</p></div><button class="btn btn-primary" id="task-add-btn">+ Add task</button></div>
+        <div class="page-head"><div><h1 data-i18n="page_tasks_title">Tasks</h1><p data-i18n="page_tasks_sub">Follow-ups and to-dos across your business.</p></div><button class="btn btn-primary" id="task-add-btn">+ <span data-i18n="btn_add_task">Add task</span></button></div>
 
         <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.1rem;" id="task-stat-grid"></div>
 
@@ -2346,7 +2778,7 @@
     <div class="app-main">
       <div id="topbar-calendar"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Business Calendar</h1><p>Invoices due, quote expiries, meetings, tasks, reminders, payments, expenses and tax deadlines — one view.</p></div><div style="display:flex;align-items:center;gap:0.7rem;"><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span><button class="btn btn-primary btn-sm" id="cal-add-event-btn">+ Add event</button></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_calendar_title">Business Calendar</h1><p>Invoices due, quote expiries, meetings, tasks, reminders, payments, expenses and tax deadlines — one view.</p></div><div style="display:flex;align-items:center;gap:0.7rem;"><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span><button class="btn btn-primary btn-sm" id="cal-add-event-btn">+ <span data-i18n="btn_add_event">Add event</span></button></div></div>
 
         <div class="ds-tabs" id="cal-tabs">
           <button class="on" data-cal-tab="month">Month</button>
@@ -2386,7 +2818,7 @@
     <div class="app-main">
       <div id="topbar-team"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Team</h1><p>Manage members, invitations and role-based permissions.</p></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_team_title">Team</h1><p data-i18n="page_team_sub">Manage members, invitations and role-based permissions.</p></div></div>
 
         <div class="ds-tabs" id="team-tabs">
           <button class="on" data-team-tab="members">Members</button>
@@ -2437,7 +2869,7 @@
       <div id="topbar-files"></div>
       <div class="app-content">
         <div class="page-head">
-          <div><h1>Files</h1><p>Store and organize invoices, quotes, contracts, receipts and documents.</p></div>
+          <div><h1 data-i18n="page_files_title">Files</h1><p>Store and organize invoices, quotes, contracts, receipts and documents.</p></div>
           <div><input type="file" id="file-upload-input" multiple style="display:none;" /><button class="btn btn-primary" id="file-upload-btn">⬆ Upload file</button></div>
         </div>
         <div class="toolbar"><div class="search-wrap"><span class="ic">🔍</span><input class="field" id="file-search" placeholder="Search files…" /></div></div>
@@ -2454,7 +2886,7 @@
     <div class="app-main">
       <div id="topbar-settings"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Settings</h1><p>Workspace preferences and the Global Compliance Center.</p></div></div>
+        <div class="page-head"><div><h1 data-i18n="page_settings_title">Settings</h1><p data-i18n="page_settings_sub">Workspace preferences and the Global Compliance Center.</p></div></div>
 
         <div class="ds-tabs" id="settings-tabs">
           <button class="on" data-settings-tab="general">General</button>
@@ -2587,23 +3019,23 @@
 
     // ---- marketing header (blog/help/resources/tools/country/landing pages) ----
     var M_NAV = [
-      { id: "landing", label: "Features" },
-      { id: "pricing", label: "Pricing" },
-      { id: "tools", label: "Free Tools" },
-      { id: "blog", label: "Blog" },
-      { id: "landing", label: "About" },
+      { id: "landing", i18nKey: "mkt_features" },
+      { id: "pricing", i18nKey: "mkt_pricing" },
+      { id: "tools", i18nKey: "mkt_tools" },
+      { id: "blog", i18nKey: "mkt_blog" },
+      { id: "landing", i18nKey: "mkt_about" },
     ];
     function mHeader(active) {
       var nav = M_NAV.map(function (item) {
-        return '<a href="#" data-goto="' + item.id + '" class="' + (item.id === active ? "current" : "") + '">' + item.label + "</a>";
+        return '<a href="#" data-goto="' + item.id + '" class="' + (item.id === active ? "current" : "") + '">' + t(item.i18nKey) + "</a>";
       }).join("");
       return (
-        '<header class="m-header"><div class="container m-header-inner">' +
+        '<header class="m-header" data-mh-active="' + active + '"><div class="container m-header-inner">' +
         '<a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a>' +
         '<nav class="m-nav">' + nav + "</nav>" +
-        '<div class="m-actions"><button class="btn btn-ghost btn-sm theme-toggle" aria-label="Toggle theme">◐</button>' +
-        '<span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>' +
-        '<a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span></div>' +
+        '<div class="m-actions">' + langSelectHtml("m-lang-select") + '<button class="btn btn-ghost btn-sm theme-toggle" aria-label="Toggle theme">◐</button>' +
+        '<span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">' + t("btn_sign_in") + '</a>' +
+        '<a href="#" class="btn btn-primary btn-sm" data-goto="register">' + t("btn_get_started") + "</a></span></div>" +
         "</div></header>"
       );
     }
@@ -2617,13 +3049,77 @@
     // A single persistent profile icon replaces the "Sign in / Get started free" pair on every
     // marketing page. Its content (photo/initials/generic icon) is filled in by the auth module's
     // renderAuthAvatars() via the shared [data-auth-avatar] elements.
+    var lastKnownAuthState = false;
     function updateMarketingHeaders(loggedIn) {
+      lastKnownAuthState = loggedIn;
       document.querySelectorAll(".m-auth-links").forEach(function (el) {
         el.innerHTML = '<a href="#" class="m-auth-icon" data-goto="' + (loggedIn ? "dashboard" : "login") + '" title="' + (loggedIn ? "Your account" : "Sign in") + '"><span class="avatar" data-auth-avatar>👤</span></a>';
       });
     }
     updateMarketingHeaders(false);
     window.ivoxaSetMarketingAuthState = updateMarketingHeaders;
+
+    // ---- app-wide language switcher ----
+    function populateStaticLangSelects() {
+      var optionsHtml = LANG_LIST.map(function (l) {
+        return '<option value="' + l.code + '">' + l.flag + " " + l.name + "</option>";
+      }).join("");
+      ["landing-lang-select", "pricing-lang-select"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = optionsHtml;
+      });
+    }
+    populateStaticLangSelects();
+
+    function refreshAllChrome() {
+      var avatarSnapshot = null;
+      var existingAvatar = document.querySelector("[data-auth-avatar]");
+      if (existingAvatar) avatarSnapshot = existingAvatar.innerHTML;
+      var existingLogout = document.querySelector("[data-auth-logout]");
+      var logoutHidden = existingLogout ? existingLogout.hidden : true;
+
+      document.querySelectorAll(".view").forEach(function (view) {
+        var rawId = view.id.replace(/^view-/, "");
+        var navId = rawId === "invoice-new" ? "invoices" : rawId === "quote-new" ? "quotes" : rawId === "client-detail" ? "clients" : rawId;
+        var sb = view.querySelector(".app-sidebar");
+        var tb = view.querySelector(".app-topbar");
+        if (sb) sb.outerHTML = renderSidebar(navId);
+        if (tb) tb.outerHTML = renderTopbar();
+      });
+      document.querySelectorAll(".m-header[data-mh-active]").forEach(function (header) {
+        header.outerHTML = mHeader(header.getAttribute("data-mh-active"));
+      });
+
+      updateMarketingHeaders(lastKnownAuthState);
+      if (avatarSnapshot !== null) {
+        document.querySelectorAll("[data-auth-avatar]").forEach(function (el) { el.innerHTML = avatarSnapshot; });
+      }
+      document.querySelectorAll("[data-auth-logout]").forEach(function (el) { el.hidden = logoutHidden; });
+    }
+
+    function applyLanguage(lang) {
+      if (!I18N[lang]) lang = "en";
+      currentLang = lang;
+      try { localStorage.setItem("ivoxa_lang", lang); } catch (e) { /* ignore */ }
+      refreshAllChrome();
+      document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) { el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder"))); });
+      document.querySelectorAll(".lang-select").forEach(function (sel) { sel.value = currentLang; });
+      var activeView = document.querySelector(".view.active");
+      if (activeView) {
+        if (activeView.id === "view-invoice-new" && typeof initInvoiceNewForm === "function") initInvoiceNewForm();
+        if (activeView.id === "view-quote-new" && typeof initQuoteNewForm === "function") initQuoteNewForm();
+      }
+    }
+    window.ivoxaApplyLanguage = applyLanguage;
+    document.addEventListener("change", function (e) {
+      if (e.target.classList && e.target.classList.contains("lang-select")) applyLanguage(e.target.value);
+    });
+
+    // Selecting a default country in Settings also switches the app language to match —
+    // e.g. choosing France applies French, Germany applies German — while the language
+    // switcher itself always stays available for a manual, independent choice.
+    var COUNTRY_LANGUAGE_MAP = { FR: "fr", IT: "it", ES: "es", DE: "de", BE: "nl", NL: "nl", PT: "pt", GB: "en", PL: "pl" };
 
     // ---- blog index: search + category filter ----
     var BLOG_POSTS = [
@@ -4794,6 +5290,11 @@
       }).join("");
       sel.value = "FR";
     }
+    var setDefaultCountryEl = document.getElementById("set-default-country");
+    if (setDefaultCountryEl) setDefaultCountryEl.addEventListener("change", function (e) {
+      var lang = COUNTRY_LANGUAGE_MAP[e.target.value];
+      if (lang) applyLanguage(lang);
+    });
     // ---- Company branding: logo/stamp + signature (stored locally, used on invoices/quotes) ----
     function getCompanyLogo() { return localStorage.getItem("ivoxa_company_logo") || ""; }
     function getCompanySignature() { return localStorage.getItem("ivoxa_company_signature") || ""; }
@@ -5036,10 +5537,10 @@
       var subEl = document.querySelector("#view-invoice-new .page-head p");
       var draftBtn = document.getElementById("invoice-save-draft-btn");
       var pendingBtn = document.getElementById("invoice-save-pending-btn");
-      if (titleEl) titleEl.textContent = editing ? "Edit invoice " + editing.id : "New invoice";
-      if (subEl) subEl.textContent = editing ? "Update the details below and save your changes." : "Fill in the details below to create an invoice.";
+      if (titleEl) titleEl.textContent = editing ? t("edit_invoice_title") + " " + editing.id : t("page_invoice_new_title");
+      if (subEl) subEl.textContent = editing ? t("edit_invoice_sub") : t("page_invoice_new_sub");
       if (draftBtn) draftBtn.style.display = editing ? "none" : "";
-      if (pendingBtn) pendingBtn.textContent = editing ? "Save changes" : "Save & mark pending";
+      if (pendingBtn) pendingBtn.textContent = editing ? t("btn_save_changes") : t("btn_save_pending");
 
       liBody.innerHTML = "";
       if (editing) {
@@ -5472,10 +5973,10 @@
       var subEl = document.getElementById("quote-new-sub");
       var draftBtn = document.getElementById("quote-save-draft-btn");
       var sendBtn = document.getElementById("quote-save-send-btn");
-      if (titleEl) titleEl.textContent = editing ? "Edit quote " + editing.id : "New quote";
-      if (subEl) subEl.textContent = editing ? "Update the details below and save your changes." : "Fill in the details below to create a quote.";
+      if (titleEl) titleEl.textContent = editing ? t("edit_quote_title") + " " + editing.id : t("page_quote_new_title");
+      if (subEl) subEl.textContent = editing ? t("edit_quote_sub") : t("page_quote_new_sub");
       if (draftBtn) draftBtn.style.display = editing ? "none" : "";
-      if (sendBtn) sendBtn.textContent = editing ? "Save changes" : "Save & send";
+      if (sendBtn) sendBtn.textContent = editing ? t("btn_save_changes") : t("btn_save_send");
 
       qLiBody.innerHTML = "";
       if (editing) {
@@ -6631,6 +7132,9 @@
         }
       });
     }
+
+    // ---- i18n bootstrap: sync static [data-i18n] content + lang selects on load ----
+    applyLanguage(currentLang);
   })();
 </script>
 <script type="module">
@@ -6855,7 +7359,6 @@
     if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
     renderAuthAvatars(user);
     document.querySelectorAll("[data-auth-logout]").forEach(el => { el.hidden = !user; });
-    if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
     const activeView = document.querySelector(".view.active");
     if (!user && activeView && protectedViews.has(activeView.id.replace("view-", ""))) window.ivoxaShowView("login");
   });
