@@ -1822,6 +1822,45 @@
   </div>
 </div>
 
+<!-- ============ ADD LEAD MODAL ============ -->
+<div class="cw-overlay" id="al-overlay">
+  <div class="ob-backdrop" id="al-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="al-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add lead</h3><button class="ob-skip" id="al-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Name</label><input class="field" id="al-name" placeholder="Contact or lead name" /></div>
+        <div><label class="field-label">Company</label><input class="field" id="al-company" placeholder="Acme Inc." /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Estimated value</label><input class="field" type="number" min="0" step="0.01" id="al-value" value="0" /></div>
+          <div><label class="field-label">Stage</label><select class="field" id="al-stage"></select></div>
+        </div>
+        <div><label class="field-label">Source</label><input class="field" id="al-source" placeholder="Referral, website inquiry…" /></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="al-submit">Add lead</button></div>
+  </div>
+</div>
+
+<!-- ============ ADD COMPANY MODAL ============ -->
+<div class="cw-overlay" id="acp-overlay">
+  <div class="ob-backdrop" id="acp-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="acp-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add company</h3><button class="ob-skip" id="acp-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Company name</label><input class="field" id="acp-name" placeholder="Acme Inc." /></div>
+        <div><label class="field-label">Industry</label><input class="field" id="acp-industry" placeholder="Marketing, Logistics, Legal…" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Size</label><select class="field" id="acp-size"><option>1-10</option><option>11-50</option><option>51-200</option><option>201-500</option><option>500+</option></select></div>
+          <div><label class="field-label">Website</label><input class="field" id="acp-website" placeholder="example.com" /></div>
+        </div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="acp-submit">Add company</button></div>
+  </div>
+</div>
+
 <!-- ============ ADD CLIENT MODAL ============ -->
 <div class="cw-overlay" id="ac-overlay">
   <div class="ob-backdrop" id="ac-backdrop"></div>
@@ -2180,16 +2219,8 @@
     <div class="app-main">
       <div id="topbar-leads"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary">+ Add lead</button></div>
-        <div class="kanban">
-          <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Proposal</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Negotiation</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Won</h4><span>0</span></div></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Lost</h4><span>0</span></div></div>
-        </div>
+        <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary" id="lead-add-btn">+ Add lead</button></div>
+        <div class="kanban" id="leads-kanban"></div>
       </div>
     </div>
   </div>
@@ -2201,7 +2232,7 @@
     <div class="app-main">
       <div id="topbar-companies"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary">+ Add company</button></div>
+        <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary" id="company-add-btn">+ Add company</button></div>
         <div class="table-wrap">
           <table class="data-table" id="companies-table">
             <thead><tr><th>Name</th><th>Industry</th><th>Size</th><th>Website</th></tr></thead>
@@ -2812,10 +2843,11 @@
         }
       }
       if (id === "crm") {
-        var crmGrid = document.getElementById("crm-stat-grid");
-        if (crmGrid) crmGrid.querySelectorAll(".val")[1].setAttribute("data-count", String(CLIENTS.length));
+        renderCrmStatsAndPipeline();
         runCounters(target);
       }
+      if (id === "leads") renderLeadsInit();
+      if (id === "companies") renderCompaniesInit();
       if (id === "calendar") renderCalendarInit();
       if (id === "inventory") renderInventoryInit();
       if (id === "tasks") renderTasksInit();
@@ -4150,6 +4182,174 @@
     });
     var clientAddBtnEl = document.getElementById("client-add-btn");
     if (clientAddBtnEl) clientAddBtnEl.addEventListener("click", acOpen);
+
+    // ---- Leads (sales pipeline kanban) ----
+    var LEAD_STAGES = [
+      { key: "new", label: "New" },
+      { key: "contacted", label: "Contacted" },
+      { key: "qualified", label: "Qualified" },
+      { key: "proposal", label: "Proposal" },
+      { key: "negotiation", label: "Negotiation" },
+      { key: "won", label: "Won" },
+      { key: "lost", label: "Lost" },
+    ];
+    var LEAD_PROBABILITY = { new: 0.1, contacted: 0.25, qualified: 0.45, proposal: 0.65, negotiation: 0.85 };
+    var LEADS = [];
+    function renderLeadsKanban() {
+      var wrap = document.getElementById("leads-kanban");
+      if (!wrap) return;
+      wrap.innerHTML = LEAD_STAGES.map(function (stage) {
+        var items = LEADS.filter(function (l) { return l.stage === stage.key; });
+        var cards = items.map(function (l) {
+          return (
+            '<div class="card kcard"><div class="kt">' + l.name + "</div>" +
+            (l.company ? '<div class="ks">' + l.company + "</div>" : "") +
+            '<div style="margin-top:0.4rem;display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">' +
+            (l.value ? '<span class="badge badge-primary">' + currency(l.value) + "</span>" : "") +
+            '<select class="field" data-lead-stage="' + l.id + '" style="font-size:0.7rem;padding:0.15rem 0.3rem;width:auto;">' +
+            LEAD_STAGES.map(function (s) { return '<option value="' + s.key + '"' + (s.key === l.stage ? " selected" : "") + ">" + s.label + "</option>"; }).join("") +
+            "</select></div></div>"
+          );
+        }).join("");
+        return '<div class="kanban-col"><div class="kanban-col-head"><h4>' + stage.label + "</h4><span>" + items.length + "</span></div>" + (cards || '<p class="widget-empty">No leads yet.</p>') + "</div>";
+      }).join("");
+    }
+    function renderCrmStatsAndPipeline() {
+      var grid = document.getElementById("crm-stat-grid");
+      if (grid) {
+        var vals = grid.querySelectorAll(".val");
+        var newCount = LEADS.filter(function (l) { return l.stage === "new"; }).length;
+        var lostCount = LEADS.filter(function (l) { return l.stage === "lost"; }).length;
+        var forecast = LEADS.reduce(function (sum, l) { var p = LEAD_PROBABILITY[l.stage]; return p ? sum + (l.value || 0) * p : sum; }, 0);
+        vals[0].setAttribute("data-count", String(newCount));
+        vals[1].setAttribute("data-count", String(CLIENTS.length));
+        vals[2].setAttribute("data-count", String(lostCount));
+        vals[3].setAttribute("data-count", String(Math.round(forecast)));
+      }
+      var pipelineWrap = document.getElementById("crm-pipeline-bars");
+      if (pipelineWrap) {
+        var openStages = LEAD_STAGES.filter(function (s) { return s.key !== "won" && s.key !== "lost"; });
+        var stageData = openStages.map(function (s) {
+          var items = LEADS.filter(function (l) { return l.stage === s.key; });
+          var value = items.reduce(function (sum, l) { return sum + (l.value || 0); }, 0);
+          return { label: s.label, count: items.length, value: value };
+        });
+        var max = Math.max.apply(null, stageData.map(function (s) { return s.value; }).concat([0]));
+        pipelineWrap.innerHTML = stageData.map(function (s) {
+          var pct = max ? Math.round((s.value / max) * 100) : 0;
+          return '<div class="pipeline-row"><span class="stage-lbl">' + s.label + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;"></div></div><span class="stage-count">' + s.count + '</span><span class="stage-val">' + currency(s.value) + "</span></div>";
+        }).join("");
+      }
+    }
+    function populateLeadStageSelect() {
+      var sel = document.getElementById("al-stage");
+      if (!sel) return;
+      sel.innerHTML = LEAD_STAGES.map(function (s) { return '<option value="' + s.key + '">' + s.label + "</option>"; }).join("");
+    }
+    function alOpen() {
+      populateLeadStageSelect();
+      document.getElementById("al-name").value = "";
+      document.getElementById("al-company").value = "";
+      document.getElementById("al-value").value = "0";
+      document.getElementById("al-source").value = "";
+      document.getElementById("al-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function alClose() {
+      document.getElementById("al-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var alCloseBtn = document.getElementById("al-close");
+    if (alCloseBtn) alCloseBtn.addEventListener("click", alClose);
+    var alBackdropEl = document.getElementById("al-backdrop");
+    if (alBackdropEl) alBackdropEl.addEventListener("click", alClose);
+    var alSubmitBtn = document.getElementById("al-submit");
+    if (alSubmitBtn) alSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("al-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      LEADS.push({
+        id: "ld" + Date.now(),
+        name: name,
+        company: document.getElementById("al-company").value.trim(),
+        value: parseFloat(document.getElementById("al-value").value) || 0,
+        stage: document.getElementById("al-stage").value,
+        source: document.getElementById("al-source").value.trim(),
+      });
+      renderLeadsKanban();
+      alClose();
+      showToast(name + " added to Leads");
+      playSound("success");
+    });
+    var leadAddBtnEl = document.getElementById("lead-add-btn");
+    if (leadAddBtnEl) leadAddBtnEl.addEventListener("click", alOpen);
+    var leadsKanbanEl = document.getElementById("leads-kanban");
+    if (leadsKanbanEl) leadsKanbanEl.addEventListener("change", function (e) {
+      var sel = e.target.closest("[data-lead-stage]");
+      if (!sel) return;
+      var lead = LEADS.filter(function (l) { return l.id === sel.getAttribute("data-lead-stage"); })[0];
+      if (!lead) return;
+      lead.stage = sel.value;
+      renderLeadsKanban();
+      showToast(lead.name + " moved to " + LEAD_STAGES.filter(function (s) { return s.key === lead.stage; })[0].label);
+    });
+    var leadsInitDone = false;
+    function renderLeadsInit() {
+      if (leadsInitDone) return;
+      leadsInitDone = true;
+      renderLeadsKanban();
+    }
+
+    // ---- Companies (organizations behind customers/leads) ----
+    var CUSTOMER_COMPANIES = [];
+    function renderCompaniesTable() {
+      var tbody = document.querySelector("#companies-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = CUSTOMER_COMPANIES.length ? CUSTOMER_COMPANIES.map(function (c) {
+        return "<tr><td class=\"link-strong\">" + c.name + "</td><td>" + (c.industry || "—") + "</td><td>" + (c.size || "—") + "</td><td>" + (c.website || "—") + "</td></tr>";
+      }).join("") : '<tr><td colspan="4" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No companies yet.</td></tr>';
+    }
+    function acpOpen() {
+      document.getElementById("acp-name").value = "";
+      document.getElementById("acp-industry").value = "";
+      document.getElementById("acp-size").value = "1-10";
+      document.getElementById("acp-website").value = "";
+      document.getElementById("acp-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function acpClose() {
+      document.getElementById("acp-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var acpCloseBtn = document.getElementById("acp-close");
+    if (acpCloseBtn) acpCloseBtn.addEventListener("click", acpClose);
+    var acpBackdropEl = document.getElementById("acp-backdrop");
+    if (acpBackdropEl) acpBackdropEl.addEventListener("click", acpClose);
+    var acpSubmitBtn = document.getElementById("acp-submit");
+    if (acpSubmitBtn) acpSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("acp-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      CUSTOMER_COMPANIES.push({
+        id: "co" + Date.now(),
+        name: name,
+        industry: document.getElementById("acp-industry").value.trim(),
+        size: document.getElementById("acp-size").value,
+        website: document.getElementById("acp-website").value.trim(),
+      });
+      renderCompaniesTable();
+      acpClose();
+      showToast(name + " added to Companies");
+      playSound("success");
+    });
+    var companyAddBtnEl = document.getElementById("company-add-btn");
+    if (companyAddBtnEl) companyAddBtnEl.addEventListener("click", acpOpen);
+    var companiesInitDone = false;
+    function renderCompaniesInit() {
+      if (companiesInitDone) return;
+      companiesInitDone = true;
+      renderCompaniesTable();
+    }
 
     // log-activity modal
     function laOpen() {
@@ -5845,6 +6045,7 @@
       INVOICES.forEach(function (inv) { idx.push({ group: "Invoices", icon: "📄", label: inv.id, sub: inv.client, goto: "invoices" }); });
       QUOTES.forEach(function (q) { idx.push({ group: "Quotes", icon: "🧾", label: q.id, sub: q.client, goto: "quotes" }); });
       CLIENTS.forEach(function (c) { idx.push({ group: "Clients", icon: "👥", label: c.name, sub: c.company, goto: "client-detail", openClient: c.id }); });
+      LEADS.forEach(function (l) { idx.push({ group: "Leads", icon: "💼", label: l.name, sub: l.company, goto: "leads" }); });
       addFromTable("companies-table", "Companies", "🏢", "companies", 0, 1);
       EXPENSES.forEach(function (e) { idx.push({ group: "Expenses", icon: "💳", label: e.title, sub: e.category, goto: "expenses" }); });
       PRODUCTS.forEach(function (p) { idx.push({ group: "Inventory", icon: p.type === "service" ? "🧰" : "📦", label: p.name, sub: p.sku, goto: "inventory" }); });
