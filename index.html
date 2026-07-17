@@ -382,6 +382,19 @@
     font-size: 0.75rem; font-weight: 800; overflow: hidden;
   }
   .m-auth-icon { display: inline-flex; text-decoration: none; flex-shrink: 0; }
+  #print-area { display: none; }
+  .print-doc-head { display: flex; align-items: center; gap: 0.8rem; border-bottom: 2px solid #111; padding-bottom: 1rem; margin-bottom: 1rem; }
+  .print-doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #111; }
+  .print-doc-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+  .print-doc-table th, .print-doc-table td { border-bottom: 1px solid #ddd; padding: 0.5rem; font-size: 0.85rem; text-align: left; color: #111; }
+  .print-doc-total { text-align: right; font-size: 1.15rem; font-weight: 800; margin-bottom: 1.5rem; color: #111; }
+  .print-doc-sig { text-align: right; }
+  .print-doc-sig img { max-height: 3.5rem; }
+  @media print {
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area { display: block; position: absolute; top: 0; left: 0; width: 100%; padding: 1.5rem; color: #111; background: #fff; }
+  }
   .app-content { padding: 1.5rem 1.75rem 3rem; max-width: 1280px; }
   .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
   .page-head h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
@@ -863,6 +876,8 @@
   </div>
   <button class="btn gfab-btn" id="gfab-btn" aria-label="Quick actions" aria-haspopup="menu">+</button>
 </div>
+
+<div id="print-area"></div>
 
 <!-- ============ LANDING ============ -->
 <section class="view active" id="view-landing">
@@ -1599,41 +1614,54 @@
       <div class="app-content">
         <div class="page-head"><div><h1>New invoice</h1><p>Fill in the details below to create an invoice.</p></div><button class="btn btn-outline btn-sm" id="invoice-print-btn">🖨 Print / Save PDF</button></div>
 
-        <div class="card card-pad" style="margin-bottom:1.1rem;">
-          <div class="card-title">Invoice details</div>
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
-            <div><label class="field-label">Client</label><select class="field" id="inv-new-client"></select></div>
-            <div><label class="field-label">Issue date</label><input class="field" type="date" id="inv-new-issue" /></div>
-            <div><label class="field-label">Due date</label><input class="field" type="date" id="inv-new-due" /></div>
-            <div><label class="field-label">Currency</label><select class="field" id="inv-new-currency"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
-            <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
-            <div><label class="field-label">Client address</label><textarea class="field" id="inv-new-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
-            <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="inv-new-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
-            <div><label class="field-label">SIRET number</label><input class="field" id="inv-new-siret" placeholder="123 456 789 00012" /></div>
-          </div>
-          <div id="inv-compliance-banner" style="margin-top:1rem;"></div>
-        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+          <div>
+            <div class="card card-pad" style="margin-bottom:1.1rem;">
+              <div class="card-title">Invoice details</div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+                <div><label class="field-label">Client</label><select class="field" id="inv-new-client"></select></div>
+                <div><label class="field-label">Issue date</label><input class="field" type="date" id="inv-new-issue" /></div>
+                <div><label class="field-label">Due date</label><input class="field" type="date" id="inv-new-due" /></div>
+                <div><label class="field-label">Currency</label><select class="field" id="inv-new-currency"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
+                <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
+                <div><label class="field-label">Client address</label><textarea class="field" id="inv-new-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
+                <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="inv-new-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
+                <div><label class="field-label">SIRET number</label><input class="field" id="inv-new-siret" placeholder="123 456 789 00012" /></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem;">
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖼 Add logo<input type="file" accept="image/*" id="inv-new-logo-file" style="display:none;" /></label>
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖋 Add stamp/signature<input type="file" accept="image/*" id="inv-new-sig-file" style="display:none;" /></label>
+                <a href="#" class="btn btn-outline btn-sm" data-goto="design-studio">🎨 Change design</a>
+              </div>
+              <div id="inv-compliance-banner" style="margin-top:1rem;"></div>
+            </div>
 
-        <div class="card card-pad" style="margin-bottom:1.1rem;">
-          <div class="card-title">Line items</div>
-          <table class="li-table" id="li-table">
-            <thead><tr><th style="width:40%;">Description</th><th>Qty</th><th>Unit price</th><th>Tax</th><th style="text-align:right;">Amount</th><th></th></tr></thead>
-            <tbody id="li-body"></tbody>
-          </table>
-          <button class="btn btn-outline btn-sm" style="margin-top:0.8rem;" id="li-add">+ Add line item</button>
-          <div class="totals-box">
-            <div class="row"><span>Subtotal</span><span class="tnum" id="t-sub">$0.00</span></div>
-            <div class="row"><span>Discount</span><span class="tnum" id="t-disc">-$0.00</span></div>
-            <div class="row"><span>Tax</span><span class="tnum" id="t-tax">$0.00</span></div>
-            <div class="row total"><span>Total</span><span class="tnum" id="t-total">$0.00</span></div>
-          </div>
-        </div>
+            <div class="card card-pad" style="margin-bottom:1.1rem;">
+              <div class="card-title">Line items</div>
+              <table class="li-table" id="li-table">
+                <thead><tr><th style="width:40%;">Description</th><th>Qty</th><th>Unit price</th><th>Tax</th><th style="text-align:right;">Amount</th><th></th></tr></thead>
+                <tbody id="li-body"></tbody>
+              </table>
+              <button class="btn btn-outline btn-sm" style="margin-top:0.8rem;" id="li-add">+ Add line item</button>
+              <div class="totals-box">
+                <div class="row"><span>Subtotal</span><span class="tnum" id="t-sub">$0.00</span></div>
+                <div class="row"><span>Discount</span><span class="tnum" id="t-disc">-$0.00</span></div>
+                <div class="row"><span>Tax</span><span class="tnum" id="t-tax">$0.00</span></div>
+                <div class="row total"><span>Total</span><span class="tnum" id="t-total">$0.00</span></div>
+              </div>
+            </div>
 
-        <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
-          <button class="btn btn-outline" id="invoice-save-draft-btn">Save as draft</button>
-          <button class="btn btn-primary" id="invoice-save-pending-btn">Save &amp; mark pending</button>
+            <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
+              <button class="btn btn-outline" id="invoice-save-draft-btn">Save as draft</button>
+              <button class="btn btn-primary" id="invoice-save-pending-btn">Save &amp; mark pending</button>
+            </div>
+          </div>
+          <div style="position:sticky;top:1rem;">
+            <p class="field-label" style="margin-bottom:0.4rem;">Live preview</p>
+            <div id="inv-new-preview" style="border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1783,20 +1811,32 @@
 <!-- ============ NEW QUOTE MODAL ============ -->
 <div class="cw-overlay" id="aq-overlay">
   <div class="ob-backdrop" id="aq-backdrop"></div>
-  <div class="card glass-panel cw-panel" id="aq-panel">
-    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">New quote</h3><button class="ob-skip" id="aq-close">Cancel</button></div>
+  <div class="card glass-panel cw-panel" id="aq-panel" style="max-width:52rem;">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;" id="aq-title">New quote</h3><button class="ob-skip" id="aq-close">Cancel</button></div>
     <div class="cw-body">
-      <div class="ob-fields">
-        <div><label class="field-label">Client</label><select class="field" id="aq-client"></select></div>
-        <div><label class="field-label">Client address</label><textarea class="field" id="aq-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
-        <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="aq-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-          <div><label class="field-label">Issue date</label><input class="field" type="date" id="aq-issue" /></div>
-          <div><label class="field-label">Valid until</label><input class="field" type="date" id="aq-valid" /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+        <div class="ob-fields">
+          <div><label class="field-label">Client</label><select class="field" id="aq-client"></select></div>
+          <div><label class="field-label">Client address</label><textarea class="field" id="aq-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
+          <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="aq-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
+          <div><label class="field-label">What's this quote for?</label><input class="field" id="aq-description" placeholder="e.g. Brand identity package" /></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+            <div><label class="field-label">Issue date</label><input class="field" type="date" id="aq-issue" /></div>
+            <div><label class="field-label">Valid until</label><input class="field" type="date" id="aq-valid" /></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+            <div><label class="field-label">SIRET number</label><input class="field" id="aq-siret" placeholder="123 456 789 00012" /></div>
+            <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
+          </div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖼 Add logo<input type="file" accept="image/*" id="aq-logo-file" style="display:none;" /></label>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖋 Add stamp/signature<input type="file" accept="image/*" id="aq-sig-file" style="display:none;" /></label>
+            <a href="#" class="btn btn-outline btn-sm" id="aq-design-link">🎨 Change design</a>
+          </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-          <div><label class="field-label">SIRET number</label><input class="field" id="aq-siret" placeholder="123 456 789 00012" /></div>
-          <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
+        <div>
+          <p class="field-label" style="margin-bottom:0.4rem;">Live preview</p>
+          <div id="aq-preview" style="border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;"></div>
         </div>
       </div>
     </div>
@@ -1944,7 +1984,7 @@
         <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><button class="btn btn-primary" id="quote-add-btn">+ New quote</button></div></div>
         <div class="table-wrap">
           <table class="data-table" id="quotes-table">
-            <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th></tr></thead>
+            <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th><th></th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -2879,7 +2919,9 @@
       var el = e.target.closest("[data-goto]");
       if (!el) return;
       e.preventDefault();
-      showView(el.getAttribute("data-goto"));
+      var dest = el.getAttribute("data-goto");
+      if (dest === "invoice-new") editingInvoiceId = null;
+      showView(dest);
     });
 
     // AI capability switcher (visual only)
@@ -2944,8 +2986,19 @@
       document.getElementById("t-disc").textContent = "-" + currency(0);
       document.getElementById("t-tax").textContent = currency(taxTotal);
       document.getElementById("t-total").textContent = currency(subtotal + taxTotal);
+      renderInvoicePreview();
     }
 
+    function getLineItemsData() {
+      return Array.prototype.slice.call(liBody.querySelectorAll("tr")).map(function (tr) {
+        return {
+          desc: tr.querySelector('[data-role="desc"]').value.trim(),
+          qty: parseFloat(tr.querySelector('[data-role="qty"]').value) || 0,
+          price: parseFloat(tr.querySelector('[data-role="price"]').value) || 0,
+          tax: tr.querySelector('[data-role="tax"]').value,
+        };
+      }).filter(function (it) { return it.desc || it.qty || it.price; });
+    }
     liBody.addEventListener("input", recalc);
     liBody.addEventListener("change", recalc);
     liBody.addEventListener("click", function (e) {
@@ -2957,8 +3010,6 @@
     document.getElementById("li-add").addEventListener("click", function () {
       addRow("", 1, 0, "none");
     });
-
-    addRow("", 1, 0, "none");
 
     // ---- count-up animation (hero revenue + dashboard stats) ----
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3528,9 +3579,7 @@
 
     // ---- workspace switcher: multiple independent companies, one account ----
     var COMPANIES = [
-      { id: "c1", name: "ABC Construction", type: "Construction", currency: "USD", country: "United States" },
-      { id: "c2", name: "ABC Consulting", type: "Consultant", currency: "EUR", country: "Germany" },
-      { id: "c3", name: "XYZ Trading", type: "Retail Shop", currency: "AED", country: "United Arab Emirates" },
+      { id: "c1", name: "Your Business", type: "General business", currency: "USD", country: "United States" },
     ];
     var wsActiveId = "c1";
 
@@ -3790,7 +3839,22 @@
       showToast("Exported " + filename);
     });
     var invoicePrintBtn = document.getElementById("invoice-print-btn");
-    if (invoicePrintBtn) invoicePrintBtn.addEventListener("click", function () { window.print(); });
+    if (invoicePrintBtn) invoicePrintBtn.addEventListener("click", function () {
+      var clientSel = document.getElementById("inv-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
+      downloadDocPdf(buildDocPrintHtml({
+        title: "Invoice",
+        number: editingInvoiceId || "Draft",
+        client: client ? client.company : "—",
+        clientAddress: document.getElementById("inv-new-client-address").value.trim(),
+        siteAddress: document.getElementById("inv-new-site-address").value.trim(),
+        siret: document.getElementById("inv-new-siret").value.trim(),
+        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
+        items: getLineItemsData(), total: total,
+      }));
+    });
 
     // ---- Inventory Management ----
     var SUPPLIERS = [];
@@ -4700,6 +4764,62 @@
     // ---- Company branding: logo/stamp + signature (stored locally, used on invoices/quotes) ----
     function getCompanyLogo() { return localStorage.getItem("ivoxa_company_logo") || ""; }
     function getCompanySignature() { return localStorage.getItem("ivoxa_company_signature") || ""; }
+    function currentWorkspaceName() {
+      var active = COMPANIES.filter(function (c) { return c.id === wsActiveId; })[0];
+      return active ? active.name : "Your Business";
+    }
+    function buildDocPrintHtml(opts) {
+      var logo = getCompanyLogo();
+      var sig = getCompanySignature();
+      var accent = (dsState && dsState.primary) || "#2563EB";
+      var singleLineDesc = opts.description || (opts.client + " — services");
+      var itemsRows = (opts.items && opts.items.length)
+        ? opts.items.map(function (it) {
+            return "<tr><td>" + (it.desc || "—") + "</td><td style=\"text-align:right;\">" + it.qty + "</td><td style=\"text-align:right;\">" + currency(it.price) + "</td><td style=\"text-align:right;\">" + currency(it.qty * it.price) + "</td></tr>";
+          }).join("")
+        : "<tr><td>" + singleLineDesc + "</td><td style=\"text-align:right;\">1</td><td style=\"text-align:right;\">" + currency(opts.total) + "</td><td style=\"text-align:right;\">" + currency(opts.total) + "</td></tr>";
+      return (
+        '<div class="print-doc">' +
+        '<div class="print-doc-head" style="border-bottom-color:' + accent + ';">' +
+        (logo ? '<img src="' + logo + '" alt="" style="height:2.4rem;object-fit:contain;" />' : "") +
+        '<div style="font-weight:800;font-size:1.1rem;">' + currentWorkspaceName() + "</div>" +
+        '<div style="margin-left:auto;text-align:right;">' +
+        '<div style="font-weight:800;font-size:1.3rem;color:' + accent + ';">' + opts.title + "</div>" +
+        "<div>" + opts.number + "</div>" +
+        (opts.status ? "<div>" + opts.status + "</div>" : "") +
+        "</div></div>" +
+        '<div class="print-doc-grid">' +
+        "<div><strong>Billed to</strong><br>" + opts.client + (opts.clientAddress ? "<br>" + opts.clientAddress.replace(/\n/g, "<br>") : "") + "</div>" +
+        (opts.siteAddress ? "<div><strong>Chantier / jobsite</strong><br>" + opts.siteAddress.replace(/\n/g, "<br>") + "</div>" : "<div></div>") +
+        "<div><strong>" + opts.issueLabel + "</strong><br>" + opts.issueDate + "<br><strong>" + opts.dueLabel + "</strong><br>" + opts.dueDate + "</div>" +
+        "</div>" +
+        (opts.siret ? "<p style=\"font-size:0.8rem;margin-bottom:0.8rem;\">SIRET: " + opts.siret + "</p>" : "") +
+        '<table class="print-doc-table"><thead><tr><th>Description</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Unit price</th><th style="text-align:right;">Amount</th></tr></thead><tbody>' + itemsRows + "</tbody></table>" +
+        '<div class="print-doc-total" style="color:' + accent + ';">Total: ' + currency(opts.total) + "</div>" +
+        (sig ? '<div class="print-doc-sig"><div style="font-size:0.78rem;color:#555;">Signature</div><img src="' + sig + '" alt="" /></div>' : "") +
+        "</div>"
+      );
+    }
+    function downloadDocPdf(html) {
+      var area = document.getElementById("print-area");
+      if (!area) return;
+      area.innerHTML = html;
+      window.print();
+    }
+    function downloadInvoicePdf(inv) {
+      downloadDocPdf(buildDocPrintHtml({
+        title: "Invoice", number: inv.id, client: inv.client, clientAddress: inv.clientAddress, siteAddress: inv.siteAddress,
+        siret: inv.siret, issueLabel: "Issue date", issueDate: fmtDate(inv.issue), dueLabel: "Due date", dueDate: fmtDate(inv.due),
+        items: inv.items, total: inv.total, status: inv.status,
+      }));
+    }
+    function downloadQuotePdf(q) {
+      downloadDocPdf(buildDocPrintHtml({
+        title: "Quote", number: q.id, client: q.client, clientAddress: q.clientAddress, siteAddress: q.siteAddress,
+        siret: q.siret, issueLabel: "Issue date", issueDate: fmtDate(q.issue), dueLabel: "Valid until", dueDate: fmtDate(q.validUntil),
+        items: null, description: q.description, total: q.total, status: q.status,
+      }));
+    }
     function renderLogoPreview() {
       var preview = document.getElementById("set-logo-preview");
       if (!preview) return;
@@ -4864,22 +4984,87 @@
     }
     var invNewClientEl = document.getElementById("inv-new-client");
     if (invNewClientEl) invNewClientEl.addEventListener("change", fillInvoiceClientAddress);
+    var editingInvoiceId = null;
     function initInvoiceNewForm() {
       populateInvoiceNewClientSelect();
-      var issueEl = document.getElementById("inv-new-issue");
-      var dueEl = document.getElementById("inv-new-due");
-      var today = new Date();
-      if (issueEl) issueEl.value = today.toISOString().slice(0, 10);
-      if (dueEl) {
-        var due = new Date();
-        due.setDate(due.getDate() + 14);
-        dueEl.value = due.toISOString().slice(0, 10);
+      var editing = editingInvoiceId ? INVOICES.filter(function (inv) { return inv.id === editingInvoiceId; })[0] : null;
+      var titleEl = document.querySelector("#view-invoice-new h1");
+      var subEl = document.querySelector("#view-invoice-new .page-head p");
+      var draftBtn = document.getElementById("invoice-save-draft-btn");
+      var pendingBtn = document.getElementById("invoice-save-pending-btn");
+      if (titleEl) titleEl.textContent = editing ? "Edit invoice " + editing.id : "New invoice";
+      if (subEl) subEl.textContent = editing ? "Update the details below and save your changes." : "Fill in the details below to create an invoice.";
+      if (draftBtn) draftBtn.style.display = editing ? "none" : "";
+      if (pendingBtn) pendingBtn.textContent = editing ? "Save changes" : "Save & mark pending";
+
+      liBody.innerHTML = "";
+      if (editing) {
+        var clientMatch = CLIENTS.filter(function (c) { return c.company === editing.client; })[0];
+        document.getElementById("inv-new-client").value = clientMatch ? clientMatch.id : "";
+        document.getElementById("inv-new-issue").value = editing.issue;
+        document.getElementById("inv-new-due").value = editing.due;
+        document.getElementById("inv-new-client-address").value = editing.clientAddress || "";
+        document.getElementById("inv-new-site-address").value = editing.siteAddress || "";
+        document.getElementById("inv-new-siret").value = editing.siret || "";
+        if (editing.items && editing.items.length) editing.items.forEach(function (it) { addRow(it.desc, it.qty, it.price, it.tax); });
+        else addRow(editing.client + " services", 1, editing.total, "none");
+      } else {
+        var issueEl = document.getElementById("inv-new-issue");
+        var dueEl = document.getElementById("inv-new-due");
+        var today = new Date();
+        if (issueEl) issueEl.value = today.toISOString().slice(0, 10);
+        if (dueEl) {
+          var due = new Date();
+          due.setDate(due.getDate() + 14);
+          dueEl.value = due.toISOString().slice(0, 10);
+        }
+        var siteEl = document.getElementById("inv-new-site-address");
+        if (siteEl) siteEl.value = "";
+        var siretEl = document.getElementById("inv-new-siret");
+        if (siretEl) siretEl.value = ccGet("FR", "siret") || "";
+        addRow("", 1, 0, "none");
       }
-      var siteEl = document.getElementById("inv-new-site-address");
-      if (siteEl) siteEl.value = "";
-      var siretEl = document.getElementById("inv-new-siret");
-      if (siretEl) siretEl.value = ccGet("FR", "siret") || "";
+      renderInvoicePreview();
     }
+    function renderInvoicePreview() {
+      var preview = document.getElementById("inv-new-preview");
+      if (!preview) return;
+      var clientSel = document.getElementById("inv-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
+      preview.innerHTML = buildDocPrintHtml({
+        title: "Invoice",
+        number: editingInvoiceId || "Draft",
+        client: client ? client.company : "—",
+        clientAddress: document.getElementById("inv-new-client-address").value.trim(),
+        siteAddress: document.getElementById("inv-new-site-address").value.trim(),
+        siret: document.getElementById("inv-new-siret").value.trim(),
+        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
+        items: getLineItemsData(), total: total,
+      });
+    }
+    var invNewLogoFileEl = document.getElementById("inv-new-logo-file");
+    if (invNewLogoFileEl) invNewLogoFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { localStorage.setItem("ivoxa_company_logo", reader.result); renderInvoicePreview(); showToast("Logo saved"); };
+      reader.readAsDataURL(file);
+    });
+    var invNewSigFileEl = document.getElementById("inv-new-sig-file");
+    if (invNewSigFileEl) invNewSigFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { localStorage.setItem("ivoxa_company_signature", reader.result); renderInvoicePreview(); showToast("Signature saved"); };
+      reader.readAsDataURL(file);
+    });
+    document.querySelectorAll("#view-invoice-new .card input, #view-invoice-new .card textarea, #view-invoice-new .card select").forEach(function (field) {
+      if (field.type === "file") return;
+      field.addEventListener("input", renderInvoicePreview);
+      field.addEventListener("change", renderInvoicePreview);
+    });
     var invoiceSeq = 0;
     function saveNewInvoice(status) {
       var clientSel = document.getElementById("inv-new-client");
@@ -4888,24 +5073,50 @@
       var issue = document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10);
       var due = document.getElementById("inv-new-due").value || issue;
       var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
-      invoiceSeq++;
-      var newId = "INV-" + String(invoiceSeq).padStart(4, "0");
-      INVOICES.push({
-        id: newId,
-        client: client.company,
-        clientAddress: document.getElementById("inv-new-client-address").value.trim(),
-        siteAddress: document.getElementById("inv-new-site-address").value.trim(),
-        siret: document.getElementById("inv-new-siret").value.trim(),
-        issue: issue,
-        due: due,
-        status: status,
-        total: total,
-        payments: [],
-      });
+      var items = getLineItemsData();
+      var clientAddress = document.getElementById("inv-new-client-address").value.trim();
+      var siteAddress = document.getElementById("inv-new-site-address").value.trim();
+      var siret = document.getElementById("inv-new-siret").value.trim();
+
+      if (editingInvoiceId) {
+        var existing = INVOICES.filter(function (inv) { return inv.id === editingInvoiceId; })[0];
+        if (existing) {
+          existing.client = client.company;
+          existing.clientAddress = clientAddress;
+          existing.siteAddress = siteAddress;
+          existing.siret = siret;
+          existing.issue = issue;
+          existing.due = due;
+          existing.total = total;
+          existing.items = items;
+          showToast(existing.id + " updated");
+        }
+        editingInvoiceId = null;
+      } else {
+        invoiceSeq++;
+        var newId = "INV-" + String(invoiceSeq).padStart(4, "0");
+        INVOICES.push({
+          id: newId,
+          client: client.company,
+          clientAddress: clientAddress,
+          siteAddress: siteAddress,
+          siret: siret,
+          issue: issue,
+          due: due,
+          status: status,
+          total: total,
+          items: items,
+          payments: [],
+        });
+        showToast(newId + " saved as " + (status === "Draft" ? "draft" : "pending"));
+      }
       renderInvoicesAll();
-      showToast(newId + " saved as " + (status === "Draft" ? "draft" : "pending"));
       playSound("success");
       showView("invoices");
+    }
+    function openInvoiceForEdit(id) {
+      editingInvoiceId = id;
+      showView("invoice-new");
     }
     var invoiceSaveDraftBtn = document.getElementById("invoice-save-draft-btn");
     if (invoiceSaveDraftBtn) invoiceSaveDraftBtn.addEventListener("click", function () { saveNewInvoice("Draft"); });
@@ -4939,7 +5150,10 @@
           new Date(inv.issue + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + "</td><td>" +
           new Date(inv.due + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + '</td><td><span class="badge ' + invoiceStatusBadgeClass(inv.status) + '">' + inv.status + "</span></td>" +
           '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(inv.total) + "</td>" +
-          "<td>" + (canRemind ? '<button class="btn btn-ghost btn-sm" data-invoice-remind="' + inv.id + '">🔔 Remind</button>' : "") + "</td></tr>"
+          '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
+          '<button class="btn btn-ghost btn-sm" data-invoice-edit="' + inv.id + '">✏️ Edit</button>' +
+          '<button class="btn btn-ghost btn-sm" data-invoice-pdf="' + inv.id + '">⬇ PDF</button>' +
+          (canRemind ? '<button class="btn btn-ghost btn-sm" data-invoice-remind="' + inv.id + '">🔔 Remind</button>' : "") + "</td></tr>"
         );
       }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No invoices match your filters.</td></tr>';
     }
@@ -5003,7 +5217,10 @@
           return '<div class="activity-row"><div><div class="num">' + currency(p.amount) + '</div><div class="meta">' + p.method + "</div></div><div style=\"text-align:right;font-size:0.78rem;color:hsl(var(--muted-fg));\">" + new Date(p.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) + "</div></div>";
         }).join("") : '<p class="widget-empty">No payments recorded yet.</p>') +
         "</div>" +
-        '<div class="cw-foot"><span></span>' + (balance > 0 ? '<button class="btn btn-primary btn-sm" data-invoice-remind="' + inv.id + '">🔔 Send reminder</button>' : "") + "</div>"
+        '<div class="cw-foot"><span style="display:flex;gap:0.5rem;">' +
+        '<button class="btn btn-outline btn-sm" data-invoice-edit="' + inv.id + '">✏️ Edit</button>' +
+        '<button class="btn btn-outline btn-sm" data-invoice-pdf="' + inv.id + '">⬇ Download PDF</button>' +
+        "</span>" + (balance > 0 ? '<button class="btn btn-primary btn-sm" data-invoice-remind="' + inv.id + '">🔔 Send reminder</button>' : "") + "</div>"
       );
     }
     function phOpen(id) {
@@ -5024,6 +5241,19 @@
     document.body.addEventListener("click", function (e) {
       var openBtn = e.target.closest("[data-invoice-open]");
       if (openBtn) { phOpen(openBtn.getAttribute("data-invoice-open")); return; }
+      var editBtn = e.target.closest("[data-invoice-edit]");
+      if (editBtn) {
+        var overlayEl = document.getElementById("ph-overlay");
+        if (overlayEl && overlayEl.classList.contains("open")) phClose();
+        openInvoiceForEdit(editBtn.getAttribute("data-invoice-edit"));
+        return;
+      }
+      var pdfBtn = e.target.closest("[data-invoice-pdf]");
+      if (pdfBtn) {
+        var pdfInv = INVOICES.filter(function (x) { return x.id === pdfBtn.getAttribute("data-invoice-pdf"); })[0];
+        if (pdfInv) downloadInvoicePdf(pdfInv);
+        return;
+      }
       var remindBtn = e.target.closest("[data-invoice-remind]");
       if (remindBtn) {
         var inv = INVOICES.filter(function (x) { return x.id === remindBtn.getAttribute("data-invoice-remind"); })[0];
@@ -5054,9 +5284,12 @@
         return (
           '<tr><td class="link-strong">' + q.id + "</td><td>" + q.client + "</td><td>" + fmtDate(q.issue) + "</td><td>" + fmtDate(q.validUntil) + "</td>" +
           '<td><span class="badge ' + quoteStatusBadgeClass(q.status) + '">' + q.status + "</span></td>" +
-          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(q.total) + "</td></tr>"
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(q.total) + "</td>" +
+          '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
+          '<button class="btn btn-ghost btn-sm" data-quote-edit="' + q.id + '">✏️ Edit</button>' +
+          '<button class="btn btn-ghost btn-sm" data-quote-pdf="' + q.id + '">⬇ PDF</button></td></tr>'
         );
-      }).join("") : '<tr><td colspan="6" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No quotes yet.</td></tr>';
+      }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No quotes yet.</td></tr>';
     }
     var quotesInitDone = false;
     function renderQuotesInit() {
@@ -5080,18 +5313,84 @@
       addressEl.value = client ? (client.address || "") : "";
     }
     var aqClientEl = document.getElementById("aq-client");
-    if (aqClientEl) aqClientEl.addEventListener("change", fillQuoteClientAddress);
+    if (aqClientEl) aqClientEl.addEventListener("change", function () { fillQuoteClientAddress(); renderQuotePreview(); });
+    function renderQuotePreview() {
+      var preview = document.getElementById("aq-preview");
+      if (!preview) return;
+      var clientSel = document.getElementById("aq-client");
+      preview.innerHTML = buildDocPrintHtml({
+        title: "Quote",
+        number: editingQuoteId || "Draft",
+        client: clientSel.value || "—",
+        clientAddress: document.getElementById("aq-client-address").value.trim(),
+        siteAddress: document.getElementById("aq-site-address").value.trim(),
+        siret: document.getElementById("aq-siret").value.trim(),
+        description: document.getElementById("aq-description").value.trim(),
+        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10)),
+        items: null, total: parseFloat(document.getElementById("aq-total").value) || 0,
+      });
+    }
+    var aqPanelEl = document.getElementById("aq-panel");
+    if (aqPanelEl) {
+      aqPanelEl.querySelectorAll("input, textarea, select").forEach(function (field) {
+        if (field.type === "file") return;
+        field.addEventListener("input", renderQuotePreview);
+        field.addEventListener("change", renderQuotePreview);
+      });
+    }
+    var aqLogoFileEl = document.getElementById("aq-logo-file");
+    if (aqLogoFileEl) aqLogoFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { localStorage.setItem("ivoxa_company_logo", reader.result); renderQuotePreview(); showToast("Logo saved"); };
+      reader.readAsDataURL(file);
+    });
+    var aqSigFileEl = document.getElementById("aq-sig-file");
+    if (aqSigFileEl) aqSigFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () { localStorage.setItem("ivoxa_company_signature", reader.result); renderQuotePreview(); showToast("Signature saved"); };
+      reader.readAsDataURL(file);
+    });
+    var editingQuoteId = null;
     function aqOpen() {
+      editingQuoteId = null;
       populateQuoteClientSelect();
+      document.getElementById("aq-title").textContent = "New quote";
+      document.getElementById("aq-submit").textContent = "Create quote";
       var today = new Date();
       var inMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
       document.getElementById("aq-issue").value = today.toISOString().slice(0, 10);
       document.getElementById("aq-valid").value = inMonth.toISOString().slice(0, 10);
       document.getElementById("aq-site-address").value = "";
       document.getElementById("aq-siret").value = ccGet("FR", "siret") || "";
+      document.getElementById("aq-description").value = "";
       document.getElementById("aq-total").value = "0";
       document.getElementById("aq-overlay").classList.add("open");
       document.body.style.overflow = "hidden";
+      renderQuotePreview();
+    }
+    function aqOpenForEdit(id) {
+      var q = QUOTES.filter(function (x) { return x.id === id; })[0];
+      if (!q) return;
+      editingQuoteId = id;
+      populateQuoteClientSelect();
+      document.getElementById("aq-title").textContent = "Edit quote " + q.id;
+      document.getElementById("aq-submit").textContent = "Save changes";
+      document.getElementById("aq-client").value = q.client;
+      document.getElementById("aq-client-address").value = q.clientAddress || "";
+      document.getElementById("aq-site-address").value = q.siteAddress || "";
+      document.getElementById("aq-siret").value = q.siret || "";
+      document.getElementById("aq-description").value = q.description || "";
+      document.getElementById("aq-issue").value = q.issue;
+      document.getElementById("aq-valid").value = q.validUntil;
+      document.getElementById("aq-total").value = q.total;
+      document.getElementById("aq-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+      renderQuotePreview();
     }
     function aqClose() {
       document.getElementById("aq-overlay").classList.remove("open");
@@ -5099,30 +5398,61 @@
     }
     var aqCloseBtn = document.getElementById("aq-close");
     if (aqCloseBtn) aqCloseBtn.addEventListener("click", aqClose);
+    var aqDesignLinkEl = document.getElementById("aq-design-link");
+    if (aqDesignLinkEl) aqDesignLinkEl.addEventListener("click", function (e) { e.preventDefault(); aqClose(); showView("design-studio"); });
     var aqBackdropEl = document.getElementById("aq-backdrop");
     if (aqBackdropEl) aqBackdropEl.addEventListener("click", aqClose);
     var aqSubmitBtn = document.getElementById("aq-submit");
     if (aqSubmitBtn) aqSubmitBtn.addEventListener("click", function () {
-      quoteSeq++;
-      var newId = "QUO-" + String(quoteSeq).padStart(4, "0");
-      QUOTES.push({
-        id: newId,
-        client: document.getElementById("aq-client").value,
-        clientAddress: document.getElementById("aq-client-address").value.trim(),
-        siteAddress: document.getElementById("aq-site-address").value.trim(),
-        siret: document.getElementById("aq-siret").value.trim(),
-        issue: document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10),
-        validUntil: document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10),
-        status: "Draft",
-        total: parseFloat(document.getElementById("aq-total").value) || 0,
-      });
-      renderQuotesTable();
-      aqClose();
-      showToast(newId + " created");
-      playSound("success");
+      var clientVal = document.getElementById("aq-client").value;
+      var clientAddress = document.getElementById("aq-client-address").value.trim();
+      var siteAddress = document.getElementById("aq-site-address").value.trim();
+      var siret = document.getElementById("aq-siret").value.trim();
+      var description = document.getElementById("aq-description").value.trim();
+      var issue = document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10);
+      var validUntil = document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10);
+      var total = parseFloat(document.getElementById("aq-total").value) || 0;
+
+      if (editingQuoteId) {
+        var existing = QUOTES.filter(function (x) { return x.id === editingQuoteId; })[0];
+        if (existing) {
+          existing.client = clientVal;
+          existing.clientAddress = clientAddress;
+          existing.siteAddress = siteAddress;
+          existing.siret = siret;
+          existing.description = description;
+          existing.issue = issue;
+          existing.validUntil = validUntil;
+          existing.total = total;
+          showToast(existing.id + " updated");
+        }
+        renderQuotesTable();
+        aqClose();
+        playSound("success");
+      } else {
+        quoteSeq++;
+        var newId = "QUO-" + String(quoteSeq).padStart(4, "0");
+        QUOTES.push({
+          id: newId, client: clientVal, clientAddress: clientAddress, siteAddress: siteAddress,
+          siret: siret, description: description, issue: issue, validUntil: validUntil, status: "Draft", total: total,
+        });
+        renderQuotesTable();
+        aqClose();
+        showToast(newId + " created");
+        playSound("success");
+      }
     });
     var quoteAddBtnEl = document.getElementById("quote-add-btn");
     if (quoteAddBtnEl) quoteAddBtnEl.addEventListener("click", aqOpen);
+    document.body.addEventListener("click", function (e) {
+      var qEditBtn = e.target.closest("[data-quote-edit]");
+      if (qEditBtn) { aqOpenForEdit(qEditBtn.getAttribute("data-quote-edit")); return; }
+      var qPdfBtn = e.target.closest("[data-quote-pdf]");
+      if (qPdfBtn) {
+        var q = QUOTES.filter(function (x) { return x.id === qPdfBtn.getAttribute("data-quote-pdf"); })[0];
+        if (q) downloadQuotePdf(q);
+      }
+    });
 
     // ---- Expense Management ----
     var EXPENSE_CATEGORIES = ["Travel", "Fuel", "Office", "Equipment", "Marketing", "Software", "Salary", "Utilities", "Maintenance", "Tax", "Other"];
