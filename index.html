@@ -379,8 +379,9 @@
   .avatar {
     width: 2rem; height: 2rem; border-radius: 999px; background: hsl(var(--primary) / 0.14);
     color: hsl(var(--primary)); display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 800;
+    font-size: 0.75rem; font-weight: 800; overflow: hidden;
   }
+  .m-auth-icon { display: inline-flex; text-decoration: none; flex-shrink: 0; }
   .app-content { padding: 1.5rem 1.75rem 3rem; max-width: 1280px; }
   .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
   .page-head h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
@@ -2549,11 +2550,12 @@
     });
 
     // ---- marketing header auth state — driven by real Firebase auth (see auth module below) ----
+    // A single persistent profile icon replaces the "Sign in / Get started free" pair on every
+    // marketing page. Its content (photo/initials/generic icon) is filled in by the auth module's
+    // renderAuthAvatars() via the shared [data-auth-avatar] elements.
     function updateMarketingHeaders(loggedIn) {
       document.querySelectorAll(".m-auth-links").forEach(function (el) {
-        el.innerHTML = loggedIn
-          ? '<a href="#" class="btn btn-ghost btn-sm" data-goto="dashboard">👤 Logged in</a><a href="#" class="btn btn-primary btn-sm" data-goto="dashboard">Go to Dashboard</a>'
-          : '<a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a><a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a>';
+        el.innerHTML = '<a href="#" class="m-auth-icon" data-goto="' + (loggedIn ? "dashboard" : "login") + '" title="' + (loggedIn ? "Your account" : "Sign in") + '"><span class="avatar" data-auth-avatar>👤</span></a>';
       });
     }
     updateMarketingHeaders(false);
@@ -6228,6 +6230,13 @@
     const source = (user && user.displayName) || (user && user.email) || "User";
     return source.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
   }
+  function renderAuthAvatars(user) {
+    document.querySelectorAll("[data-auth-avatar]").forEach(el => {
+      if (user && user.photoURL) el.innerHTML = '<img src="' + user.photoURL + '" alt="" style="width:100%;height:100%;object-fit:cover;" />';
+      else if (user) el.textContent = initials(user);
+      else el.textContent = "👤";
+    });
+  }
 
   document.getElementById("register-form").addEventListener("submit", async event => {
     event.preventDefault();
@@ -6244,7 +6253,7 @@
       const credential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(credential.user, { displayName: name });
       currentUser = credential.user;
-      document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(credential.user); });
+      renderAuthAvatars(credential.user);
       showAuthStatus("register-status", "Account created successfully.", "success");
       window.ivoxaShowView("dashboard");
     } catch (error) { showAuthStatus("register-status", friendlyAuthError(error)); }
@@ -6390,7 +6399,8 @@
 
   onAuthStateChanged(auth, user => {
     currentUser = user;
-    document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(user); });
+    if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
+    renderAuthAvatars(user);
     document.querySelectorAll("[data-auth-logout]").forEach(el => { el.hidden = !user; });
     if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
     const activeView = document.querySelector(".view.active");
