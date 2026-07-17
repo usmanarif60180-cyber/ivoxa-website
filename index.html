@@ -1526,7 +1526,7 @@
 
         <div class="card quick-actions" style="margin-top:1.1rem;">
           <a href="#" class="qa-item" data-goto="invoice-new"><span>📄+</span>New invoice</a>
-          <a href="#" class="qa-item" data-goto="quotes"><span>🧾+</span>New quote</a>
+          <a href="#" class="qa-item" data-goto="quote-new"><span>🧾+</span>New quote</a>
           <a href="#" class="qa-item" data-goto="clients"><span>👥+</span>Add client</a>
           <a href="#" class="qa-item" data-goto="inventory"><span>📦+</span>Add product</a>
         </div>
@@ -1661,6 +1661,65 @@
           <div style="position:sticky;top:1rem;">
             <p class="field-label" style="margin-bottom:0.4rem;">Live preview</p>
             <div id="inv-new-preview" style="border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="view-quote-new">
+  <div class="app-shell">
+    <div id="sidebar-quote-new"></div>
+    <div class="app-main">
+      <div id="topbar-quote-new"></div>
+      <div class="app-content">
+        <div class="page-head"><div><h1 id="quote-new-title">New quote</h1><p id="quote-new-sub">Fill in the details below to create a quote.</p></div><button class="btn btn-outline btn-sm" id="quote-print-btn">🖨 Print / Save PDF</button></div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+          <div>
+            <div class="card card-pad" style="margin-bottom:1.1rem;">
+              <div class="card-title">Quote details</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+                <div><label class="field-label">Client</label><select class="field" id="q-new-client"></select></div>
+                <div><label class="field-label">Issue date</label><input class="field" type="date" id="q-new-issue" /></div>
+                <div><label class="field-label">Valid until</label><input class="field" type="date" id="q-new-valid" /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
+                <div><label class="field-label">Client address</label><textarea class="field" id="q-new-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
+                <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="q-new-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
+                <div><label class="field-label">SIRET number</label><input class="field" id="q-new-siret" placeholder="123 456 789 00012" /></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem;">
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖼 Add logo<input type="file" accept="image/*" id="q-new-logo-file" style="display:none;" /></label>
+                <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖋 Add stamp/signature<input type="file" accept="image/*" id="q-new-sig-file" style="display:none;" /></label>
+                <a href="#" class="btn btn-outline btn-sm" data-goto="design-studio">🎨 Change design</a>
+              </div>
+            </div>
+
+            <div class="card card-pad" style="margin-bottom:1.1rem;">
+              <div class="card-title">Line items</div>
+              <table class="li-table" id="qli-table">
+                <thead><tr><th style="width:40%;">Description</th><th>Qty</th><th>Unit price</th><th>Tax</th><th style="text-align:right;">Amount</th><th></th></tr></thead>
+                <tbody id="qli-body"></tbody>
+              </table>
+              <button class="btn btn-outline btn-sm" style="margin-top:0.8rem;" id="qli-add">+ Add line item</button>
+              <div class="totals-box">
+                <div class="row"><span>Subtotal</span><span class="tnum" id="q-t-sub">$0.00</span></div>
+                <div class="row"><span>Discount</span><span class="tnum" id="q-t-disc">-$0.00</span></div>
+                <div class="row"><span>Tax</span><span class="tnum" id="q-t-tax">$0.00</span></div>
+                <div class="row total"><span>Total</span><span class="tnum" id="q-t-total">$0.00</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
+              <button class="btn btn-outline" id="quote-save-draft-btn">Save as draft</button>
+              <button class="btn btn-primary" id="quote-save-send-btn">Save &amp; send</button>
+            </div>
+          </div>
+          <div style="position:sticky;top:1rem;">
+            <p class="field-label" style="margin-bottom:0.4rem;">Live preview</p>
+            <div id="q-new-preview" style="border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;"></div>
           </div>
         </div>
       </div>
@@ -1808,42 +1867,6 @@
   </div>
 </section>
 
-<!-- ============ NEW QUOTE MODAL ============ -->
-<div class="cw-overlay" id="aq-overlay">
-  <div class="ob-backdrop" id="aq-backdrop"></div>
-  <div class="card glass-panel cw-panel" id="aq-panel" style="max-width:52rem;">
-    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;" id="aq-title">New quote</h3><button class="ob-skip" id="aq-close">Cancel</button></div>
-    <div class="cw-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
-        <div class="ob-fields">
-          <div><label class="field-label">Client</label><select class="field" id="aq-client"></select></div>
-          <div><label class="field-label">Client address</label><textarea class="field" id="aq-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
-          <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="aq-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
-          <div><label class="field-label">What's this quote for?</label><input class="field" id="aq-description" placeholder="e.g. Brand identity package" /></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-            <div><label class="field-label">Issue date</label><input class="field" type="date" id="aq-issue" /></div>
-            <div><label class="field-label">Valid until</label><input class="field" type="date" id="aq-valid" /></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-            <div><label class="field-label">SIRET number</label><input class="field" id="aq-siret" placeholder="123 456 789 00012" /></div>
-            <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
-          </div>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-            <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖼 Add logo<input type="file" accept="image/*" id="aq-logo-file" style="display:none;" /></label>
-            <label class="btn btn-outline btn-sm" style="cursor:pointer;">🖋 Add stamp/signature<input type="file" accept="image/*" id="aq-sig-file" style="display:none;" /></label>
-            <a href="#" class="btn btn-outline btn-sm" id="aq-design-link">🎨 Change design</a>
-          </div>
-        </div>
-        <div>
-          <p class="field-label" style="margin-bottom:0.4rem;">Live preview</p>
-          <div id="aq-preview" style="border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;"></div>
-        </div>
-      </div>
-    </div>
-    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="aq-submit">Create quote</button></div>
-  </div>
-</div>
-
 <!-- ============ ADD CALENDAR EVENT MODAL ============ -->
 <div class="cw-overlay" id="aev-overlay">
   <div class="ob-backdrop" id="aev-backdrop"></div>
@@ -1981,7 +2004,7 @@
     <div class="app-main">
       <div id="topbar-quotes"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><button class="btn btn-primary" id="quote-add-btn">+ New quote</button></div></div>
+        <div class="page-head"><div><h1>Quotes</h1><p>Send polished quotations and convert accepted ones into invoices.</p></div><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline btn-sm" data-export-csv="quotes" data-export-name="quotes.csv">⬇ Export CSV</button><a href="#" class="btn btn-primary" data-goto="quote-new">+ New quote</a></div></div>
         <div class="table-wrap">
           <table class="data-table" id="quotes-table">
             <thead><tr><th>Number</th><th>Client</th><th>Issue date</th><th>Valid until</th><th>Status</th><th style="text-align:right;">Total</th><th></th></tr></thead>
@@ -2552,11 +2575,11 @@
 
 <script>
   (function () {
-    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "settings", "reports", "ai"];
+    var appViews = ["dashboard", "crm", "leads", "companies", "invoices", "invoice-new", "quotes", "quote-new", "design-studio", "clients", "client-detail", "inventory", "expenses", "tasks", "calendar", "team", "files", "settings", "reports", "ai"];
     appViews.forEach(function (id) {
       var sb = document.getElementById("sidebar-" + id);
       var tb = document.getElementById("topbar-" + id);
-      var navId = id === "invoice-new" ? "invoices" : id === "client-detail" ? "clients" : id;
+      var navId = id === "invoice-new" ? "invoices" : id === "quote-new" ? "quotes" : id === "client-detail" ? "clients" : id;
       if (sb) sb.outerHTML = renderSidebar(navId);
       if (tb) tb.outerHTML = renderTopbar();
     });
@@ -2897,6 +2920,7 @@
       if (id === "files") renderFilesInit();
       if (id === "settings") renderSettingsInit();
       if (id === "invoice-new") { initInvoiceNewForm(); renderInvoiceComplianceBanner(); }
+      if (id === "quote-new") initQuoteNewForm();
       if (id === "clients") renderClientsInit();
       if (id === "expenses") renderExpensesInit();
       if (id === "invoices") renderInvoicesInit();
@@ -2921,6 +2945,7 @@
       e.preventDefault();
       var dest = el.getAttribute("data-goto");
       if (dest === "invoice-new") editingInvoiceId = null;
+      if (dest === "quote-new") editingQuoteId = null;
       showView(dest);
     });
 
@@ -4817,7 +4842,7 @@
       downloadDocPdf(buildDocPrintHtml({
         title: "Quote", number: q.id, client: q.client, clientAddress: q.clientAddress, siteAddress: q.siteAddress,
         siret: q.siret, issueLabel: "Issue date", issueDate: fmtDate(q.issue), dueLabel: "Valid until", dueDate: fmtDate(q.validUntil),
-        items: null, description: q.description, total: q.total, status: q.status,
+        items: q.items, total: q.total, status: q.status,
       }));
     }
     function renderLogoPreview() {
@@ -5297,156 +5322,222 @@
       quotesInitDone = true;
       renderQuotesTable();
     }
-    function populateQuoteClientSelect() {
-      var sel = document.getElementById("aq-client");
-      if (!sel) return;
-      sel.innerHTML = CLIENTS.length
-        ? CLIENTS.map(function (c) { return "<option>" + c.company + "</option>"; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; }).join("")
-        : '<option value="">No clients yet — add one first</option>';
-      fillQuoteClientAddress();
+    // ---- Quote line items (mirrors the invoice line-item editor) ----
+    var qLiBody = document.getElementById("qli-body");
+    var qNextRow = 0;
+    function qAddRow(desc, qty, price, tax) {
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td><input class="field" data-role="desc" value="' + desc + '" /></td>' +
+        '<td><input class="field" data-role="qty" type="number" min="0" step="any" value="' + qty + '" style="width:4.5rem;" /></td>' +
+        '<td><input class="field" data-role="price" type="number" min="0" step="any" value="' + price + '" style="width:6rem;" /></td>' +
+        '<td><select class="field" data-role="tax" style="width:8rem;">' +
+          '<option value="none"' + (tax === "none" ? " selected" : "") + '>No tax</option>' +
+          '<option value="vat20"' + (tax === "vat20" ? " selected" : "") + '>VAT 20%</option>' +
+          '<option value="gst10"' + (tax === "gst10" ? " selected" : "") + '>GST 10%</option>' +
+          '<option value="sales8"' + (tax === "sales8" ? " selected" : "") + '>Sales Tax 8%</option>' +
+        "</select></td>" +
+        '<td style="text-align:right;font-weight:700;" class="tnum" data-role="amount">' + currency(qty * price) + "</td>" +
+        '<td><button class="btn btn-ghost btn-icon" data-role="remove">✕</button></td>';
+      qLiBody.appendChild(tr);
+      qRecalc();
     }
-    function fillQuoteClientAddress() {
-      var sel = document.getElementById("aq-client");
-      var addressEl = document.getElementById("aq-client-address");
+    function qRecalc() {
+      var subtotal = 0, taxTotal = 0;
+      qLiBody.querySelectorAll("tr").forEach(function (tr) {
+        var qty = parseFloat(tr.querySelector('[data-role="qty"]').value) || 0;
+        var price = parseFloat(tr.querySelector('[data-role="price"]').value) || 0;
+        var tax = tr.querySelector('[data-role="tax"]').value;
+        var amount = qty * price;
+        subtotal += amount;
+        taxTotal += amount * (TAX_RATES[tax] / 100);
+        tr.querySelector('[data-role="amount"]').textContent = currency(amount);
+      });
+      document.getElementById("q-t-sub").textContent = currency(subtotal);
+      document.getElementById("q-t-disc").textContent = "-" + currency(0);
+      document.getElementById("q-t-tax").textContent = currency(taxTotal);
+      document.getElementById("q-t-total").textContent = currency(subtotal + taxTotal);
+      renderQuotePreview();
+    }
+    function getQuoteLineItemsData() {
+      return Array.prototype.slice.call(qLiBody.querySelectorAll("tr")).map(function (tr) {
+        return {
+          desc: tr.querySelector('[data-role="desc"]').value.trim(),
+          qty: parseFloat(tr.querySelector('[data-role="qty"]').value) || 0,
+          price: parseFloat(tr.querySelector('[data-role="price"]').value) || 0,
+          tax: tr.querySelector('[data-role="tax"]').value,
+        };
+      }).filter(function (it) { return it.desc || it.qty || it.price; });
+    }
+    if (qLiBody) {
+      qLiBody.addEventListener("input", qRecalc);
+      qLiBody.addEventListener("change", qRecalc);
+      qLiBody.addEventListener("click", function (e) {
+        if (e.target.closest('[data-role="remove"]')) { e.target.closest("tr").remove(); qRecalc(); }
+      });
+    }
+    var qliAddBtn = document.getElementById("qli-add");
+    if (qliAddBtn) qliAddBtn.addEventListener("click", function () { qAddRow("", 1, 0, "none"); });
+
+    function fillQuoteNewClientAddress() {
+      var sel = document.getElementById("q-new-client");
+      var addressEl = document.getElementById("q-new-client-address");
       if (!sel || !addressEl) return;
-      var client = CLIENTS.filter(function (c) { return c.company === sel.value; })[0];
+      var client = CLIENTS.filter(function (c) { return c.id === sel.value; })[0];
       addressEl.value = client ? (client.address || "") : "";
     }
-    var aqClientEl = document.getElementById("aq-client");
-    if (aqClientEl) aqClientEl.addEventListener("change", function () { fillQuoteClientAddress(); renderQuotePreview(); });
+    function populateQuoteNewClientSelect() {
+      var sel = document.getElementById("q-new-client");
+      if (!sel) return;
+      sel.innerHTML = CLIENTS.length
+        ? CLIENTS.map(function (c) { return '<option value="' + c.id + '">' + c.company + " — " + c.name + "</option>"; }).join("")
+        : '<option value="">No clients yet — add one first</option>';
+      fillQuoteNewClientAddress();
+    }
+    var qNewClientEl = document.getElementById("q-new-client");
+    if (qNewClientEl) qNewClientEl.addEventListener("change", function () { fillQuoteNewClientAddress(); renderQuotePreview(); });
     function renderQuotePreview() {
-      var preview = document.getElementById("aq-preview");
+      var preview = document.getElementById("q-new-preview");
       if (!preview) return;
-      var clientSel = document.getElementById("aq-client");
+      var clientSel = document.getElementById("q-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       preview.innerHTML = buildDocPrintHtml({
         title: "Quote",
         number: editingQuoteId || "Draft",
-        client: clientSel.value || "—",
-        clientAddress: document.getElementById("aq-client-address").value.trim(),
-        siteAddress: document.getElementById("aq-site-address").value.trim(),
-        siret: document.getElementById("aq-siret").value.trim(),
-        description: document.getElementById("aq-description").value.trim(),
-        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10)),
-        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10)),
-        items: null, total: parseFloat(document.getElementById("aq-total").value) || 0,
+        client: client ? client.company : "—",
+        clientAddress: document.getElementById("q-new-client-address").value.trim(),
+        siteAddress: document.getElementById("q-new-site-address").value.trim(),
+        siret: document.getElementById("q-new-siret").value.trim(),
+        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
+        items: getQuoteLineItemsData(), total: total,
       });
     }
-    var aqPanelEl = document.getElementById("aq-panel");
-    if (aqPanelEl) {
-      aqPanelEl.querySelectorAll("input, textarea, select").forEach(function (field) {
-        if (field.type === "file") return;
-        field.addEventListener("input", renderQuotePreview);
-        field.addEventListener("change", renderQuotePreview);
-      });
-    }
-    var aqLogoFileEl = document.getElementById("aq-logo-file");
-    if (aqLogoFileEl) aqLogoFileEl.addEventListener("change", function (e) {
+    var qNewLogoFileEl = document.getElementById("q-new-logo-file");
+    if (qNewLogoFileEl) qNewLogoFileEl.addEventListener("change", function (e) {
       var file = e.target.files[0];
       if (!file) return;
       var reader = new FileReader();
       reader.onload = function () { localStorage.setItem("ivoxa_company_logo", reader.result); renderQuotePreview(); showToast("Logo saved"); };
       reader.readAsDataURL(file);
     });
-    var aqSigFileEl = document.getElementById("aq-sig-file");
-    if (aqSigFileEl) aqSigFileEl.addEventListener("change", function (e) {
+    var qNewSigFileEl = document.getElementById("q-new-sig-file");
+    if (qNewSigFileEl) qNewSigFileEl.addEventListener("change", function (e) {
       var file = e.target.files[0];
       if (!file) return;
       var reader = new FileReader();
       reader.onload = function () { localStorage.setItem("ivoxa_company_signature", reader.result); renderQuotePreview(); showToast("Signature saved"); };
       reader.readAsDataURL(file);
     });
+    document.querySelectorAll("#view-quote-new .card input, #view-quote-new .card textarea, #view-quote-new .card select").forEach(function (field) {
+      if (field.type === "file") return;
+      field.addEventListener("input", renderQuotePreview);
+      field.addEventListener("change", renderQuotePreview);
+    });
+
     var editingQuoteId = null;
-    function aqOpen() {
-      editingQuoteId = null;
-      populateQuoteClientSelect();
-      document.getElementById("aq-title").textContent = "New quote";
-      document.getElementById("aq-submit").textContent = "Create quote";
-      var today = new Date();
-      var inMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-      document.getElementById("aq-issue").value = today.toISOString().slice(0, 10);
-      document.getElementById("aq-valid").value = inMonth.toISOString().slice(0, 10);
-      document.getElementById("aq-site-address").value = "";
-      document.getElementById("aq-siret").value = ccGet("FR", "siret") || "";
-      document.getElementById("aq-description").value = "";
-      document.getElementById("aq-total").value = "0";
-      document.getElementById("aq-overlay").classList.add("open");
-      document.body.style.overflow = "hidden";
+    function initQuoteNewForm() {
+      populateQuoteNewClientSelect();
+      var editing = editingQuoteId ? QUOTES.filter(function (q) { return q.id === editingQuoteId; })[0] : null;
+      var titleEl = document.getElementById("quote-new-title");
+      var subEl = document.getElementById("quote-new-sub");
+      var draftBtn = document.getElementById("quote-save-draft-btn");
+      var sendBtn = document.getElementById("quote-save-send-btn");
+      if (titleEl) titleEl.textContent = editing ? "Edit quote " + editing.id : "New quote";
+      if (subEl) subEl.textContent = editing ? "Update the details below and save your changes." : "Fill in the details below to create a quote.";
+      if (draftBtn) draftBtn.style.display = editing ? "none" : "";
+      if (sendBtn) sendBtn.textContent = editing ? "Save changes" : "Save & send";
+
+      qLiBody.innerHTML = "";
+      if (editing) {
+        var clientMatch = CLIENTS.filter(function (c) { return c.company === editing.client; })[0];
+        document.getElementById("q-new-client").value = clientMatch ? clientMatch.id : "";
+        document.getElementById("q-new-issue").value = editing.issue;
+        document.getElementById("q-new-valid").value = editing.validUntil;
+        document.getElementById("q-new-client-address").value = editing.clientAddress || "";
+        document.getElementById("q-new-site-address").value = editing.siteAddress || "";
+        document.getElementById("q-new-siret").value = editing.siret || "";
+        if (editing.items && editing.items.length) editing.items.forEach(function (it) { qAddRow(it.desc, it.qty, it.price, it.tax); });
+        else qAddRow(editing.description || (editing.client + " services"), 1, editing.total, "none");
+      } else {
+        var today = new Date();
+        var inMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        document.getElementById("q-new-issue").value = today.toISOString().slice(0, 10);
+        document.getElementById("q-new-valid").value = inMonth.toISOString().slice(0, 10);
+        document.getElementById("q-new-site-address").value = "";
+        document.getElementById("q-new-siret").value = ccGet("FR", "siret") || "";
+        qAddRow("", 1, 0, "none");
+      }
       renderQuotePreview();
     }
-    function aqOpenForEdit(id) {
-      var q = QUOTES.filter(function (x) { return x.id === id; })[0];
-      if (!q) return;
-      editingQuoteId = id;
-      populateQuoteClientSelect();
-      document.getElementById("aq-title").textContent = "Edit quote " + q.id;
-      document.getElementById("aq-submit").textContent = "Save changes";
-      document.getElementById("aq-client").value = q.client;
-      document.getElementById("aq-client-address").value = q.clientAddress || "";
-      document.getElementById("aq-site-address").value = q.siteAddress || "";
-      document.getElementById("aq-siret").value = q.siret || "";
-      document.getElementById("aq-description").value = q.description || "";
-      document.getElementById("aq-issue").value = q.issue;
-      document.getElementById("aq-valid").value = q.validUntil;
-      document.getElementById("aq-total").value = q.total;
-      document.getElementById("aq-overlay").classList.add("open");
-      document.body.style.overflow = "hidden";
-      renderQuotePreview();
-    }
-    function aqClose() {
-      document.getElementById("aq-overlay").classList.remove("open");
-      document.body.style.overflow = "";
-    }
-    var aqCloseBtn = document.getElementById("aq-close");
-    if (aqCloseBtn) aqCloseBtn.addEventListener("click", aqClose);
-    var aqDesignLinkEl = document.getElementById("aq-design-link");
-    if (aqDesignLinkEl) aqDesignLinkEl.addEventListener("click", function (e) { e.preventDefault(); aqClose(); showView("design-studio"); });
-    var aqBackdropEl = document.getElementById("aq-backdrop");
-    if (aqBackdropEl) aqBackdropEl.addEventListener("click", aqClose);
-    var aqSubmitBtn = document.getElementById("aq-submit");
-    if (aqSubmitBtn) aqSubmitBtn.addEventListener("click", function () {
-      var clientVal = document.getElementById("aq-client").value;
-      var clientAddress = document.getElementById("aq-client-address").value.trim();
-      var siteAddress = document.getElementById("aq-site-address").value.trim();
-      var siret = document.getElementById("aq-siret").value.trim();
-      var description = document.getElementById("aq-description").value.trim();
-      var issue = document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10);
-      var validUntil = document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10);
-      var total = parseFloat(document.getElementById("aq-total").value) || 0;
+    function saveNewQuote(status) {
+      var clientSel = document.getElementById("q-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      if (!client) { showToast("Add a client before saving a quote"); return; }
+      var clientAddress = document.getElementById("q-new-client-address").value.trim();
+      var siteAddress = document.getElementById("q-new-site-address").value.trim();
+      var siret = document.getElementById("q-new-siret").value.trim();
+      var issue = document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10);
+      var validUntil = document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10);
+      var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
+      var items = getQuoteLineItemsData();
 
       if (editingQuoteId) {
-        var existing = QUOTES.filter(function (x) { return x.id === editingQuoteId; })[0];
+        var existing = QUOTES.filter(function (q) { return q.id === editingQuoteId; })[0];
         if (existing) {
-          existing.client = clientVal;
+          existing.client = client.company;
           existing.clientAddress = clientAddress;
           existing.siteAddress = siteAddress;
           existing.siret = siret;
-          existing.description = description;
           existing.issue = issue;
           existing.validUntil = validUntil;
           existing.total = total;
+          existing.items = items;
           showToast(existing.id + " updated");
         }
-        renderQuotesTable();
-        aqClose();
-        playSound("success");
+        editingQuoteId = null;
       } else {
         quoteSeq++;
         var newId = "QUO-" + String(quoteSeq).padStart(4, "0");
         QUOTES.push({
-          id: newId, client: clientVal, clientAddress: clientAddress, siteAddress: siteAddress,
-          siret: siret, description: description, issue: issue, validUntil: validUntil, status: "Draft", total: total,
+          id: newId, client: client.company, clientAddress: clientAddress, siteAddress: siteAddress,
+          siret: siret, issue: issue, validUntil: validUntil, status: status, total: total, items: items,
         });
-        renderQuotesTable();
-        aqClose();
-        showToast(newId + " created");
-        playSound("success");
+        showToast(newId + " saved as " + (status === "Draft" ? "draft" : "sent"));
       }
+      renderQuotesTable();
+      playSound("success");
+      showView("quotes");
+    }
+    function openQuoteForEdit(id) {
+      editingQuoteId = id;
+      showView("quote-new");
+    }
+    var quoteSaveDraftBtn = document.getElementById("quote-save-draft-btn");
+    if (quoteSaveDraftBtn) quoteSaveDraftBtn.addEventListener("click", function () { saveNewQuote("Draft"); });
+    var quoteSaveSendBtn = document.getElementById("quote-save-send-btn");
+    if (quoteSaveSendBtn) quoteSaveSendBtn.addEventListener("click", function () { saveNewQuote("Sent"); });
+    var quotePrintBtn = document.getElementById("quote-print-btn");
+    if (quotePrintBtn) quotePrintBtn.addEventListener("click", function () {
+      var clientSel = document.getElementById("q-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
+      downloadDocPdf(buildDocPrintHtml({
+        title: "Quote",
+        number: editingQuoteId || "Draft",
+        client: client ? client.company : "—",
+        clientAddress: document.getElementById("q-new-client-address").value.trim(),
+        siteAddress: document.getElementById("q-new-site-address").value.trim(),
+        siret: document.getElementById("q-new-siret").value.trim(),
+        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
+        items: getQuoteLineItemsData(), total: total,
+      }));
     });
-    var quoteAddBtnEl = document.getElementById("quote-add-btn");
-    if (quoteAddBtnEl) quoteAddBtnEl.addEventListener("click", aqOpen);
     document.body.addEventListener("click", function (e) {
       var qEditBtn = e.target.closest("[data-quote-edit]");
-      if (qEditBtn) { aqOpenForEdit(qEditBtn.getAttribute("data-quote-edit")); return; }
+      if (qEditBtn) { openQuoteForEdit(qEditBtn.getAttribute("data-quote-edit")); return; }
       var qPdfBtn = e.target.closest("[data-quote-pdf]");
       if (qPdfBtn) {
         var q = QUOTES.filter(function (x) { return x.id === qPdfBtn.getAttribute("data-quote-pdf"); })[0];
