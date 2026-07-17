@@ -379,8 +379,9 @@
   .avatar {
     width: 2rem; height: 2rem; border-radius: 999px; background: hsl(var(--primary) / 0.14);
     color: hsl(var(--primary)); display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 800;
+    font-size: 0.75rem; font-weight: 800; overflow: hidden;
   }
+  .m-auth-icon { display: inline-flex; text-decoration: none; flex-shrink: 0; }
   .app-content { padding: 1.5rem 1.75rem 3rem; max-width: 1280px; }
   .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
   .page-head h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
@@ -876,8 +877,8 @@
       </nav>
       <div class="m-actions">
         <button class="btn btn-ghost btn-sm" id="theme-toggle-1" aria-label="Toggle theme">◐</button>
-        <a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
-        <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a>
+        <span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
+        <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span>
       </div>
     </div>
   </header>
@@ -1060,8 +1061,8 @@
       </nav>
       <div class="m-actions">
         <button class="btn btn-ghost btn-sm" id="theme-toggle-2" aria-label="Toggle theme">◐</button>
-        <a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
-        <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a>
+        <span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>
+        <a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span>
       </div>
     </div>
   </header>
@@ -1601,11 +1602,16 @@
         <div class="card card-pad" style="margin-bottom:1.1rem;">
           <div class="card-title">Invoice details</div>
           <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
-            <div><label class="field-label">Client</label><select class="field"><option>Nova Digital Agency</option><option>Atlas Studio</option><option>Harborline Logistics</option></select></div>
-            <div><label class="field-label">Issue date</label><input class="field" type="date" value="2026-07-10" /></div>
-            <div><label class="field-label">Due date</label><input class="field" type="date" value="2026-07-24" /></div>
-            <div><label class="field-label">Currency</label><select class="field"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
+            <div><label class="field-label">Client</label><select class="field" id="inv-new-client"></select></div>
+            <div><label class="field-label">Issue date</label><input class="field" type="date" id="inv-new-issue" /></div>
+            <div><label class="field-label">Due date</label><input class="field" type="date" id="inv-new-due" /></div>
+            <div><label class="field-label">Currency</label><select class="field" id="inv-new-currency"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
             <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
+            <div><label class="field-label">Client address</label><textarea class="field" id="inv-new-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
+            <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="inv-new-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
+            <div><label class="field-label">SIRET number</label><input class="field" id="inv-new-siret" placeholder="123 456 789 00012" /></div>
           </div>
           <div id="inv-compliance-banner" style="margin-top:1rem;"></div>
         </div>
@@ -1626,8 +1632,8 @@
         </div>
 
         <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
-          <button class="btn btn-outline">Save as draft</button>
-          <button class="btn btn-primary" data-goto="invoices">Save &amp; mark pending</button>
+          <button class="btn btn-outline" id="invoice-save-draft-btn">Save as draft</button>
+          <button class="btn btn-primary" id="invoice-save-pending-btn">Save &amp; mark pending</button>
         </div>
       </div>
     </div>
@@ -1668,7 +1674,8 @@
             <div class="ds-doc card" id="ds-doc">
               <div class="ds-doc-accent" id="ds-doc-accent"></div>
               <div class="ds-doc-head" id="ds-doc-head">
-                <div>
+                <div style="display:flex;align-items:center;gap:0.6rem;">
+                  <img id="ds-doc-logo" src="" alt="" style="width:2.2rem;height:2.2rem;object-fit:contain;border-radius:4px;display:none;" />
                   <div style="font-weight:800;font-size:0.95rem;" id="ds-doc-orgname">Your Business</div>
                 </div>
                 <div style="text-align:right;">
@@ -1692,6 +1699,10 @@
                   <div class="row"><span>Subtotal</span><span>$4,550.00</span></div>
                   <div class="row"><span>Tax</span><span>$445.00</span></div>
                   <div class="row total" id="ds-doc-total"><span>Total</span><span>$4,895.00</span></div>
+                </div>
+                <div id="ds-doc-signature" style="margin-top:1.2rem;padding-top:0.8rem;border-top:1px dashed hsl(var(--border));display:none;">
+                  <div class="ds-doc-lbl">Signature</div>
+                  <div id="ds-doc-signature-body" style="margin-top:0.4rem;"></div>
                 </div>
               </div>
             </div>
@@ -1777,14 +1788,77 @@
     <div class="cw-body">
       <div class="ob-fields">
         <div><label class="field-label">Client</label><select class="field" id="aq-client"></select></div>
+        <div><label class="field-label">Client address</label><textarea class="field" id="aq-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
+        <div><label class="field-label">Chantier / jobsite address</label><textarea class="field" id="aq-site-address" rows="2" placeholder="Leave blank if same as client address"></textarea></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
           <div><label class="field-label">Issue date</label><input class="field" type="date" id="aq-issue" /></div>
           <div><label class="field-label">Valid until</label><input class="field" type="date" id="aq-valid" /></div>
         </div>
-        <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">SIRET number</label><input class="field" id="aq-siret" placeholder="123 456 789 00012" /></div>
+          <div><label class="field-label">Total amount</label><input class="field" type="number" min="0" step="0.01" id="aq-total" value="0" /></div>
+        </div>
       </div>
     </div>
     <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="aq-submit">Create quote</button></div>
+  </div>
+</div>
+
+<!-- ============ ADD CALENDAR EVENT MODAL ============ -->
+<div class="cw-overlay" id="aev-overlay">
+  <div class="ob-backdrop" id="aev-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="aev-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add calendar event</h3><button class="ob-skip" id="aev-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Title</label><input class="field" id="aev-title" placeholder="e.g. Client meeting" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Date</label><input class="field" type="date" id="aev-date" /></div>
+          <div><label class="field-label">Time (optional)</label><input class="field" type="time" id="aev-time" /></div>
+        </div>
+        <div><label class="field-label">Type</label><select class="field" id="aev-type"></select></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="aev-submit">Add event</button></div>
+  </div>
+</div>
+
+<!-- ============ ADD LEAD MODAL ============ -->
+<div class="cw-overlay" id="al-overlay">
+  <div class="ob-backdrop" id="al-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="al-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add lead</h3><button class="ob-skip" id="al-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Name</label><input class="field" id="al-name" placeholder="Contact or lead name" /></div>
+        <div><label class="field-label">Company</label><input class="field" id="al-company" placeholder="Acme Inc." /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Estimated value</label><input class="field" type="number" min="0" step="0.01" id="al-value" value="0" /></div>
+          <div><label class="field-label">Stage</label><select class="field" id="al-stage"></select></div>
+        </div>
+        <div><label class="field-label">Source</label><input class="field" id="al-source" placeholder="Referral, website inquiry…" /></div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="al-submit">Add lead</button></div>
+  </div>
+</div>
+
+<!-- ============ ADD COMPANY MODAL ============ -->
+<div class="cw-overlay" id="acp-overlay">
+  <div class="ob-backdrop" id="acp-backdrop"></div>
+  <div class="card glass-panel cw-panel" id="acp-panel">
+    <div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">Add company</h3><button class="ob-skip" id="acp-close">Cancel</button></div>
+    <div class="cw-body">
+      <div class="ob-fields">
+        <div><label class="field-label">Company name</label><input class="field" id="acp-name" placeholder="Acme Inc." /></div>
+        <div><label class="field-label">Industry</label><input class="field" id="acp-industry" placeholder="Marketing, Logistics, Legal…" /></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+          <div><label class="field-label">Size</label><select class="field" id="acp-size"><option>1-10</option><option>11-50</option><option>51-200</option><option>201-500</option><option>500+</option></select></div>
+          <div><label class="field-label">Website</label><input class="field" id="acp-website" placeholder="example.com" /></div>
+        </div>
+      </div>
+    </div>
+    <div class="cw-foot"><span></span><button class="btn btn-primary btn-sm" id="acp-submit">Add company</button></div>
   </div>
 </div>
 
@@ -1797,6 +1871,7 @@
       <div class="ob-fields">
         <div><label class="field-label">Name</label><input class="field" id="ac-name" placeholder="Contact name" /></div>
         <div><label class="field-label">Company</label><input class="field" id="ac-company" placeholder="Acme Inc." /></div>
+        <div><label class="field-label">Billing address</label><textarea class="field" id="ac-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
           <div><label class="field-label">Email</label><input class="field" type="email" id="ac-email" placeholder="name@company.com" /></div>
           <div><label class="field-label">Phone</label><input class="field" id="ac-phone" placeholder="+1 415 555 0100" /></div>
@@ -2145,16 +2220,8 @@
     <div class="app-main">
       <div id="topbar-leads"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary">+ Add lead</button></div>
-        <div class="kanban">
-          <div class="kanban-col"><div class="kanban-col-head"><h4>New</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Contacted</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Qualified</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Proposal</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Negotiation</h4><span>0</span></div><p class="widget-empty">No leads yet.</p></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Won</h4><span>0</span></div></div>
-          <div class="kanban-col"><div class="kanban-col-head"><h4>Lost</h4><span>0</span></div></div>
-        </div>
+        <div class="page-head"><div><h1>Leads</h1><p>Track prospects through your sales pipeline.</p></div><button class="btn btn-primary" id="lead-add-btn">+ Add lead</button></div>
+        <div class="kanban" id="leads-kanban"></div>
       </div>
     </div>
   </div>
@@ -2166,7 +2233,7 @@
     <div class="app-main">
       <div id="topbar-companies"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary">+ Add company</button></div>
+        <div class="page-head"><div><h1>Companies</h1><p>Organizations behind your customers and leads.</p></div><button class="btn btn-primary" id="company-add-btn">+ Add company</button></div>
         <div class="table-wrap">
           <table class="data-table" id="companies-table">
             <thead><tr><th>Name</th><th>Industry</th><th>Size</th><th>Website</th></tr></thead>
@@ -2215,7 +2282,7 @@
     <div class="app-main">
       <div id="topbar-calendar"></div>
       <div class="app-content">
-        <div class="page-head"><div><h1>Business Calendar</h1><p>Invoices due, quote expiries, meetings, tasks, reminders, payments, expenses and tax deadlines — one view.</p></div><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span></div>
+        <div class="page-head"><div><h1>Business Calendar</h1><p>Invoices due, quote expiries, meetings, tasks, reminders, payments, expenses and tax deadlines — one view.</p></div><div style="display:flex;align-items:center;gap:0.7rem;"><span style="font-size:0.85rem;font-weight:600;" id="cal-month-label"></span><button class="btn btn-primary btn-sm" id="cal-add-event-btn">+ Add event</button></div></div>
 
         <div class="ds-tabs" id="cal-tabs">
           <button class="on" data-cal-tab="month">Month</button>
@@ -2227,7 +2294,7 @@
           <div class="card card-pad">
             <div class="cal-grid" id="cal-grid"></div>
             <div class="cal-legend" id="cal-legend"></div>
-            <p style="margin-top:0.8rem;font-size:0.72rem;color:hsl(var(--muted-fg));">Drag an event dot onto another day to reschedule it.</p>
+            <p style="margin-top:0.8rem;font-size:0.72rem;color:hsl(var(--muted-fg));">Drag an event dot onto another day to reschedule it. Click an event dot to remove it.</p>
           </div>
         </div>
 
@@ -2343,6 +2410,34 @@
             </div>
           </div>
           <div class="card card-pad" style="margin-bottom:1.1rem;">
+            <div class="card-title">Company branding &amp; signature</div>
+            <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.8rem;">Appear on generated invoices and quotes.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+              <div>
+                <label class="field-label">Company logo / stamp</label>
+                <div style="display:flex;align-items:center;gap:0.8rem;margin-top:0.4rem;">
+                  <div id="set-logo-preview" style="width:5rem;height:5rem;border:1px dashed hsl(var(--border));border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:hsl(var(--surface));flex-shrink:0;"><span style="font-size:0.68rem;color:hsl(var(--muted-fg));text-align:center;padding:0.3rem;">No logo</span></div>
+                  <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                    <input type="file" accept="image/*" id="set-logo-file" style="font-size:0.78rem;" />
+                    <button class="btn btn-ghost btn-sm" id="set-logo-remove" style="width:fit-content;">Remove logo</button>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="field-label">Signature</label>
+                <div style="margin-top:0.4rem;">
+                  <canvas id="set-signature-pad" width="260" height="90" style="border:1px dashed hsl(var(--border));border-radius:8px;background:hsl(var(--surface));width:100%;max-width:16rem;height:5.6rem;touch-action:none;cursor:crosshair;"></canvas>
+                  <div style="display:flex;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
+                    <button class="btn btn-outline btn-sm" id="set-signature-clear">Clear</button>
+                    <button class="btn btn-primary btn-sm" id="set-signature-save">Save signature</button>
+                    <label class="btn btn-ghost btn-sm" style="cursor:pointer;">Upload instead<input type="file" accept="image/*" id="set-signature-file" style="display:none;" /></label>
+                  </div>
+                  <p id="set-signature-status" style="font-size:0.75rem;color:hsl(var(--muted-fg));margin-top:0.4rem;">No signature saved.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-pad" style="margin-bottom:1.1rem;">
             <div class="card-title">Legal footer</div>
             <p style="font-size:0.82rem;color:hsl(var(--muted-fg));margin-bottom:0.6rem;">Appears on invoices and quotes — registration details, share capital, etc.</p>
             <textarea class="field" id="set-legal-footer" rows="3" placeholder="e.g. Share capital €10,000 — RCS Paris 123 456 789"></textarea>
@@ -2443,8 +2538,8 @@
         '<a href="#" class="logo" data-goto="landing"><span class="logo-mark">IX</span>IVOXA</a>' +
         '<nav class="m-nav">' + nav + "</nav>" +
         '<div class="m-actions"><button class="btn btn-ghost btn-sm theme-toggle" aria-label="Toggle theme">◐</button>' +
-        '<a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>' +
-        '<a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></div>' +
+        '<span class="m-auth-links"><a href="#" class="btn btn-ghost btn-sm" data-goto="login">Sign in</a>' +
+        '<a href="#" class="btn btn-primary btn-sm" data-goto="register">Get started free</a></span></div>' +
         "</div></header>"
       );
     }
@@ -2453,6 +2548,18 @@
       var navActive = id === "blog-post" ? "blog" : id === "tool" ? "tools" : id === "landing-example" ? "landing" : id;
       if (mh) mh.outerHTML = mHeader(navActive);
     });
+
+    // ---- marketing header auth state — driven by real Firebase auth (see auth module below) ----
+    // A single persistent profile icon replaces the "Sign in / Get started free" pair on every
+    // marketing page. Its content (photo/initials/generic icon) is filled in by the auth module's
+    // renderAuthAvatars() via the shared [data-auth-avatar] elements.
+    function updateMarketingHeaders(loggedIn) {
+      document.querySelectorAll(".m-auth-links").forEach(function (el) {
+        el.innerHTML = '<a href="#" class="m-auth-icon" data-goto="' + (loggedIn ? "dashboard" : "login") + '" title="' + (loggedIn ? "Your account" : "Sign in") + '"><span class="avatar" data-auth-avatar>👤</span></a>';
+      });
+    }
+    updateMarketingHeaders(false);
+    window.ivoxaSetMarketingAuthState = updateMarketingHeaders;
 
     // ---- blog index: search + category filter ----
     var BLOG_POSTS = [
@@ -2632,11 +2739,72 @@
         var newDay = Number(cell.getAttribute("data-cal-day"));
         if (newDay === ev.day) return;
         ev.day = newDay;
-        renderCalMonthGrid();
+        refreshCalendarView();
         showToast('Moved "' + ev.title + '" to day ' + newDay);
         playSound("click");
       });
+      grid.addEventListener("click", function (e) {
+        var chip = e.target.closest("[data-event-id]");
+        if (!chip) return;
+        var id = chip.getAttribute("data-event-id");
+        var ev = CAL_EVENTS.filter(function (x) { return x.id === id; })[0];
+        if (!ev) return;
+        if (!window.confirm('Remove "' + ev.title + '" from the calendar?')) return;
+        CAL_EVENTS = CAL_EVENTS.filter(function (x) { return x.id !== id; });
+        refreshCalendarView();
+        showToast("Event removed");
+        playSound("click");
+      });
     }
+    function refreshCalendarView() {
+      renderCalMonthGrid();
+      var activeTabBtn = calTabsEl ? calTabsEl.querySelector("button.on") : null;
+      var activeTab = activeTabBtn ? activeTabBtn.getAttribute("data-cal-tab") : "month";
+      if (activeTab === "week") renderCalAgenda(currentWeekDays(), "cal-week-list", "cal-week-label", "This week");
+      if (activeTab === "day") renderCalAgenda([new Date().getDate()], "cal-day-list", "cal-day-label", new Date().toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" }));
+    }
+    function populateCalTypeSelect() {
+      var sel = document.getElementById("aev-type");
+      if (!sel) return;
+      sel.innerHTML = Object.keys(CAL_TYPES).map(function (k) { return '<option value="' + k + '">' + CAL_TYPES[k].icon + " " + CAL_TYPES[k].label + "</option>"; }).join("");
+    }
+    function aevOpen() {
+      populateCalTypeSelect();
+      var today = new Date();
+      document.getElementById("aev-title").value = "";
+      document.getElementById("aev-date").value = today.toISOString().slice(0, 10);
+      document.getElementById("aev-date").min = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+      document.getElementById("aev-date").max = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().slice(0, 10);
+      document.getElementById("aev-time").value = "";
+      document.getElementById("aev-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function aevClose() {
+      document.getElementById("aev-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var calAddEventBtn = document.getElementById("cal-add-event-btn");
+    if (calAddEventBtn) calAddEventBtn.addEventListener("click", aevOpen);
+    var aevCloseBtn = document.getElementById("aev-close");
+    if (aevCloseBtn) aevCloseBtn.addEventListener("click", aevClose);
+    var aevBackdropEl = document.getElementById("aev-backdrop");
+    if (aevBackdropEl) aevBackdropEl.addEventListener("click", aevClose);
+    var aevSubmitBtn = document.getElementById("aev-submit");
+    if (aevSubmitBtn) aevSubmitBtn.addEventListener("click", function () {
+      var titleEl = document.getElementById("aev-title");
+      var title = titleEl.value.trim();
+      if (!title) { titleEl.focus(); return; }
+      var dateVal = document.getElementById("aev-date").value;
+      var day = dateVal ? new Date(dateVal + "T00:00:00").getDate() : new Date().getDate();
+      var timeVal = document.getElementById("aev-time").value;
+      var timeLabel = timeVal ? new Date("2000-01-01T" + timeVal).toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" }) : "";
+      var type = document.getElementById("aev-type").value;
+      CAL_EVENTS.push({ id: "ev" + Date.now(), day: day, type: type, title: title, time: timeLabel });
+      refreshCalendarView();
+      aevClose();
+      showToast("Event added");
+      playSound("success");
+    });
     var calRendered = false;
     function renderCalendarInit() {
       if (calRendered) return;
@@ -2677,17 +2845,18 @@
         }
       }
       if (id === "crm") {
-        var crmGrid = document.getElementById("crm-stat-grid");
-        if (crmGrid) crmGrid.querySelectorAll(".val")[1].setAttribute("data-count", String(CLIENTS.length));
+        renderCrmStatsAndPipeline();
         runCounters(target);
       }
+      if (id === "leads") renderLeadsInit();
+      if (id === "companies") renderCompaniesInit();
       if (id === "calendar") renderCalendarInit();
       if (id === "inventory") renderInventoryInit();
       if (id === "tasks") renderTasksInit();
       if (id === "team") renderTeamInit();
       if (id === "files") renderFilesInit();
       if (id === "settings") renderSettingsInit();
-      if (id === "invoice-new") renderInvoiceComplianceBanner();
+      if (id === "invoice-new") { initInvoiceNewForm(); renderInvoiceComplianceBanner(); }
       if (id === "clients") renderClientsInit();
       if (id === "expenses") renderExpensesInit();
       if (id === "invoices") renderInvoicesInit();
@@ -3221,6 +3390,25 @@
       totalRow.querySelectorAll("span")[1].style.color = dsState.primary;
       doc.style.borderLeftWidth = dsState.accent === "left" ? "6px" : "1px";
       doc.style.borderLeftColor = dsState.accent === "left" ? dsState.primary : "hsl(var(--border))";
+
+      var logoEl = document.getElementById("ds-doc-logo");
+      var logo = getCompanyLogo();
+      if (logoEl) {
+        if (logo) { logoEl.src = logo; logoEl.style.display = ""; }
+        else logoEl.style.display = "none";
+      }
+      var sigSection = DS_SECTIONS.filter(function (s) { return s.id === "signature"; })[0];
+      var sigWrap = document.getElementById("ds-doc-signature");
+      var sigBody = document.getElementById("ds-doc-signature-body");
+      if (sigWrap && sigBody) {
+        if (sigSection && sigSection.visible) {
+          var sig = getCompanySignature();
+          sigBody.innerHTML = sig ? '<img src="' + sig + '" alt="Signature" style="max-height:3.2rem;max-width:12rem;" />' : '<span style="color:' + (dsState.dark ? "inherit" : "hsl(var(--muted-fg))") + ';opacity:0.6;font-style:italic;">No signature saved — add one in Settings → Company branding.</span>';
+          sigWrap.style.display = "";
+        } else {
+          sigWrap.style.display = "none";
+        }
+      }
     }
 
     function dsRenderTemplates() {
@@ -3324,6 +3512,7 @@
         var i = Number(btn.getAttribute("data-sec-toggle"));
         DS_SECTIONS[i].visible = !DS_SECTIONS[i].visible;
         dsRenderSections();
+        dsApplyPreview();
       });
     }
 
@@ -3956,7 +4145,7 @@
 
     // add-client modal
     function acOpen() {
-      ["ac-name", "ac-company", "ac-email", "ac-phone", "ac-tags"].forEach(function (id) { document.getElementById(id).value = ""; });
+      ["ac-name", "ac-company", "ac-address", "ac-email", "ac-phone", "ac-tags"].forEach(function (id) { document.getElementById(id).value = ""; });
       document.getElementById("ac-status").value = "Active";
       document.getElementById("ac-overlay").classList.add("open");
       document.body.style.overflow = "hidden";
@@ -3979,6 +4168,7 @@
         id: "cl" + Date.now(),
         name: name,
         company: document.getElementById("ac-company").value.trim() || "—",
+        address: document.getElementById("ac-address").value.trim(),
         email: document.getElementById("ac-email").value.trim(),
         phone: document.getElementById("ac-phone").value.trim(),
         status: document.getElementById("ac-status").value,
@@ -3994,6 +4184,174 @@
     });
     var clientAddBtnEl = document.getElementById("client-add-btn");
     if (clientAddBtnEl) clientAddBtnEl.addEventListener("click", acOpen);
+
+    // ---- Leads (sales pipeline kanban) ----
+    var LEAD_STAGES = [
+      { key: "new", label: "New" },
+      { key: "contacted", label: "Contacted" },
+      { key: "qualified", label: "Qualified" },
+      { key: "proposal", label: "Proposal" },
+      { key: "negotiation", label: "Negotiation" },
+      { key: "won", label: "Won" },
+      { key: "lost", label: "Lost" },
+    ];
+    var LEAD_PROBABILITY = { new: 0.1, contacted: 0.25, qualified: 0.45, proposal: 0.65, negotiation: 0.85 };
+    var LEADS = [];
+    function renderLeadsKanban() {
+      var wrap = document.getElementById("leads-kanban");
+      if (!wrap) return;
+      wrap.innerHTML = LEAD_STAGES.map(function (stage) {
+        var items = LEADS.filter(function (l) { return l.stage === stage.key; });
+        var cards = items.map(function (l) {
+          return (
+            '<div class="card kcard"><div class="kt">' + l.name + "</div>" +
+            (l.company ? '<div class="ks">' + l.company + "</div>" : "") +
+            '<div style="margin-top:0.4rem;display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">' +
+            (l.value ? '<span class="badge badge-primary">' + currency(l.value) + "</span>" : "") +
+            '<select class="field" data-lead-stage="' + l.id + '" style="font-size:0.7rem;padding:0.15rem 0.3rem;width:auto;">' +
+            LEAD_STAGES.map(function (s) { return '<option value="' + s.key + '"' + (s.key === l.stage ? " selected" : "") + ">" + s.label + "</option>"; }).join("") +
+            "</select></div></div>"
+          );
+        }).join("");
+        return '<div class="kanban-col"><div class="kanban-col-head"><h4>' + stage.label + "</h4><span>" + items.length + "</span></div>" + (cards || '<p class="widget-empty">No leads yet.</p>') + "</div>";
+      }).join("");
+    }
+    function renderCrmStatsAndPipeline() {
+      var grid = document.getElementById("crm-stat-grid");
+      if (grid) {
+        var vals = grid.querySelectorAll(".val");
+        var newCount = LEADS.filter(function (l) { return l.stage === "new"; }).length;
+        var lostCount = LEADS.filter(function (l) { return l.stage === "lost"; }).length;
+        var forecast = LEADS.reduce(function (sum, l) { var p = LEAD_PROBABILITY[l.stage]; return p ? sum + (l.value || 0) * p : sum; }, 0);
+        vals[0].setAttribute("data-count", String(newCount));
+        vals[1].setAttribute("data-count", String(CLIENTS.length));
+        vals[2].setAttribute("data-count", String(lostCount));
+        vals[3].setAttribute("data-count", String(Math.round(forecast)));
+      }
+      var pipelineWrap = document.getElementById("crm-pipeline-bars");
+      if (pipelineWrap) {
+        var openStages = LEAD_STAGES.filter(function (s) { return s.key !== "won" && s.key !== "lost"; });
+        var stageData = openStages.map(function (s) {
+          var items = LEADS.filter(function (l) { return l.stage === s.key; });
+          var value = items.reduce(function (sum, l) { return sum + (l.value || 0); }, 0);
+          return { label: s.label, count: items.length, value: value };
+        });
+        var max = Math.max.apply(null, stageData.map(function (s) { return s.value; }).concat([0]));
+        pipelineWrap.innerHTML = stageData.map(function (s) {
+          var pct = max ? Math.round((s.value / max) * 100) : 0;
+          return '<div class="pipeline-row"><span class="stage-lbl">' + s.label + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;"></div></div><span class="stage-count">' + s.count + '</span><span class="stage-val">' + currency(s.value) + "</span></div>";
+        }).join("");
+      }
+    }
+    function populateLeadStageSelect() {
+      var sel = document.getElementById("al-stage");
+      if (!sel) return;
+      sel.innerHTML = LEAD_STAGES.map(function (s) { return '<option value="' + s.key + '">' + s.label + "</option>"; }).join("");
+    }
+    function alOpen() {
+      populateLeadStageSelect();
+      document.getElementById("al-name").value = "";
+      document.getElementById("al-company").value = "";
+      document.getElementById("al-value").value = "0";
+      document.getElementById("al-source").value = "";
+      document.getElementById("al-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function alClose() {
+      document.getElementById("al-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var alCloseBtn = document.getElementById("al-close");
+    if (alCloseBtn) alCloseBtn.addEventListener("click", alClose);
+    var alBackdropEl = document.getElementById("al-backdrop");
+    if (alBackdropEl) alBackdropEl.addEventListener("click", alClose);
+    var alSubmitBtn = document.getElementById("al-submit");
+    if (alSubmitBtn) alSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("al-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      LEADS.push({
+        id: "ld" + Date.now(),
+        name: name,
+        company: document.getElementById("al-company").value.trim(),
+        value: parseFloat(document.getElementById("al-value").value) || 0,
+        stage: document.getElementById("al-stage").value,
+        source: document.getElementById("al-source").value.trim(),
+      });
+      renderLeadsKanban();
+      alClose();
+      showToast(name + " added to Leads");
+      playSound("success");
+    });
+    var leadAddBtnEl = document.getElementById("lead-add-btn");
+    if (leadAddBtnEl) leadAddBtnEl.addEventListener("click", alOpen);
+    var leadsKanbanEl = document.getElementById("leads-kanban");
+    if (leadsKanbanEl) leadsKanbanEl.addEventListener("change", function (e) {
+      var sel = e.target.closest("[data-lead-stage]");
+      if (!sel) return;
+      var lead = LEADS.filter(function (l) { return l.id === sel.getAttribute("data-lead-stage"); })[0];
+      if (!lead) return;
+      lead.stage = sel.value;
+      renderLeadsKanban();
+      showToast(lead.name + " moved to " + LEAD_STAGES.filter(function (s) { return s.key === lead.stage; })[0].label);
+    });
+    var leadsInitDone = false;
+    function renderLeadsInit() {
+      if (leadsInitDone) return;
+      leadsInitDone = true;
+      renderLeadsKanban();
+    }
+
+    // ---- Companies (organizations behind customers/leads) ----
+    var CUSTOMER_COMPANIES = [];
+    function renderCompaniesTable() {
+      var tbody = document.querySelector("#companies-table tbody");
+      if (!tbody) return;
+      tbody.innerHTML = CUSTOMER_COMPANIES.length ? CUSTOMER_COMPANIES.map(function (c) {
+        return "<tr><td class=\"link-strong\">" + c.name + "</td><td>" + (c.industry || "—") + "</td><td>" + (c.size || "—") + "</td><td>" + (c.website || "—") + "</td></tr>";
+      }).join("") : '<tr><td colspan="4" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No companies yet.</td></tr>';
+    }
+    function acpOpen() {
+      document.getElementById("acp-name").value = "";
+      document.getElementById("acp-industry").value = "";
+      document.getElementById("acp-size").value = "1-10";
+      document.getElementById("acp-website").value = "";
+      document.getElementById("acp-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function acpClose() {
+      document.getElementById("acp-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    var acpCloseBtn = document.getElementById("acp-close");
+    if (acpCloseBtn) acpCloseBtn.addEventListener("click", acpClose);
+    var acpBackdropEl = document.getElementById("acp-backdrop");
+    if (acpBackdropEl) acpBackdropEl.addEventListener("click", acpClose);
+    var acpSubmitBtn = document.getElementById("acp-submit");
+    if (acpSubmitBtn) acpSubmitBtn.addEventListener("click", function () {
+      var nameEl = document.getElementById("acp-name");
+      var name = nameEl.value.trim();
+      if (!name) { nameEl.focus(); return; }
+      CUSTOMER_COMPANIES.push({
+        id: "co" + Date.now(),
+        name: name,
+        industry: document.getElementById("acp-industry").value.trim(),
+        size: document.getElementById("acp-size").value,
+        website: document.getElementById("acp-website").value.trim(),
+      });
+      renderCompaniesTable();
+      acpClose();
+      showToast(name + " added to Companies");
+      playSound("success");
+    });
+    var companyAddBtnEl = document.getElementById("company-add-btn");
+    if (companyAddBtnEl) companyAddBtnEl.addEventListener("click", acpOpen);
+    var companiesInitDone = false;
+    function renderCompaniesInit() {
+      if (companiesInitDone) return;
+      companiesInitDone = true;
+      renderCompaniesTable();
+    }
 
     // log-activity modal
     function laOpen() {
@@ -4339,6 +4697,109 @@
       }).join("");
       sel.value = "FR";
     }
+    // ---- Company branding: logo/stamp + signature (stored locally, used on invoices/quotes) ----
+    function getCompanyLogo() { return localStorage.getItem("ivoxa_company_logo") || ""; }
+    function getCompanySignature() { return localStorage.getItem("ivoxa_company_signature") || ""; }
+    function renderLogoPreview() {
+      var preview = document.getElementById("set-logo-preview");
+      if (!preview) return;
+      var logo = getCompanyLogo();
+      preview.innerHTML = logo ? '<img src="' + logo + '" alt="Company logo" style="width:100%;height:100%;object-fit:contain;" />' : '<span style="font-size:0.68rem;color:hsl(var(--muted-fg));text-align:center;padding:0.3rem;">No logo</span>';
+    }
+    var setLogoFileEl = document.getElementById("set-logo-file");
+    if (setLogoFileEl) setLogoFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        localStorage.setItem("ivoxa_company_logo", reader.result);
+        renderLogoPreview();
+        dsApplyPreview();
+        showToast("Logo saved");
+        playSound("success");
+      };
+      reader.readAsDataURL(file);
+    });
+    var setLogoRemoveBtn = document.getElementById("set-logo-remove");
+    if (setLogoRemoveBtn) setLogoRemoveBtn.addEventListener("click", function () {
+      localStorage.removeItem("ivoxa_company_logo");
+      if (setLogoFileEl) setLogoFileEl.value = "";
+      renderLogoPreview();
+      dsApplyPreview();
+      showToast("Logo removed");
+    });
+    renderLogoPreview();
+
+    function renderSignatureStatus() {
+      var status = document.getElementById("set-signature-status");
+      if (status) status.textContent = getCompanySignature() ? "Signature saved — it will appear on invoices and quotes." : "No signature saved.";
+    }
+    var sigCanvas = document.getElementById("set-signature-pad");
+    if (sigCanvas) {
+      var sigCtx = sigCanvas.getContext("2d");
+      sigCtx.strokeStyle = "#1a1a1a";
+      sigCtx.lineWidth = 2;
+      sigCtx.lineCap = "round";
+      var sigDrawing = false, sigHasStrokes = false;
+      function sigPos(e) {
+        var rect = sigCanvas.getBoundingClientRect();
+        var scaleX = sigCanvas.width / rect.width, scaleY = sigCanvas.height / rect.height;
+        var point = e.touches ? e.touches[0] : e;
+        return { x: (point.clientX - rect.left) * scaleX, y: (point.clientY - rect.top) * scaleY };
+      }
+      function sigStart(e) {
+        e.preventDefault();
+        sigDrawing = true;
+        var p = sigPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(p.x, p.y);
+      }
+      function sigMove(e) {
+        if (!sigDrawing) return;
+        e.preventDefault();
+        var p = sigPos(e);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+        sigHasStrokes = true;
+      }
+      function sigEnd() { sigDrawing = false; }
+      sigCanvas.addEventListener("mousedown", sigStart);
+      sigCanvas.addEventListener("mousemove", sigMove);
+      window.addEventListener("mouseup", sigEnd);
+      sigCanvas.addEventListener("touchstart", sigStart);
+      sigCanvas.addEventListener("touchmove", sigMove);
+      sigCanvas.addEventListener("touchend", sigEnd);
+      var sigClearBtn = document.getElementById("set-signature-clear");
+      if (sigClearBtn) sigClearBtn.addEventListener("click", function () {
+        sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        sigHasStrokes = false;
+      });
+      var sigSaveBtn = document.getElementById("set-signature-save");
+      if (sigSaveBtn) sigSaveBtn.addEventListener("click", function () {
+        if (!sigHasStrokes) { showToast("Draw a signature first, or upload an image"); return; }
+        localStorage.setItem("ivoxa_company_signature", sigCanvas.toDataURL("image/png"));
+        renderSignatureStatus();
+        dsApplyPreview();
+        showToast("Signature saved");
+        playSound("success");
+      });
+    }
+    var sigFileEl = document.getElementById("set-signature-file");
+    if (sigFileEl) sigFileEl.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        localStorage.setItem("ivoxa_company_signature", reader.result);
+        renderSignatureStatus();
+        dsApplyPreview();
+        showToast("Signature saved");
+        playSound("success");
+      };
+      reader.readAsDataURL(file);
+    });
+    renderSignatureStatus();
+
     var settingsInitDone = false;
     function renderSettingsInit() {
       if (settingsInitDone) return;
@@ -4384,6 +4845,72 @@
     populateInvoiceComplianceCountrySelect();
     var invComplianceCountryEl = document.getElementById("inv-compliance-country");
     if (invComplianceCountryEl) invComplianceCountryEl.addEventListener("change", renderInvoiceComplianceBanner);
+
+    // ---- New Invoice: client select, addresses, SIRET, and save ----
+    function fillInvoiceClientAddress() {
+      var sel = document.getElementById("inv-new-client");
+      var addressEl = document.getElementById("inv-new-client-address");
+      if (!sel || !addressEl) return;
+      var client = CLIENTS.filter(function (c) { return c.id === sel.value; })[0];
+      addressEl.value = client ? (client.address || "") : "";
+    }
+    function populateInvoiceNewClientSelect() {
+      var sel = document.getElementById("inv-new-client");
+      if (!sel) return;
+      sel.innerHTML = CLIENTS.length
+        ? CLIENTS.map(function (c) { return '<option value="' + c.id + '">' + c.company + " — " + c.name + "</option>"; }).join("")
+        : '<option value="">No clients yet — add one first</option>';
+      fillInvoiceClientAddress();
+    }
+    var invNewClientEl = document.getElementById("inv-new-client");
+    if (invNewClientEl) invNewClientEl.addEventListener("change", fillInvoiceClientAddress);
+    function initInvoiceNewForm() {
+      populateInvoiceNewClientSelect();
+      var issueEl = document.getElementById("inv-new-issue");
+      var dueEl = document.getElementById("inv-new-due");
+      var today = new Date();
+      if (issueEl) issueEl.value = today.toISOString().slice(0, 10);
+      if (dueEl) {
+        var due = new Date();
+        due.setDate(due.getDate() + 14);
+        dueEl.value = due.toISOString().slice(0, 10);
+      }
+      var siteEl = document.getElementById("inv-new-site-address");
+      if (siteEl) siteEl.value = "";
+      var siretEl = document.getElementById("inv-new-siret");
+      if (siretEl) siretEl.value = ccGet("FR", "siret") || "";
+    }
+    var invoiceSeq = 0;
+    function saveNewInvoice(status) {
+      var clientSel = document.getElementById("inv-new-client");
+      var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
+      if (!client) { showToast("Add a client before saving an invoice"); return; }
+      var issue = document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10);
+      var due = document.getElementById("inv-new-due").value || issue;
+      var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
+      invoiceSeq++;
+      var newId = "INV-" + String(invoiceSeq).padStart(4, "0");
+      INVOICES.push({
+        id: newId,
+        client: client.company,
+        clientAddress: document.getElementById("inv-new-client-address").value.trim(),
+        siteAddress: document.getElementById("inv-new-site-address").value.trim(),
+        siret: document.getElementById("inv-new-siret").value.trim(),
+        issue: issue,
+        due: due,
+        status: status,
+        total: total,
+        payments: [],
+      });
+      renderInvoicesAll();
+      showToast(newId + " saved as " + (status === "Draft" ? "draft" : "pending"));
+      playSound("success");
+      showView("invoices");
+    }
+    var invoiceSaveDraftBtn = document.getElementById("invoice-save-draft-btn");
+    if (invoiceSaveDraftBtn) invoiceSaveDraftBtn.addEventListener("click", function () { saveNewInvoice("Draft"); });
+    var invoiceSavePendingBtn = document.getElementById("invoice-save-pending-btn");
+    if (invoiceSavePendingBtn) invoiceSavePendingBtn.addEventListener("click", function () { saveNewInvoice("Sent"); });
 
     // ---- Payment Tracking (Invoices) ----
     var INVOICES = [];
@@ -4460,6 +4987,12 @@
         '<div class="cw-head"><h3 style="font-size:1rem;font-weight:800;">' + inv.id + " — " + inv.client + '</h3><button class="ob-skip" id="ph-close">Close</button></div>' +
         '<div class="cw-body">' +
         (overdue ? '<div class="callout" style="border-color:hsl(var(--danger)/0.4);background:hsl(var(--danger)/0.08);"><span>⚠️</span><span>This invoice is overdue — due date was ' + new Date(inv.due + "T00:00:00").toLocaleDateString("en", { month: "long", day: "numeric", year: "numeric" }) + ".</span></div>" : "") +
+        ((inv.clientAddress || inv.siteAddress || inv.siret) ?
+          '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin-bottom:1rem;font-size:0.8rem;">' +
+          (inv.clientAddress ? '<div><div class="ds-doc-lbl">Client address</div><div style="margin-top:0.2rem;">' + inv.clientAddress.replace(/\n/g, "<br>") + "</div></div>" : "") +
+          (inv.siteAddress ? '<div><div class="ds-doc-lbl">Chantier / jobsite address</div><div style="margin-top:0.2rem;">' + inv.siteAddress.replace(/\n/g, "<br>") + "</div></div>" : "") +
+          (inv.siret ? '<div><div class="ds-doc-lbl">SIRET</div><div style="margin-top:0.2rem;">' + inv.siret + "</div></div>" : "") +
+          "</div>" : "") +
         '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1rem;">' +
         '<div class="card stat-card"><div><div class="lbl">Total</div><div class="val tnum">' + currency(inv.total) + '</div></div><div class="ic">📄</div></div>' +
         '<div class="card stat-card"><div><div class="lbl">Paid</div><div class="val tnum" style="color:hsl(var(--success));">' + currency(inv.total - balance) + '</div></div><div class="ic">✅</div></div>' +
@@ -4534,15 +5067,28 @@
     function populateQuoteClientSelect() {
       var sel = document.getElementById("aq-client");
       if (!sel) return;
-      var companies = CLIENTS.map(function (c) { return c.company; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; });
-      sel.innerHTML = companies.map(function (c) { return "<option>" + c + "</option>"; }).join("");
+      sel.innerHTML = CLIENTS.length
+        ? CLIENTS.map(function (c) { return "<option>" + c.company + "</option>"; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; }).join("")
+        : '<option value="">No clients yet — add one first</option>';
+      fillQuoteClientAddress();
     }
+    function fillQuoteClientAddress() {
+      var sel = document.getElementById("aq-client");
+      var addressEl = document.getElementById("aq-client-address");
+      if (!sel || !addressEl) return;
+      var client = CLIENTS.filter(function (c) { return c.company === sel.value; })[0];
+      addressEl.value = client ? (client.address || "") : "";
+    }
+    var aqClientEl = document.getElementById("aq-client");
+    if (aqClientEl) aqClientEl.addEventListener("change", fillQuoteClientAddress);
     function aqOpen() {
       populateQuoteClientSelect();
       var today = new Date();
       var inMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
       document.getElementById("aq-issue").value = today.toISOString().slice(0, 10);
       document.getElementById("aq-valid").value = inMonth.toISOString().slice(0, 10);
+      document.getElementById("aq-site-address").value = "";
+      document.getElementById("aq-siret").value = ccGet("FR", "siret") || "";
       document.getElementById("aq-total").value = "0";
       document.getElementById("aq-overlay").classList.add("open");
       document.body.style.overflow = "hidden";
@@ -4562,6 +5108,9 @@
       QUOTES.push({
         id: newId,
         client: document.getElementById("aq-client").value,
+        clientAddress: document.getElementById("aq-client-address").value.trim(),
+        siteAddress: document.getElementById("aq-site-address").value.trim(),
+        siret: document.getElementById("aq-siret").value.trim(),
         issue: document.getElementById("aq-issue").value || new Date().toISOString().slice(0, 10),
         validUntil: document.getElementById("aq-valid").value || new Date().toISOString().slice(0, 10),
         status: "Draft",
@@ -5498,6 +6047,7 @@
       INVOICES.forEach(function (inv) { idx.push({ group: "Invoices", icon: "📄", label: inv.id, sub: inv.client, goto: "invoices" }); });
       QUOTES.forEach(function (q) { idx.push({ group: "Quotes", icon: "🧾", label: q.id, sub: q.client, goto: "quotes" }); });
       CLIENTS.forEach(function (c) { idx.push({ group: "Clients", icon: "👥", label: c.name, sub: c.company, goto: "client-detail", openClient: c.id }); });
+      LEADS.forEach(function (l) { idx.push({ group: "Leads", icon: "💼", label: l.name, sub: l.company, goto: "leads" }); });
       addFromTable("companies-table", "Companies", "🏢", "companies", 0, 1);
       EXPENSES.forEach(function (e) { idx.push({ group: "Expenses", icon: "💳", label: e.title, sub: e.category, goto: "expenses" }); });
       PRODUCTS.forEach(function (p) { idx.push({ group: "Inventory", icon: p.type === "service" ? "🧰" : "📦", label: p.name, sub: p.sku, goto: "inventory" }); });
@@ -5680,6 +6230,13 @@
     const source = (user && user.displayName) || (user && user.email) || "User";
     return source.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
   }
+  function renderAuthAvatars(user) {
+    document.querySelectorAll("[data-auth-avatar]").forEach(el => {
+      if (user && user.photoURL) el.innerHTML = '<img src="' + user.photoURL + '" alt="" style="width:100%;height:100%;object-fit:cover;" />';
+      else if (user) el.textContent = initials(user);
+      else el.textContent = "👤";
+    });
+  }
 
   document.getElementById("register-form").addEventListener("submit", async event => {
     event.preventDefault();
@@ -5696,7 +6253,7 @@
       const credential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(credential.user, { displayName: name });
       currentUser = credential.user;
-      document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(credential.user); });
+      renderAuthAvatars(credential.user);
       showAuthStatus("register-status", "Account created successfully.", "success");
       window.ivoxaShowView("dashboard");
     } catch (error) { showAuthStatus("register-status", friendlyAuthError(error)); }
@@ -5842,8 +6399,10 @@
 
   onAuthStateChanged(auth, user => {
     currentUser = user;
-    document.querySelectorAll("[data-auth-avatar]").forEach(el => { el.textContent = initials(user); });
+    if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
+    renderAuthAvatars(user);
     document.querySelectorAll("[data-auth-logout]").forEach(el => { el.hidden = !user; });
+    if (window.ivoxaSetMarketingAuthState) window.ivoxaSetMarketingAuthState(!!user);
     const activeView = document.querySelector(".view.active");
     if (!user && activeView && protectedViews.has(activeView.id.replace("view-", ""))) window.ivoxaShowView("login");
   });
