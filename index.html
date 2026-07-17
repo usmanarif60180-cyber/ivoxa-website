@@ -1622,7 +1622,7 @@
                 <div><label class="field-label">Client</label><select class="field" id="inv-new-client"></select></div>
                 <div><label class="field-label">Issue date</label><input class="field" type="date" id="inv-new-issue" /></div>
                 <div><label class="field-label">Due date</label><input class="field" type="date" id="inv-new-due" /></div>
-                <div><label class="field-label">Currency</label><select class="field" id="inv-new-currency"><option>USD — US Dollar</option><option>EUR — Euro</option><option>GBP — British Pound</option></select></div>
+                <div><label class="field-label">Currency</label><select class="field" id="inv-new-currency"><option value="USD">USD — US Dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British Pound</option></select></div>
                 <div><label class="field-label">Compliance country</label><select class="field" id="inv-compliance-country"></select></div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
@@ -1680,10 +1680,11 @@
           <div>
             <div class="card card-pad" style="margin-bottom:1.1rem;">
               <div class="card-title">Quote details</div>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
                 <div><label class="field-label">Client</label><select class="field" id="q-new-client"></select></div>
                 <div><label class="field-label">Issue date</label><input class="field" type="date" id="q-new-issue" /></div>
                 <div><label class="field-label">Valid until</label><input class="field" type="date" id="q-new-valid" /></div>
+                <div><label class="field-label">Currency</label><select class="field" id="q-new-currency"><option value="USD">USD — US Dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British Pound</option></select></div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
                 <div><label class="field-label">Client address</label><textarea class="field" id="q-new-client-address" rows="2" placeholder="Street, city, postal code, country"></textarea></div>
@@ -2976,6 +2977,11 @@
     function currency(n) {
       return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
+    var CURRENCY_SYMBOLS = { USD: "$", EUR: "€", GBP: "£" };
+    function formatCurrency(n, code) {
+      var symbol = CURRENCY_SYMBOLS[code] || "$";
+      return symbol + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
     function addRow(desc, qty, price, tax) {
       var rid = "row" + nextRow++;
@@ -2997,6 +3003,8 @@
     }
 
     function recalc() {
+      var currencyEl = document.getElementById("inv-new-currency");
+      var code = currencyEl ? currencyEl.value : "USD";
       var subtotal = 0, taxTotal = 0;
       liBody.querySelectorAll("tr").forEach(function (tr) {
         var qty = parseFloat(tr.querySelector('[data-role="qty"]').value) || 0;
@@ -3005,12 +3013,12 @@
         var amount = qty * price;
         subtotal += amount;
         taxTotal += amount * (TAX_RATES[tax] / 100);
-        tr.querySelector('[data-role="amount"]').textContent = currency(amount);
+        tr.querySelector('[data-role="amount"]').textContent = formatCurrency(amount, code);
       });
-      document.getElementById("t-sub").textContent = currency(subtotal);
-      document.getElementById("t-disc").textContent = "-" + currency(0);
-      document.getElementById("t-tax").textContent = currency(taxTotal);
-      document.getElementById("t-total").textContent = currency(subtotal + taxTotal);
+      document.getElementById("t-sub").textContent = formatCurrency(subtotal, code);
+      document.getElementById("t-disc").textContent = "-" + formatCurrency(0, code);
+      document.getElementById("t-tax").textContent = formatCurrency(taxTotal, code);
+      document.getElementById("t-total").textContent = formatCurrency(subtotal + taxTotal, code);
       renderInvoicePreview();
     }
 
@@ -3877,7 +3885,7 @@
         siret: document.getElementById("inv-new-siret").value.trim(),
         issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
         dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
-        items: getLineItemsData(), total: total,
+        items: getLineItemsData(), total: total, currencyCode: document.getElementById("inv-new-currency").value,
       }));
     });
 
@@ -4796,20 +4804,29 @@
     function buildDocPrintHtml(opts) {
       var logo = getCompanyLogo();
       var sig = getCompanySignature();
-      var accent = (dsState && dsState.primary) || "#2563EB";
+      var code = opts.currencyCode || "USD";
+      var fmt = function (n) { return formatCurrency(n, code); };
+      var primary = (dsState && dsState.primary) || "#2563EB";
+      var dark = !!(dsState && dsState.dark);
+      var tableBg = (dsState && dsState.tableBg) || "#EEF2FF";
+      var accentPos = (dsState && dsState.accent) || "top";
+      var docStyle = accentPos === "left" ? "border-left:6px solid " + primary + ";" : "";
+      var headBg = dark ? primary : "transparent";
+      var headColor = dark ? "#fff" : "#111";
+      var headBorder = accentPos === "top" ? primary : (dark ? primary : "#ddd");
       var singleLineDesc = opts.description || (opts.client + " — services");
       var itemsRows = (opts.items && opts.items.length)
         ? opts.items.map(function (it) {
-            return "<tr><td>" + (it.desc || "—") + "</td><td style=\"text-align:right;\">" + it.qty + "</td><td style=\"text-align:right;\">" + currency(it.price) + "</td><td style=\"text-align:right;\">" + currency(it.qty * it.price) + "</td></tr>";
+            return "<tr><td>" + (it.desc || "—") + "</td><td style=\"text-align:right;\">" + it.qty + "</td><td style=\"text-align:right;\">" + fmt(it.price) + "</td><td style=\"text-align:right;\">" + fmt(it.qty * it.price) + "</td></tr>";
           }).join("")
-        : "<tr><td>" + singleLineDesc + "</td><td style=\"text-align:right;\">1</td><td style=\"text-align:right;\">" + currency(opts.total) + "</td><td style=\"text-align:right;\">" + currency(opts.total) + "</td></tr>";
+        : "<tr><td>" + singleLineDesc + "</td><td style=\"text-align:right;\">1</td><td style=\"text-align:right;\">" + fmt(opts.total) + "</td><td style=\"text-align:right;\">" + fmt(opts.total) + "</td></tr>";
       return (
-        '<div class="print-doc">' +
-        '<div class="print-doc-head" style="border-bottom-color:' + accent + ';">' +
+        '<div class="print-doc" style="' + docStyle + '">' +
+        '<div class="print-doc-head" style="background:' + headBg + ';color:' + headColor + ';border-bottom-color:' + headBorder + ';">' +
         (logo ? '<img src="' + logo + '" alt="" style="height:2.4rem;object-fit:contain;" />' : "") +
         '<div style="font-weight:800;font-size:1.1rem;">' + currentWorkspaceName() + "</div>" +
         '<div style="margin-left:auto;text-align:right;">' +
-        '<div style="font-weight:800;font-size:1.3rem;color:' + accent + ';">' + opts.title + "</div>" +
+        '<div style="font-weight:800;font-size:1.3rem;color:' + (dark ? headColor : primary) + ';">' + opts.title + "</div>" +
         "<div>" + opts.number + "</div>" +
         (opts.status ? "<div>" + opts.status + "</div>" : "") +
         "</div></div>" +
@@ -4819,8 +4836,8 @@
         "<div><strong>" + opts.issueLabel + "</strong><br>" + opts.issueDate + "<br><strong>" + opts.dueLabel + "</strong><br>" + opts.dueDate + "</div>" +
         "</div>" +
         (opts.siret ? "<p style=\"font-size:0.8rem;margin-bottom:0.8rem;\">SIRET: " + opts.siret + "</p>" : "") +
-        '<table class="print-doc-table"><thead><tr><th>Description</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Unit price</th><th style="text-align:right;">Amount</th></tr></thead><tbody>' + itemsRows + "</tbody></table>" +
-        '<div class="print-doc-total" style="color:' + accent + ';">Total: ' + currency(opts.total) + "</div>" +
+        '<table class="print-doc-table"><thead style="background:' + tableBg + ';"><tr><th>Description</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Unit price</th><th style="text-align:right;">Amount</th></tr></thead><tbody>' + itemsRows + "</tbody></table>" +
+        '<div class="print-doc-total" style="color:' + primary + ';">Total: ' + fmt(opts.total) + "</div>" +
         (sig ? '<div class="print-doc-sig"><div style="font-size:0.78rem;color:#555;">Signature</div><img src="' + sig + '" alt="" /></div>' : "") +
         "</div>"
       );
@@ -4835,14 +4852,14 @@
       downloadDocPdf(buildDocPrintHtml({
         title: "Invoice", number: inv.id, client: inv.client, clientAddress: inv.clientAddress, siteAddress: inv.siteAddress,
         siret: inv.siret, issueLabel: "Issue date", issueDate: fmtDate(inv.issue), dueLabel: "Due date", dueDate: fmtDate(inv.due),
-        items: inv.items, total: inv.total, status: inv.status,
+        items: inv.items, total: inv.total, status: inv.status, currencyCode: inv.currency,
       }));
     }
     function downloadQuotePdf(q) {
       downloadDocPdf(buildDocPrintHtml({
         title: "Quote", number: q.id, client: q.client, clientAddress: q.clientAddress, siteAddress: q.siteAddress,
         siret: q.siret, issueLabel: "Issue date", issueDate: fmtDate(q.issue), dueLabel: "Valid until", dueDate: fmtDate(q.validUntil),
-        items: q.items, total: q.total, status: q.status,
+        items: q.items, total: q.total, status: q.status, currencyCode: q.currency,
       }));
     }
     function renderLogoPreview() {
@@ -5009,6 +5026,8 @@
     }
     var invNewClientEl = document.getElementById("inv-new-client");
     if (invNewClientEl) invNewClientEl.addEventListener("change", fillInvoiceClientAddress);
+    var invNewCurrencyEl = document.getElementById("inv-new-currency");
+    if (invNewCurrencyEl) invNewCurrencyEl.addEventListener("change", recalc);
     var editingInvoiceId = null;
     function initInvoiceNewForm() {
       populateInvoiceNewClientSelect();
@@ -5031,6 +5050,7 @@
         document.getElementById("inv-new-client-address").value = editing.clientAddress || "";
         document.getElementById("inv-new-site-address").value = editing.siteAddress || "";
         document.getElementById("inv-new-siret").value = editing.siret || "";
+        document.getElementById("inv-new-currency").value = editing.currency || "USD";
         if (editing.items && editing.items.length) editing.items.forEach(function (it) { addRow(it.desc, it.qty, it.price, it.tax); });
         else addRow(editing.client + " services", 1, editing.total, "none");
       } else {
@@ -5047,6 +5067,7 @@
         if (siteEl) siteEl.value = "";
         var siretEl = document.getElementById("inv-new-siret");
         if (siretEl) siretEl.value = ccGet("FR", "siret") || "";
+        document.getElementById("inv-new-currency").value = "USD";
         addRow("", 1, 0, "none");
       }
       renderInvoicePreview();
@@ -5066,7 +5087,7 @@
         siret: document.getElementById("inv-new-siret").value.trim(),
         issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
         dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
-        items: getLineItemsData(), total: total,
+        items: getLineItemsData(), total: total, currencyCode: document.getElementById("inv-new-currency").value,
       });
     }
     var invNewLogoFileEl = document.getElementById("inv-new-logo-file");
@@ -5102,6 +5123,7 @@
       var clientAddress = document.getElementById("inv-new-client-address").value.trim();
       var siteAddress = document.getElementById("inv-new-site-address").value.trim();
       var siret = document.getElementById("inv-new-siret").value.trim();
+      var currencyCode = document.getElementById("inv-new-currency").value;
 
       if (editingInvoiceId) {
         var existing = INVOICES.filter(function (inv) { return inv.id === editingInvoiceId; })[0];
@@ -5114,6 +5136,7 @@
           existing.due = due;
           existing.total = total;
           existing.items = items;
+          existing.currency = currencyCode;
           showToast(existing.id + " updated");
         }
         editingInvoiceId = null;
@@ -5131,6 +5154,7 @@
           status: status,
           total: total,
           items: items,
+          currency: currencyCode,
           payments: [],
         });
         showToast(newId + " saved as " + (status === "Draft" ? "draft" : "pending"));
@@ -5174,7 +5198,7 @@
           '<tr><td class="link-strong" data-invoice-open="' + inv.id + '" style="cursor:pointer;">' + inv.id + "</td><td>" + inv.client + "</td><td>" +
           new Date(inv.issue + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + "</td><td>" +
           new Date(inv.due + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + '</td><td><span class="badge ' + invoiceStatusBadgeClass(inv.status) + '">' + inv.status + "</span></td>" +
-          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(inv.total) + "</td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + formatCurrency(inv.total, inv.currency) + "</td>" +
           '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
           '<button class="btn btn-ghost btn-sm" data-invoice-edit="' + inv.id + '">✏️ Edit</button>' +
           '<button class="btn btn-ghost btn-sm" data-invoice-pdf="' + inv.id + '">⬇ PDF</button>' +
@@ -5233,13 +5257,13 @@
           (inv.siret ? '<div><div class="ds-doc-lbl">SIRET</div><div style="margin-top:0.2rem;">' + inv.siret + "</div></div>" : "") +
           "</div>" : "") +
         '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1rem;">' +
-        '<div class="card stat-card"><div><div class="lbl">Total</div><div class="val tnum">' + currency(inv.total) + '</div></div><div class="ic">📄</div></div>' +
-        '<div class="card stat-card"><div><div class="lbl">Paid</div><div class="val tnum" style="color:hsl(var(--success));">' + currency(inv.total - balance) + '</div></div><div class="ic">✅</div></div>' +
-        '<div class="card stat-card"><div><div class="lbl">Balance due</div><div class="val tnum" style="color:' + (balance > 0 ? "hsl(var(--danger))" : "hsl(var(--success))") + ';">' + currency(balance) + "</div></div><div class=\"ic\">💰</div></div>" +
+        '<div class="card stat-card"><div><div class="lbl">Total</div><div class="val tnum">' + formatCurrency(inv.total, inv.currency) + '</div></div><div class="ic">📄</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Paid</div><div class="val tnum" style="color:hsl(var(--success));">' + formatCurrency(inv.total - balance, inv.currency) + '</div></div><div class="ic">✅</div></div>' +
+        '<div class="card stat-card"><div><div class="lbl">Balance due</div><div class="val tnum" style="color:' + (balance > 0 ? "hsl(var(--danger))" : "hsl(var(--success))") + ';">' + formatCurrency(balance, inv.currency) + "</div></div><div class=\"ic\">💰</div></div>" +
         "</div>" +
         '<div class="card-title" style="margin-bottom:0.5rem;">Payment history</div>' +
         (inv.payments.length ? inv.payments.map(function (p) {
-          return '<div class="activity-row"><div><div class="num">' + currency(p.amount) + '</div><div class="meta">' + p.method + "</div></div><div style=\"text-align:right;font-size:0.78rem;color:hsl(var(--muted-fg));\">" + new Date(p.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) + "</div></div>";
+          return '<div class="activity-row"><div><div class="num">' + formatCurrency(p.amount, inv.currency) + '</div><div class="meta">' + p.method + "</div></div><div style=\"text-align:right;font-size:0.78rem;color:hsl(var(--muted-fg));\">" + new Date(p.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) + "</div></div>";
         }).join("") : '<p class="widget-empty">No payments recorded yet.</p>') +
         "</div>" +
         '<div class="cw-foot"><span style="display:flex;gap:0.5rem;">' +
@@ -5309,7 +5333,7 @@
         return (
           '<tr><td class="link-strong">' + q.id + "</td><td>" + q.client + "</td><td>" + fmtDate(q.issue) + "</td><td>" + fmtDate(q.validUntil) + "</td>" +
           '<td><span class="badge ' + quoteStatusBadgeClass(q.status) + '">' + q.status + "</span></td>" +
-          '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(q.total) + "</td>" +
+          '<td class="tnum" style="text-align:right;font-weight:700;">' + formatCurrency(q.total, q.currency) + "</td>" +
           '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
           '<button class="btn btn-ghost btn-sm" data-quote-edit="' + q.id + '">✏️ Edit</button>' +
           '<button class="btn btn-ghost btn-sm" data-quote-pdf="' + q.id + '">⬇ PDF</button></td></tr>'
@@ -5343,6 +5367,8 @@
       qRecalc();
     }
     function qRecalc() {
+      var currencyEl = document.getElementById("q-new-currency");
+      var code = currencyEl ? currencyEl.value : "USD";
       var subtotal = 0, taxTotal = 0;
       qLiBody.querySelectorAll("tr").forEach(function (tr) {
         var qty = parseFloat(tr.querySelector('[data-role="qty"]').value) || 0;
@@ -5351,12 +5377,12 @@
         var amount = qty * price;
         subtotal += amount;
         taxTotal += amount * (TAX_RATES[tax] / 100);
-        tr.querySelector('[data-role="amount"]').textContent = currency(amount);
+        tr.querySelector('[data-role="amount"]').textContent = formatCurrency(amount, code);
       });
-      document.getElementById("q-t-sub").textContent = currency(subtotal);
-      document.getElementById("q-t-disc").textContent = "-" + currency(0);
-      document.getElementById("q-t-tax").textContent = currency(taxTotal);
-      document.getElementById("q-t-total").textContent = currency(subtotal + taxTotal);
+      document.getElementById("q-t-sub").textContent = formatCurrency(subtotal, code);
+      document.getElementById("q-t-disc").textContent = "-" + formatCurrency(0, code);
+      document.getElementById("q-t-tax").textContent = formatCurrency(taxTotal, code);
+      document.getElementById("q-t-total").textContent = formatCurrency(subtotal + taxTotal, code);
       renderQuotePreview();
     }
     function getQuoteLineItemsData() {
@@ -5396,6 +5422,8 @@
     }
     var qNewClientEl = document.getElementById("q-new-client");
     if (qNewClientEl) qNewClientEl.addEventListener("change", function () { fillQuoteNewClientAddress(); renderQuotePreview(); });
+    var qNewCurrencyEl = document.getElementById("q-new-currency");
+    if (qNewCurrencyEl) qNewCurrencyEl.addEventListener("change", qRecalc);
     function renderQuotePreview() {
       var preview = document.getElementById("q-new-preview");
       if (!preview) return;
@@ -5411,7 +5439,7 @@
         siret: document.getElementById("q-new-siret").value.trim(),
         issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
         dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
-        items: getQuoteLineItemsData(), total: total,
+        items: getQuoteLineItemsData(), total: total, currencyCode: document.getElementById("q-new-currency").value,
       });
     }
     var qNewLogoFileEl = document.getElementById("q-new-logo-file");
@@ -5458,6 +5486,7 @@
         document.getElementById("q-new-client-address").value = editing.clientAddress || "";
         document.getElementById("q-new-site-address").value = editing.siteAddress || "";
         document.getElementById("q-new-siret").value = editing.siret || "";
+        document.getElementById("q-new-currency").value = editing.currency || "USD";
         if (editing.items && editing.items.length) editing.items.forEach(function (it) { qAddRow(it.desc, it.qty, it.price, it.tax); });
         else qAddRow(editing.description || (editing.client + " services"), 1, editing.total, "none");
       } else {
@@ -5467,6 +5496,7 @@
         document.getElementById("q-new-valid").value = inMonth.toISOString().slice(0, 10);
         document.getElementById("q-new-site-address").value = "";
         document.getElementById("q-new-siret").value = ccGet("FR", "siret") || "";
+        document.getElementById("q-new-currency").value = "USD";
         qAddRow("", 1, 0, "none");
       }
       renderQuotePreview();
@@ -5482,6 +5512,7 @@
       var validUntil = document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10);
       var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       var items = getQuoteLineItemsData();
+      var currencyCode = document.getElementById("q-new-currency").value;
 
       if (editingQuoteId) {
         var existing = QUOTES.filter(function (q) { return q.id === editingQuoteId; })[0];
@@ -5494,6 +5525,7 @@
           existing.validUntil = validUntil;
           existing.total = total;
           existing.items = items;
+          existing.currency = currencyCode;
           showToast(existing.id + " updated");
         }
         editingQuoteId = null;
@@ -5502,7 +5534,7 @@
         var newId = "QUO-" + String(quoteSeq).padStart(4, "0");
         QUOTES.push({
           id: newId, client: client.company, clientAddress: clientAddress, siteAddress: siteAddress,
-          siret: siret, issue: issue, validUntil: validUntil, status: status, total: total, items: items,
+          siret: siret, issue: issue, validUntil: validUntil, status: status, total: total, items: items, currency: currencyCode,
         });
         showToast(newId + " saved as " + (status === "Draft" ? "draft" : "sent"));
       }
@@ -5532,7 +5564,7 @@
         siret: document.getElementById("q-new-siret").value.trim(),
         issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
         dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
-        items: getQuoteLineItemsData(), total: total,
+        items: getQuoteLineItemsData(), total: total, currencyCode: document.getElementById("q-new-currency").value,
       }));
     });
     document.body.addEventListener("click", function (e) {
