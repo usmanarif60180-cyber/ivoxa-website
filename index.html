@@ -3095,6 +3095,9 @@
         document.querySelectorAll("[data-auth-avatar]").forEach(function (el) { el.innerHTML = avatarSnapshot; });
       }
       document.querySelectorAll("[data-auth-logout]").forEach(function (el) { el.hidden = logoutHidden; });
+      // Sidebar/topbar were just rebuilt from scratch, so the workspace switcher name
+      // (which starts as a "Loading…" placeholder in the template) needs repopulating.
+      if (typeof wsRenderAll === "function") wsRenderAll();
     }
 
     function applyLanguage(lang) {
@@ -3113,13 +3116,42 @@
     }
     window.ivoxaApplyLanguage = applyLanguage;
     document.addEventListener("change", function (e) {
-      if (e.target.classList && e.target.classList.contains("lang-select")) applyLanguage(e.target.value);
+      if (e.target.classList && e.target.classList.contains("lang-select")) {
+        applyLanguage(e.target.value);
+        if (typeof applyCurrencyDefault === "function") applyCurrencyDefault(LANG_CURRENCY_MAP[e.target.value] || "USD");
+      }
     });
 
     // Selecting a default country in Settings also switches the app language to match —
     // e.g. choosing France applies French, Germany applies German — while the language
     // switcher itself always stays available for a manual, independent choice.
     var COUNTRY_LANGUAGE_MAP = { FR: "fr", IT: "it", ES: "es", DE: "de", BE: "nl", NL: "nl", PT: "pt", GB: "en", PL: "pl" };
+
+    // Language/country also drives the default invoice/quote currency — continental
+    // European languages/countries default to Euro, English defaults to US Dollar,
+    // and the United Kingdom specifically defaults to Pound Sterling.
+    var LANG_CURRENCY_MAP = { en: "USD", fr: "EUR", it: "EUR", es: "EUR", de: "EUR", nl: "EUR", pt: "EUR", pl: "EUR" };
+    var COUNTRY_CURRENCY_MAP = { FR: "EUR", IT: "EUR", ES: "EUR", DE: "EUR", BE: "EUR", NL: "EUR", PT: "EUR", GB: "GBP", PL: "EUR" };
+    var currentCurrency = (function () {
+      try { return localStorage.getItem("ivoxa_currency") || "USD"; } catch (e) { return "USD"; }
+    })();
+    function applyCurrencyDefault(code) {
+      if (!code) return;
+      currentCurrency = code;
+      try { localStorage.setItem("ivoxa_currency", code); } catch (e) { /* ignore */ }
+      // Only auto-set the currency on a fresh (not-yet-edited) invoice/quote — never
+      // override the saved currency of a document that's actively being edited.
+      var activeView = document.querySelector(".view.active");
+      if (activeView && activeView.id === "view-invoice-new" && !editingInvoiceId) {
+        var invSel = document.getElementById("inv-new-currency");
+        if (invSel) { invSel.value = code; if (typeof recalc === "function") recalc(); }
+      }
+      if (activeView && activeView.id === "view-quote-new" && !editingQuoteId) {
+        var qSel = document.getElementById("q-new-currency");
+        if (qSel) { qSel.value = code; if (typeof qRecalc === "function") qRecalc(); }
+      }
+    }
+    window.ivoxaApplyCurrencyDefault = applyCurrencyDefault;
 
     // ---- blog index: search + category filter ----
     var BLOG_POSTS = [
@@ -5294,6 +5326,8 @@
     if (setDefaultCountryEl) setDefaultCountryEl.addEventListener("change", function (e) {
       var lang = COUNTRY_LANGUAGE_MAP[e.target.value];
       if (lang) applyLanguage(lang);
+      var curr = COUNTRY_CURRENCY_MAP[e.target.value];
+      if (curr) applyCurrencyDefault(curr);
     });
     // ---- Company branding: logo/stamp + signature (stored locally, used on invoices/quotes) ----
     function getCompanyLogo() { return localStorage.getItem("ivoxa_company_logo") || ""; }
@@ -5568,7 +5602,7 @@
         if (siteEl) siteEl.value = "";
         var siretEl = document.getElementById("inv-new-siret");
         if (siretEl) siretEl.value = ccGet("FR", "siret") || "";
-        document.getElementById("inv-new-currency").value = "USD";
+        document.getElementById("inv-new-currency").value = currentCurrency || "USD";
         addRow("", 1, 0, "none");
       }
       renderInvoicePreview();
@@ -5997,7 +6031,7 @@
         document.getElementById("q-new-valid").value = inMonth.toISOString().slice(0, 10);
         document.getElementById("q-new-site-address").value = "";
         document.getElementById("q-new-siret").value = ccGet("FR", "siret") || "";
-        document.getElementById("q-new-currency").value = "USD";
+        document.getElementById("q-new-currency").value = currentCurrency || "USD";
         qAddRow("", 1, 0, "none");
       }
       renderQuotePreview();
