@@ -3095,6 +3095,9 @@
         document.querySelectorAll("[data-auth-avatar]").forEach(function (el) { el.innerHTML = avatarSnapshot; });
       }
       document.querySelectorAll("[data-auth-logout]").forEach(function (el) { el.hidden = logoutHidden; });
+      // Sidebar/topbar were just rebuilt from scratch, so the workspace switcher name
+      // (which starts as a "Loading…" placeholder in the template) needs repopulating.
+      if (typeof wsRenderAll === "function") wsRenderAll();
     }
 
     function applyLanguage(lang) {
