@@ -2266,6 +2266,7 @@
           </div>
           <div style="display:flex;gap:0.5rem;">
             <button class="btn btn-outline btn-sm" id="cd-log-activity-btn">📝 Log activity</button>
+            <button class="btn btn-outline btn-sm" id="cd-delete-btn" style="color:hsl(var(--danger));">🗑️ Delete client</button>
           </div>
         </div>
 
@@ -2763,7 +2764,7 @@
         <div id="task-kanban-wrap"><div class="kanban" id="task-kanban"></div></div>
         <div id="task-list-wrap" style="display:none;">
           <div class="table-wrap"><table class="data-table" id="task-list-table">
-            <thead><tr><th></th><th>Task</th><th>Priority</th><th>Due</th><th>Labels</th><th>Status</th></tr></thead>
+            <thead><tr><th></th><th>Task</th><th>Priority</th><th>Due</th><th>Labels</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody></tbody>
           </table></div>
         </div>
@@ -5008,6 +5009,21 @@
     });
     var cdLogActivityBtn = document.getElementById("cd-log-activity-btn");
     if (cdLogActivityBtn) cdLogActivityBtn.addEventListener("click", laOpen);
+    var cdDeleteBtn = document.getElementById("cd-delete-btn");
+    if (cdDeleteBtn) cdDeleteBtn.addEventListener("click", function () {
+      if (!cdActiveClientId) return;
+      var c = CLIENTS.filter(function (x) { return x.id === cdActiveClientId; })[0];
+      if (!c) return;
+      if (confirm("Delete client " + c.name + " (" + c.company + ")? This cannot be undone.")) {
+        var idx = CLIENTS.findIndex(function (x) { return x.id === cdActiveClientId; });
+        if (idx !== -1) CLIENTS.splice(idx, 1);
+        cdActiveClientId = null;
+        renderClientsTable(document.getElementById("clients-search") ? document.getElementById("clients-search").value : "");
+        showView("clients");
+        showToast(c.name + " deleted");
+        playSound("success");
+      }
+    });
 
     // ---- Global Compliance Center: plugin architecture ----
     // Each country/region registers itself as an independent "compliance
@@ -5737,7 +5753,8 @@
           '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
           '<button class="btn btn-ghost btn-sm" data-invoice-edit="' + inv.id + '">✏️ Edit</button>' +
           '<button class="btn btn-ghost btn-sm" data-invoice-pdf="' + inv.id + '">⬇ PDF</button>' +
-          (canRemind ? '<button class="btn btn-ghost btn-sm" data-invoice-remind="' + inv.id + '">🔔 Remind</button>' : "") + "</td></tr>"
+          (canRemind ? '<button class="btn btn-ghost btn-sm" data-invoice-remind="' + inv.id + '">🔔 Remind</button>' : "") +
+          '<button class="btn btn-ghost btn-sm" data-invoice-delete="' + inv.id + '" title="Delete invoice">🗑️</button></td></tr>'
         );
       }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No invoices match your filters.</td></tr>';
     }
@@ -5804,6 +5821,7 @@
         '<div class="cw-foot"><span style="display:flex;gap:0.5rem;">' +
         '<button class="btn btn-outline btn-sm" data-invoice-edit="' + inv.id + '">✏️ Edit</button>' +
         '<button class="btn btn-outline btn-sm" data-invoice-pdf="' + inv.id + '">⬇ Download PDF</button>' +
+        '<button class="btn btn-outline btn-sm" data-invoice-delete="' + inv.id + '" style="color:hsl(var(--danger));">🗑️ Delete</button>' +
         "</span>" + (balance > 0 ? '<button class="btn btn-primary btn-sm" data-invoice-remind="' + inv.id + '">🔔 Send reminder</button>' : "") + "</div>"
       );
     }
@@ -5836,6 +5854,20 @@
       if (pdfBtn) {
         var pdfInv = INVOICES.filter(function (x) { return x.id === pdfBtn.getAttribute("data-invoice-pdf"); })[0];
         if (pdfInv) downloadInvoicePdf(pdfInv);
+        return;
+      }
+      var invDeleteBtn = e.target.closest("[data-invoice-delete]");
+      if (invDeleteBtn) {
+        var delId = invDeleteBtn.getAttribute("data-invoice-delete");
+        if (confirm("Delete invoice " + delId + "? This cannot be undone.")) {
+          var delIdx = INVOICES.findIndex(function (x) { return x.id === delId; });
+          if (delIdx !== -1) INVOICES.splice(delIdx, 1);
+          var phOverlayEl = document.getElementById("ph-overlay");
+          if (phOverlayEl && phOverlayEl.classList.contains("open")) phClose();
+          renderInvoicesAll();
+          showToast(delId + " deleted");
+          playSound("success");
+        }
         return;
       }
       var remindBtn = e.target.closest("[data-invoice-remind]");
@@ -5871,7 +5903,8 @@
           '<td class="tnum" style="text-align:right;font-weight:700;">' + formatCurrency(q.total, q.currency) + "</td>" +
           '<td style="display:flex;gap:0.3rem;flex-wrap:wrap;">' +
           '<button class="btn btn-ghost btn-sm" data-quote-edit="' + q.id + '">✏️ Edit</button>' +
-          '<button class="btn btn-ghost btn-sm" data-quote-pdf="' + q.id + '">⬇ PDF</button></td></tr>'
+          '<button class="btn btn-ghost btn-sm" data-quote-pdf="' + q.id + '">⬇ PDF</button>' +
+          '<button class="btn btn-ghost btn-sm" data-quote-delete="' + q.id + '" title="Delete quote">🗑️</button></td></tr>'
         );
       }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No quotes yet.</td></tr>';
     }
@@ -6109,6 +6142,18 @@
       if (qPdfBtn) {
         var q = QUOTES.filter(function (x) { return x.id === qPdfBtn.getAttribute("data-quote-pdf"); })[0];
         if (q) downloadQuotePdf(q);
+        return;
+      }
+      var qDeleteBtn = e.target.closest("[data-quote-delete]");
+      if (qDeleteBtn) {
+        var qDelId = qDeleteBtn.getAttribute("data-quote-delete");
+        if (confirm("Delete quote " + qDelId + "? This cannot be undone.")) {
+          var qDelIdx = QUOTES.findIndex(function (x) { return x.id === qDelId; });
+          if (qDelIdx !== -1) QUOTES.splice(qDelIdx, 1);
+          renderQuotesTable();
+          showToast(qDelId + " deleted");
+          playSound("success");
+        }
       }
     });
 
@@ -6126,7 +6171,8 @@
           new Date(e.date + "T00:00:00").toLocaleDateString("en", { month: "short", day: "2-digit", year: "numeric" }) + "</td><td>" + (e.vendor || "—") + "</td>" +
           '<td class="tnum" style="text-align:right;font-weight:700;">' + currency(e.amount) + "</td>" +
           '<td><span class="badge ' + expApprovalBadgeClass(e.approval) + '">' + e.approval + "</span></td>" +
-          "<td>" + (e.approval === "Pending" ? '<button class="btn btn-ghost btn-sm" data-exp-approve="' + e.id + '">✓ Approve</button> <button class="btn btn-ghost btn-sm" data-exp-reject="' + e.id + '">✕ Reject</button>' : "") + "</td></tr>"
+          "<td>" + (e.approval === "Pending" ? '<button class="btn btn-ghost btn-sm" data-exp-approve="' + e.id + '">✓ Approve</button> <button class="btn btn-ghost btn-sm" data-exp-reject="' + e.id + '">✕ Reject</button> ' : "") +
+          '<button class="btn btn-ghost btn-sm" data-exp-delete="' + e.id + '" title="Delete expense">🗑️</button></td></tr>'
         );
       }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No expenses yet.</td></tr>';
     }
@@ -6204,6 +6250,19 @@
       if (rejectBtn) {
         var er = EXPENSES.filter(function (x) { return x.id === rejectBtn.getAttribute("data-exp-reject"); })[0];
         if (er) { er.approval = "Rejected"; renderExpensesAll(); showToast(er.title + " rejected"); }
+        return;
+      }
+      var expDeleteBtn = e.target.closest("[data-exp-delete]");
+      if (expDeleteBtn) {
+        var expDelId = expDeleteBtn.getAttribute("data-exp-delete");
+        var expToDelete = EXPENSES.filter(function (x) { return x.id === expDelId; })[0];
+        if (expToDelete && confirm("Delete expense \"" + expToDelete.title + "\"? This cannot be undone.")) {
+          var expDelIdx = EXPENSES.findIndex(function (x) { return x.id === expDelId; });
+          if (expDelIdx !== -1) EXPENSES.splice(expDelIdx, 1);
+          renderExpensesAll();
+          showToast(expToDelete.title + " deleted");
+          playSound("success");
+        }
       }
     });
 
@@ -6623,12 +6682,13 @@
         var cards = items.map(function (t) {
           var done = t.status === "done";
           return (
-            '<div class="card kcard" style="' + (done ? "opacity:0.6;" : "") + '">' +
-            '<div class="kt" style="' + (done ? "text-decoration:line-through;" : "") + '">' + (done ? "✓ " : "◯ ") + t.title + "</div>" +
+            '<div class="card kcard" data-task-id="' + t.id + '" style="' + (done ? "opacity:0.6;" : "") + '">' +
+            '<div class="kt" style="' + (done ? "text-decoration:line-through;" : "") + '"><span data-task-toggle="' + t.id + '" style="cursor:pointer;" title="Advance status">' + (done ? "✓ " : "◯ ") + "</span>" + t.title + "</div>" +
             (t.due ? '<div class="ks">' + taskDueLabel(t) + (isOverdue(t) ? " · overdue" : "") + "</div>" : "") +
             '<div style="margin-top:0.4rem;display:flex;gap:0.3rem;flex-wrap:wrap;align-items:center;">' +
             '<span class="badge ' + taskPriorityBadgeClass(t.priority) + '">' + t.priority + "</span>" + taskLabelChips(t) +
             (taskMetaLine(t) ? '<span style="font-size:0.75rem;color:hsl(var(--muted-fg));">' + taskMetaLine(t) + "</span>" : "") +
+            '<button class="btn btn-ghost btn-sm" data-task-delete="' + t.id + '" style="margin-left:auto;padding:0.1rem 0.4rem;" title="Delete task">🗑️</button>' +
             "</div></div>"
           );
         }).join("");
@@ -6642,13 +6702,15 @@
       tbody.innerHTML = items.length ? items.map(function (t) {
         var done = t.status === "done";
         return (
-          "<tr><td>" + (done ? "✓" : "◯") + '</td><td style="' + (done ? "text-decoration:line-through;color:hsl(var(--muted-fg));" : "font-weight:600;") + '">' + t.title + " " + taskMetaLine(t) + "</td>" +
+          '<tr><td><span data-task-toggle="' + t.id + '" style="cursor:pointer;" title="Advance status">' + (done ? "✓" : "◯") + "</span></td>" +
+          '<td style="' + (done ? "text-decoration:line-through;color:hsl(var(--muted-fg));" : "font-weight:600;") + '">' + t.title + " " + taskMetaLine(t) + "</td>" +
           '<td><span class="badge ' + taskPriorityBadgeClass(t.priority) + '">' + t.priority + "</span></td>" +
           "<td>" + (t.due ? taskDueLabel(t) + (isOverdue(t) ? ' <span class="badge badge-danger">overdue</span>' : "") : "—") + "</td>" +
           "<td>" + taskLabelChips(t) + "</td>" +
-          '<td><span class="badge badge-default">' + (t.status === "todo" ? "To do" : t.status === "inprogress" ? "In progress" : "Done") + "</span></td></tr>"
+          '<td><span class="badge badge-default">' + (t.status === "todo" ? "To do" : t.status === "inprogress" ? "In progress" : "Done") + "</span></td>" +
+          '<td><button class="btn btn-ghost btn-sm" data-task-delete="' + t.id + '" title="Delete task">🗑️</button></td></tr>'
         );
-      }).join("") : '<tr><td colspan="6" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No tasks match your filters.</td></tr>';
+      }).join("") : '<tr><td colspan="7" style="text-align:center;color:hsl(var(--muted-fg));padding:2rem 0;">No tasks match your filters.</td></tr>';
     }
     function populateTaskLabelFilter() {
       var sel = document.getElementById("task-label-filter");
@@ -6685,6 +6747,27 @@
       taskViewTabsEl.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b === btn); });
       document.getElementById("task-kanban-wrap").style.display = view === "kanban" ? "" : "none";
       document.getElementById("task-list-wrap").style.display = view === "list" ? "" : "none";
+    });
+    var TASK_STATUS_CYCLE = { todo: "inprogress", inprogress: "done", done: "todo" };
+    document.body.addEventListener("click", function (e) {
+      var toggleEl = e.target.closest("[data-task-toggle]");
+      if (toggleEl) {
+        var tg = TASKS.filter(function (x) { return x.id === toggleEl.getAttribute("data-task-toggle"); })[0];
+        if (tg) { tg.status = TASK_STATUS_CYCLE[tg.status] || "todo"; renderTasksAll(); }
+        return;
+      }
+      var taskDeleteBtn = e.target.closest("[data-task-delete]");
+      if (taskDeleteBtn) {
+        var tDelId = taskDeleteBtn.getAttribute("data-task-delete");
+        var tToDelete = TASKS.filter(function (x) { return x.id === tDelId; })[0];
+        if (tToDelete && confirm("Delete task \"" + tToDelete.title + "\"? This cannot be undone.")) {
+          var tDelIdx = TASKS.findIndex(function (x) { return x.id === tDelId; });
+          if (tDelIdx !== -1) TASKS.splice(tDelIdx, 1);
+          renderTasksAll();
+          showToast(tToDelete.title + " deleted");
+          playSound("success");
+        }
+      }
     });
 
     // add-task modal
