@@ -1653,6 +1653,7 @@
       stat_balance_due: "Balance due", stat_this_month: "This month", stat_pending_approval: "Pending approval",
       stat_recurring: "Recurring", stat_total_tasks: "Total tasks", stat_overdue: "Overdue",
       stat_due_today: "Due today", stat_completed: "Completed",
+      lbl_jobsite: "Chantier / jobsite", doc_invoice: "Invoice", doc_quote: "Quote", st_accepted: "Accepted", st_rejected: "Rejected", st_converted: "Converted",
     },
     fr: {
       nav_dashboard: "Tableau de bord", nav_crm: "CRM", nav_leads: "Prospects", nav_clients: "Clients", nav_companies: "Entreprises",
@@ -1787,6 +1788,7 @@
       stat_balance_due: "Solde dû", stat_this_month: "Ce mois-ci", stat_pending_approval: "En attente d'approbation",
       stat_recurring: "Récurrent", stat_total_tasks: "Total des tâches", stat_overdue: "En retard",
       stat_due_today: "Échéance aujourd'hui", stat_completed: "Terminées",
+      lbl_jobsite: "Chantier", doc_invoice: "Facture", doc_quote: "Devis", st_accepted: "Acceptée", st_rejected: "Refusée", st_converted: "Convertie",
     },
     it: {
       nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Contatti", nav_clients: "Clienti", nav_companies: "Aziende",
@@ -1921,6 +1923,7 @@
       stat_balance_due: "Saldo dovuto", stat_this_month: "Questo mese", stat_pending_approval: "In attesa di approvazione",
       stat_recurring: "Ricorrente", stat_total_tasks: "Attività totali", stat_overdue: "In ritardo",
       stat_due_today: "In scadenza oggi", stat_completed: "Completate",
+      lbl_jobsite: "Cantiere", doc_invoice: "Fattura", doc_quote: "Preventivo", st_accepted: "Accettato", st_rejected: "Rifiutato", st_converted: "Convertito",
     },
     es: {
       nav_dashboard: "Panel", nav_crm: "CRM", nav_leads: "Prospectos", nav_clients: "Clientes", nav_companies: "Empresas",
@@ -2055,6 +2058,7 @@
       stat_balance_due: "Saldo pendiente", stat_this_month: "Este mes", stat_pending_approval: "Pendiente de aprobación",
       stat_recurring: "Recurrente", stat_total_tasks: "Total de tareas", stat_overdue: "Vencidas",
       stat_due_today: "Vence hoy", stat_completed: "Completadas",
+      lbl_jobsite: "Obra", doc_invoice: "Factura", doc_quote: "Presupuesto", st_accepted: "Aceptado", st_rejected: "Rechazado", st_converted: "Convertido",
     },
     de: {
       nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Kunden", nav_companies: "Unternehmen",
@@ -2189,6 +2193,7 @@
       stat_balance_due: "Fälliger Betrag", stat_this_month: "Diesen Monat", stat_pending_approval: "Genehmigung ausstehend",
       stat_recurring: "Wiederkehrend", stat_total_tasks: "Aufgaben insgesamt", stat_overdue: "Überfällig",
       stat_due_today: "Heute fällig", stat_completed: "Abgeschlossen",
+      lbl_jobsite: "Baustelle", doc_invoice: "Rechnung", doc_quote: "Angebot", st_accepted: "Angenommen", st_rejected: "Abgelehnt", st_converted: "Umgewandelt",
     },
     nl: {
       nav_dashboard: "Dashboard", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Klanten", nav_companies: "Bedrijven",
@@ -2323,6 +2328,7 @@
       stat_balance_due: "Verschuldigd saldo", stat_this_month: "Deze maand", stat_pending_approval: "In afwachting van goedkeuring",
       stat_recurring: "Terugkerend", stat_total_tasks: "Totaal taken", stat_overdue: "Achterstallig",
       stat_due_today: "Vandaag verschuldigd", stat_completed: "Voltooid",
+      lbl_jobsite: "Bouwplaats", doc_invoice: "Factuur", doc_quote: "Offerte", st_accepted: "Geaccepteerd", st_rejected: "Afgewezen", st_converted: "Omgezet",
     },
     pt: {
       nav_dashboard: "Painel", nav_crm: "CRM", nav_leads: "Leads", nav_clients: "Clientes", nav_companies: "Empresas",
@@ -2457,6 +2463,7 @@
       stat_balance_due: "Saldo devido", stat_this_month: "Este mês", stat_pending_approval: "Aprovação pendente",
       stat_recurring: "Recorrente", stat_total_tasks: "Total de tarefas", stat_overdue: "Em atraso",
       stat_due_today: "Vence hoje", stat_completed: "Concluídas",
+      lbl_jobsite: "Obra", doc_invoice: "Fatura", doc_quote: "Orçamento", st_accepted: "Aceite", st_rejected: "Rejeitada", st_converted: "Convertida",
     },
     pl: {
       nav_dashboard: "Panel główny", nav_crm: "CRM", nav_leads: "Leady", nav_clients: "Klienci", nav_companies: "Firmy",
@@ -2591,6 +2598,7 @@
       stat_balance_due: "Saldo do zapłaty", stat_this_month: "Ten miesiąc", stat_pending_approval: "Oczekuje na zatwierdzenie",
       stat_recurring: "Cykliczne", stat_total_tasks: "Łączna liczba zadań", stat_overdue: "Zaległe",
       stat_due_today: "Termin dzisiaj", stat_completed: "Ukończone",
+      lbl_jobsite: "Plac budowy", doc_invoice: "Faktura", doc_quote: "Oferta", st_accepted: "Zaakceptowana", st_rejected: "Odrzucona", st_converted: "Przekonwertowana",
     },
   };
   var currentLang = (function () {
@@ -5134,14 +5142,14 @@
       var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
       var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       downloadDocPdf(buildDocPrintHtml({
-        title: "Invoice",
-        number: editingInvoiceId || "Draft",
+        title: t("doc_invoice"),
+        number: editingInvoiceId || t("st_draft"),
         client: client ? client.company : "—",
         clientAddress: document.getElementById("inv-new-client-address").value.trim(),
         siteAddress: document.getElementById("inv-new-site-address").value.trim(),
         siret: document.getElementById("inv-new-siret").value.trim(),
-        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
-        dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
+        issueLabel: t("fld_issue_date"), issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: t("fld_due_date"), dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
         items: getLineItemsData(), total: total, currencyCode: document.getElementById("inv-new-currency").value,
       }));
     });
@@ -6080,6 +6088,15 @@
       var active = COMPANIES.filter(function (c) { return c.id === wsActiveId; })[0];
       return active ? active.name : "Your Business";
     }
+    var DOC_STATUS_KEYS = {
+      "Draft": "st_draft", "Sent": "st_sent", "Viewed": "st_viewed", "Partially paid": "st_partially_paid",
+      "Paid": "st_paid", "Overdue": "st_overdue", "Cancelled": "st_cancelled", "Refunded": "st_refunded",
+      "Accepted": "st_accepted", "Rejected": "st_rejected", "Converted": "st_converted",
+    };
+    function docStatusLabel(status) {
+      var key = DOC_STATUS_KEYS[status];
+      return key ? t(key) : status;
+    }
     function buildDocPrintHtml(opts) {
       var logo = getCompanyLogo();
       var sig = getCompanySignature();
@@ -6107,17 +6124,17 @@
         '<div style="margin-left:auto;text-align:right;">' +
         '<div style="font-weight:800;font-size:1.3rem;color:' + (dark ? headColor : primary) + ';">' + opts.title + "</div>" +
         "<div>" + opts.number + "</div>" +
-        (opts.status ? "<div>" + opts.status + "</div>" : "") +
+        (opts.status ? "<div>" + docStatusLabel(opts.status) + "</div>" : "") +
         "</div></div>" +
         '<div class="print-doc-grid">' +
-        "<div><strong>Billed to</strong><br>" + opts.client + (opts.clientAddress ? "<br>" + opts.clientAddress.replace(/\n/g, "<br>") : "") + "</div>" +
-        (opts.siteAddress ? "<div><strong>Chantier / jobsite</strong><br>" + opts.siteAddress.replace(/\n/g, "<br>") + "</div>" : "<div></div>") +
+        "<div><strong>" + t("lbl_billed_to") + "</strong><br>" + opts.client + (opts.clientAddress ? "<br>" + opts.clientAddress.replace(/\n/g, "<br>") : "") + "</div>" +
+        (opts.siteAddress ? "<div><strong>" + t("lbl_jobsite") + "</strong><br>" + opts.siteAddress.replace(/\n/g, "<br>") + "</div>" : "<div></div>") +
         "<div><strong>" + opts.issueLabel + "</strong><br>" + opts.issueDate + "<br><strong>" + opts.dueLabel + "</strong><br>" + opts.dueDate + "</div>" +
         "</div>" +
         (opts.siret ? "<p style=\"font-size:0.8rem;margin-bottom:0.8rem;\">SIRET: " + opts.siret + "</p>" : "") +
-        '<table class="print-doc-table"><thead style="background:' + tableBg + ';"><tr><th>Description</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Unit price</th><th style="text-align:right;">Amount</th></tr></thead><tbody>' + itemsRows + "</tbody></table>" +
-        '<div class="print-doc-total" style="color:' + primary + ';">Total: ' + fmt(opts.total) + "</div>" +
-        (sig ? '<div class="print-doc-sig"><div style="font-size:0.78rem;color:#555;">Signature</div><img src="' + sig + '" alt="" /></div>' : "") +
+        '<table class="print-doc-table"><thead style="background:' + tableBg + ';"><tr><th>' + t("fld_description") + '</th><th style="text-align:right;">' + t("fld_qty") + '</th><th style="text-align:right;">' + t("fld_unit_price") + '</th><th style="text-align:right;">' + t("fld_amount") + "</th></tr></thead><tbody>" + itemsRows + "</tbody></table>" +
+        '<div class="print-doc-total" style="color:' + primary + ';">' + t("fld_total") + ": " + fmt(opts.total) + "</div>" +
+        (sig ? '<div class="print-doc-sig"><div style="font-size:0.78rem;color:#555;">' + t("fld_signature") + '</div><img src="' + sig + '" alt="" /></div>' : "") +
         "</div>"
       );
     }
@@ -6129,15 +6146,15 @@
     }
     function downloadInvoicePdf(inv) {
       downloadDocPdf(buildDocPrintHtml({
-        title: "Invoice", number: inv.id, client: inv.client, clientAddress: inv.clientAddress, siteAddress: inv.siteAddress,
-        siret: inv.siret, issueLabel: "Issue date", issueDate: fmtDate(inv.issue), dueLabel: "Due date", dueDate: fmtDate(inv.due),
+        title: t("doc_invoice"), number: inv.id, client: inv.client, clientAddress: inv.clientAddress, siteAddress: inv.siteAddress,
+        siret: inv.siret, issueLabel: t("fld_issue_date"), issueDate: fmtDate(inv.issue), dueLabel: t("fld_due_date"), dueDate: fmtDate(inv.due),
         items: inv.items, total: inv.total, status: inv.status, currencyCode: inv.currency,
       }));
     }
     function downloadQuotePdf(q) {
       downloadDocPdf(buildDocPrintHtml({
-        title: "Quote", number: q.id, client: q.client, clientAddress: q.clientAddress, siteAddress: q.siteAddress,
-        siret: q.siret, issueLabel: "Issue date", issueDate: fmtDate(q.issue), dueLabel: "Valid until", dueDate: fmtDate(q.validUntil),
+        title: t("doc_quote"), number: q.id, client: q.client, clientAddress: q.clientAddress, siteAddress: q.siteAddress,
+        siret: q.siret, issueLabel: t("fld_issue_date"), issueDate: fmtDate(q.issue), dueLabel: t("fld_valid_until"), dueDate: fmtDate(q.validUntil),
         items: q.items, total: q.total, status: q.status, currencyCode: q.currency,
       }));
     }
@@ -6358,14 +6375,14 @@
       var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
       var total = parseFloat(document.getElementById("t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       preview.innerHTML = buildDocPrintHtml({
-        title: "Invoice",
-        number: editingInvoiceId || "Draft",
+        title: t("doc_invoice"),
+        number: editingInvoiceId || t("st_draft"),
         client: client ? client.company : "—",
         clientAddress: document.getElementById("inv-new-client-address").value.trim(),
         siteAddress: document.getElementById("inv-new-site-address").value.trim(),
         siret: document.getElementById("inv-new-siret").value.trim(),
-        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
-        dueLabel: "Due date", dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
+        issueLabel: t("fld_issue_date"), issueDate: fmtDate(document.getElementById("inv-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: t("fld_due_date"), dueDate: fmtDate(document.getElementById("inv-new-due").value || new Date().toISOString().slice(0, 10)),
         items: getLineItemsData(), total: total, currencyCode: document.getElementById("inv-new-currency").value,
       });
     }
@@ -6727,14 +6744,14 @@
       var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
       var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       preview.innerHTML = buildDocPrintHtml({
-        title: "Quote",
-        number: editingQuoteId || "Draft",
+        title: t("doc_quote"),
+        number: editingQuoteId || t("st_draft"),
         client: client ? client.company : "—",
         clientAddress: document.getElementById("q-new-client-address").value.trim(),
         siteAddress: document.getElementById("q-new-site-address").value.trim(),
         siret: document.getElementById("q-new-siret").value.trim(),
-        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
-        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
+        issueLabel: t("fld_issue_date"), issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: t("fld_valid_until"), dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
         items: getQuoteLineItemsData(), total: total, currencyCode: document.getElementById("q-new-currency").value,
       });
     }
@@ -6852,14 +6869,14 @@
       var client = CLIENTS.filter(function (c) { return c.id === clientSel.value; })[0];
       var total = parseFloat(document.getElementById("q-t-total").textContent.replace(/[^0-9.-]/g, "")) || 0;
       downloadDocPdf(buildDocPrintHtml({
-        title: "Quote",
-        number: editingQuoteId || "Draft",
+        title: t("doc_quote"),
+        number: editingQuoteId || t("st_draft"),
         client: client ? client.company : "—",
         clientAddress: document.getElementById("q-new-client-address").value.trim(),
         siteAddress: document.getElementById("q-new-site-address").value.trim(),
         siret: document.getElementById("q-new-siret").value.trim(),
-        issueLabel: "Issue date", issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
-        dueLabel: "Valid until", dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
+        issueLabel: t("fld_issue_date"), issueDate: fmtDate(document.getElementById("q-new-issue").value || new Date().toISOString().slice(0, 10)),
+        dueLabel: t("fld_valid_until"), dueDate: fmtDate(document.getElementById("q-new-valid").value || new Date().toISOString().slice(0, 10)),
         items: getQuoteLineItemsData(), total: total, currencyCode: document.getElementById("q-new-currency").value,
       }));
     });
